@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { api } from '../utils/api';
 import {
   Delivery,
   DeliveryAddress,
@@ -35,14 +35,8 @@ export class DeliveryService {
         }],
       };
 
-      const { data, error } = await supabase
-        .from('deliveries')
-        .insert([newDelivery])
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
+      const response = await api.post('/deliveries', newDelivery);
+      return response.data.delivery;
     } catch (error) {
       console.error('Error creating delivery:', error);
       throw error;
@@ -55,22 +49,7 @@ export class DeliveryService {
     notes?: string
   ): Promise<void> {
     try {
-      const statusUpdate = {
-        status,
-        statusHistory: supabase.sql`array_append(status_history, ${JSON.stringify({
-          status,
-          timestamp: new Date(),
-          notes,
-        })}::jsonb)`,
-        updatedAt: new Date(),
-      };
-
-      const { error } = await supabase
-        .from('deliveries')
-        .update(statusUpdate)
-        .eq('id', deliveryId);
-
-      if (error) throw error;
+      await api.put(`/deliveries/${deliveryId}/status`, { status, notes });
     } catch (error) {
       console.error('Error updating delivery status:', error);
       throw error;
@@ -79,21 +58,7 @@ export class DeliveryService {
 
   async assignDriver(deliveryId: string, driverId: string): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('deliveries')
-        .update({
-          driverId,
-          status: 'assigned',
-          updatedAt: new Date(),
-          statusHistory: supabase.sql`array_append(status_history, ${JSON.stringify({
-            status: 'assigned',
-            timestamp: new Date(),
-            notes: `Assigned to driver ${driverId}`,
-          })}::jsonb)`,
-        })
-        .eq('id', deliveryId);
-
-      if (error) throw error;
+      await api.put(`/deliveries/${deliveryId}/assign`, { driver_id: driverId });
     } catch (error) {
       console.error('Error assigning driver:', error);
       throw error;
@@ -106,23 +71,11 @@ export class DeliveryService {
     photo?: string
   ): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('deliveries')
-        .update({
-          status: 'completed',
-          signature,
-          photo,
-          confirmedAt: new Date(),
-          updatedAt: new Date(),
-          statusHistory: supabase.sql`array_append(status_history, ${JSON.stringify({
-            status: 'completed',
-            timestamp: new Date(),
-            notes: 'Delivery confirmed',
-          })}::jsonb)`,
-        })
-        .eq('id', deliveryId);
-
-      if (error) throw error;
+      await api.put(`/deliveries/${deliveryId}/status`, {
+        status: 'completed',
+        signature,
+        photo,
+      });
     } catch (error) {
       console.error('Error confirming delivery:', error);
       throw error;
@@ -131,14 +84,13 @@ export class DeliveryService {
 
   async getAvailableTimeSlots(date: Date): Promise<DeliveryTimeSlot[]> {
     try {
-      const { data, error } = await supabase
-        .from('delivery_time_slots')
-        .select('*')
-        .lte('currentDeliveries', supabase.raw('max_deliveries'))
-        .eq('date', date.toISOString().split('T')[0]);
-
-      if (error) throw error;
-      return data;
+      // TODO: Implement time slots endpoint in backend
+      // For now, return mock data
+      return [
+        { id: '1', startTime: '09:00', endTime: '12:00', maxDeliveries: 10, currentDeliveries: 0 },
+        { id: '2', startTime: '12:00', endTime: '15:00', maxDeliveries: 10, currentDeliveries: 0 },
+        { id: '3', startTime: '15:00', endTime: '18:00', maxDeliveries: 10, currentDeliveries: 0 },
+      ];
     } catch (error) {
       console.error('Error getting time slots:', error);
       throw error;
@@ -147,14 +99,8 @@ export class DeliveryService {
 
   async getDeliveryByOrderId(orderId: string): Promise<Delivery | null> {
     try {
-      const { data, error } = await supabase
-        .from('deliveries')
-        .select('*')
-        .eq('orderId', orderId)
-        .single();
-
-      if (error) throw error;
-      return data;
+      const response = await api.get(`/deliveries?orderId=${orderId}`);
+      return response.data.deliveries?.[0] || null;
     } catch (error) {
       console.error('Error getting delivery:', error);
       throw error;
@@ -163,13 +109,8 @@ export class DeliveryService {
 
   async getDeliveriesByStatus(status: DeliveryStatus): Promise<Delivery[]> {
     try {
-      const { data, error } = await supabase
-        .from('deliveries')
-        .select('*')
-        .eq('status', status);
-
-      if (error) throw error;
-      return data;
+      const response = await api.get(`/deliveries?status=${status}`);
+      return response.data.deliveries || [];
     } catch (error) {
       console.error('Error getting deliveries:', error);
       throw error;
@@ -178,14 +119,8 @@ export class DeliveryService {
 
   async createDeliveryRoute(route: Omit<DeliveryRoute, 'id'>): Promise<DeliveryRoute> {
     try {
-      const { data, error } = await supabase
-        .from('delivery_routes')
-        .insert([route])
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
+      // TODO: Implement routes endpoint in backend
+      throw new Error('Route creation not yet implemented in backend');
     } catch (error) {
       console.error('Error creating delivery route:', error);
       throw error;
@@ -198,18 +133,8 @@ export class DeliveryService {
     longitude: number
   ): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('delivery_drivers')
-        .update({
-          currentLocation: {
-            latitude,
-            longitude,
-            lastUpdated: new Date(),
-          },
-        })
-        .eq('id', driverId);
-
-      if (error) throw error;
+      // TODO: Implement driver location update endpoint in backend
+      console.log('Driver location update:', { driverId, latitude, longitude });
     } catch (error) {
       console.error('Error updating driver location:', error);
       throw error;
@@ -218,13 +143,8 @@ export class DeliveryService {
 
   async getAvailableDrivers(): Promise<DeliveryDriver[]> {
     try {
-      const { data, error } = await supabase
-        .from('delivery_drivers')
-        .select('*')
-        .eq('isAvailable', true);
-
-      if (error) throw error;
-      return data;
+      // TODO: Implement drivers endpoint in backend
+      return [];
     } catch (error) {
       console.error('Error getting available drivers:', error);
       throw error;
@@ -233,14 +153,8 @@ export class DeliveryService {
 
   async saveDeliveryAddress(address: Omit<DeliveryAddress, 'id'>): Promise<DeliveryAddress> {
     try {
-      const { data, error } = await supabase
-        .from('delivery_addresses')
-        .insert([address])
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
+      // TODO: Implement delivery addresses endpoint in backend
+      return { ...address, id: crypto.randomUUID() };
     } catch (error) {
       console.error('Error saving delivery address:', error);
       throw error;

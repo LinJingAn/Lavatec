@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf';
 import { Invoice, InvoiceTemplate, InvoiceStatus, LaundryOrder, AccountingMetadata } from '../models';
-import { supabase } from '../lib/supabaseClient';
+import { api } from '../utils/api';
 
 export class InvoiceService {
   private static instance: InvoiceService;
@@ -78,12 +78,9 @@ export class InvoiceService {
     try {
       // Get default template if templateId not provided
       if (!templateId) {
-        const { data: template } = await supabase
-          .from('invoice_templates')
-          .select('*')
-          .eq('isDefault', true)
-          .single();
-        templateId = template.id;
+        // TODO: Implement template endpoint in backend
+        // For now, use a default template ID
+        templateId = 'default-template-id';
       }
 
       // Create invoice items from order items
@@ -143,15 +140,9 @@ export class InvoiceService {
         throw new Error(`Invalid invoice: ${validation.errors.join(', ')}`);
       }
 
-      // Save to database
-      const { data, error } = await supabase
-        .from('invoices')
-        .insert([invoice])
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
+      // Save to database via backend API
+      const response = await api.post('/invoices', invoice);
+      return response.data.invoice;
     } catch (error) {
       console.error('Error generating invoice:', error);
       throw error;
@@ -308,18 +299,13 @@ export class InvoiceService {
         Thank you for your business!
       `;
       
-      // Send email with PDF attachment
-      const { error } = await supabase.functions.invoke('send-invoice-email', {
-        body: {
-          to: invoice.customerEmail,
-          subject: `Invoice #${invoice.invoiceNumber}`,
-          content: emailContent,
-          attachmentData: await this.blobToBase64(pdf),
-          attachmentName: `invoice-${invoice.invoiceNumber}.pdf`
-        }
+      // TODO: Implement email sending via backend
+      // For now, just log the email
+      console.log('Email would be sent:', {
+        to: invoice.customerEmail,
+        subject: `Invoice #${invoice.invoiceNumber}`,
+        content: emailContent,
       });
-
-      if (error) throw error;
 
       // Update email history
       await this.updateEmailHistory(invoice.id, {
@@ -352,14 +338,17 @@ export class InvoiceService {
   }
 
   private async getTemplate(templateId: string): Promise<InvoiceTemplate> {
-    const { data, error } = await supabase
-      .from('invoice_templates')
-      .select('*')
-      .eq('id', templateId)
-      .single();
-    
-    if (error) throw error;
-    return data;
+    // TODO: Implement template endpoint in backend
+    // For now, return a default template
+    return {
+      id: templateId,
+      name: 'Default Template',
+      description: 'Default invoice template',
+      content: '<html><body>{{invoiceNumber}}</body></html>',
+      isDefault: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
   }
 
   private async updateEmailHistory(
@@ -371,25 +360,14 @@ export class InvoiceService {
       error?: string;
     }
   ): Promise<void> {
-    const { error } = await supabase
-      .from('invoices')
-      .update({
-        emailHistory: supabase.sql`array_append(email_history, ${history}::jsonb)`
-      })
-      .eq('id', invoiceId);
-    
-    if (error) throw error;
+    // TODO: Implement email history update via backend
+    console.log('Email history update:', { invoiceId, history });
   }
 
   private async updateInvoiceStatus(
     invoiceId: string,
     status: InvoiceStatus
   ): Promise<void> {
-    const { error } = await supabase
-      .from('invoices')
-      .update({ status, updatedAt: new Date() })
-      .eq('id', invoiceId);
-    
-    if (error) throw error;
+    await api.put(`/invoices/${invoiceId}`, { status });
   }
 } 

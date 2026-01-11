@@ -63,14 +63,12 @@ const RegisterPage = () => {
       });
 
       // 1. Criar o usuário no Authentication
+      const fullName = `${data.adminFirstName} ${data.adminLastName}`;
       const { error: signUpError, user } = await signUp(
         data.adminEmail,
         data.adminPassword,
-        {
-          first_name: data.adminFirstName,
-          last_name: data.adminLastName,
-          role: 'admin',
-        }
+        fullName,
+        'admin'
       );
 
       if (signUpError) {
