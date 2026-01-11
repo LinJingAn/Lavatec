@@ -1,0 +1,475 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { 
+  MdArrowBack, 
+  MdAdd, 
+  MdEdit, 
+  MdDelete, 
+  MdCheckCircle,
+  MdSave,
+  MdClose,
+  MdOutlineDryCleaning
+} from 'react-icons/md';
+import { 
+  ServiceType, 
+  PriceVariant, 
+  generateMockServiceTypes,
+  generateMockPriceVariants
+} from '../../models/ServiceTypes';
+import { formatCurrency } from '../../lib/utils';
+
+interface PriceVariantFormData {
+  id?: string;
+  name: string;
+  description: string;
+  multiplier: number;
+  isDefault: boolean;
+}
+
+const initialVariantForm: PriceVariantFormData = {
+  name: '',
+  description: '',
+  multiplier: 1.0,
+  isDefault: false
+};
+
+const PriceVariantsPage: React.FC = () => {
+  const { serviceId } = useParams<{ serviceId: string }>();
+  const navigate = useNavigate();
+  
+  const [service, setService] = useState<ServiceType | null>(null);
+  const [variants, setVariants] = useState<PriceVariant[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState<string | null>(null);
+  const [formData, setFormData] = useState<PriceVariantFormData>(initialVariantForm);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Fetch service and variants data
+  useEffect(() => {
+    if (!serviceId) {
+      navigate('/services');
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      const services = generateMockServiceTypes();
+      const service = services.find(s => s.id === serviceId);
+      
+      if (!service) {
+        navigate('/services');
+        return;
+      }
+      
+      setService(service);
+      
+      const allVariants = generateMockPriceVariants();
+      const serviceVariants = allVariants.filter(v => v.serviceTypeId === serviceId);
+      setVariants(serviceVariants);
+      
+      setIsLoading(false);
+    }, 500);
+  }, [serviceId, navigate]);
+
+  // Reset form
+  const resetForm = () => {
+    setFormData(initialVariantForm);
+    setErrors({});
+    setIsAdding(false);
+    setIsEditing(null);
+  };
+
+  // Form input change handler
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'number' ? parseFloat(value) : value
+    }));
+    
+    // Clear error when field is edited
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  // Checkbox change handler
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData(prev => ({ ...prev, [name]: checked }));
+  };
+
+  // Form validation
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Nome é obrigatório';
+    }
+    
+    if (formData.multiplier <= 0) {
+      newErrors.multiplier = 'Multiplicador deve ser maior que zero';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Start edit mode for a variant
+  const handleEditVariant = (variant: PriceVariant) => {
+    setFormData({
+      id: variant.id,
+      name: variant.name,
+      description: variant.description || '',
+      multiplier: variant.multiplier,
+      isDefault: variant.isDefault
+    });
+    setIsEditing(variant.id);
+    setIsAdding(false);
+  };
+
+  // Delete a variant
+  const handleDeleteVariant = (variantId: string) => {
+    if (window.confirm('Tem certeza que deseja excluir esta variante de preço?')) {
+      // If deleting the default variant, show warning
+      const variant = variants.find(v => v.id === variantId);
+      if (variant?.isDefault) {
+        alert('Atenção: Você está removendo a variante padrão. Por favor, defina outra variante como padrão depois.');
+      }
+      
+      // Simulate API call for deletion
+      setVariants(prev => prev.filter(v => v.id !== variantId));
+    }
+  };
+
+  // Save variant (create or update)
+  const handleSaveVariant = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    if (isEditing) {
+      // Update existing variant
+      setVariants(prev => prev.map(v => 
+        v.id === isEditing 
+          ? { 
+              ...v, 
+              name: formData.name, 
+              description: formData.description, 
+              multiplier: formData.multiplier,
+              isDefault: formData.isDefault
+            } 
+          : formData.isDefault ? { ...v, isDefault: false } : v
+      ));
+    } else {
+      // Create new variant
+      const newVariant: PriceVariant = {
+        id: `new-${Date.now()}`, // In a real app, this would be generated by the server
+        serviceTypeId: serviceId!,
+        name: formData.name,
+        description: formData.description || undefined,
+        multiplier: formData.multiplier,
+        isDefault: formData.isDefault
+      };
+      
+      setVariants(prev => {
+        // If the new variant is default, remove default from others
+        if (formData.isDefault) {
+          return [...prev.map(v => ({ ...v, isDefault: false })), newVariant];
+        }
+        return [...prev, newVariant];
+      });
+    }
+    
+    resetForm();
+  };
+
+  // Set a variant as default
+  const handleSetDefault = (variantId: string) => {
+    setVariants(prev => prev.map(v => ({
+      ...v,
+      isDefault: v.id === variantId
+    })));
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-6 flex justify-center items-center h-full">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!service) {
+    return (
+      <div className="p-6 text-center">
+        <h2 className="text-xl font-semibold text-gray-700">Serviço não encontrado</h2>
+        <Link to="/services" className="mt-4 inline-block text-blue-600 hover:text-blue-800">
+          Voltar para lista de serviços
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 max-w-6xl mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <Link to={`/services/${serviceId}`} className="mr-4 text-gray-600 hover:text-gray-800">
+            <MdArrowBack className="text-2xl" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 flex items-center">
+              <MdOutlineDryCleaning className="mr-2 text-blue-600" />
+              Variantes de Preço
+            </h1>
+            <p className="text-gray-600">{service.name}</p>
+          </div>
+        </div>
+        
+        <button
+          onClick={() => {
+            setIsAdding(true);
+            setIsEditing(null);
+            setFormData(initialVariantForm);
+          }}
+          className="flex items-center gap-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          disabled={isAdding}
+        >
+          <MdAdd /> Nova Variante
+        </button>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div className="p-6">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-gray-700">Informações do Serviço</h2>
+            <div className="grid grid-cols-2 gap-4 mt-2">
+              <div>
+                <p className="text-sm text-gray-500">Categoria</p>
+                <p className="font-medium">{service.categoryId}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Preço Base</p>
+                <p className="font-medium">{formatCurrency(service.basePrice)}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Form for adding/editing variants */}
+          {(isAdding || isEditing) && (
+            <div className="mb-6 p-4 border border-gray-200 rounded-md bg-gray-50">
+              <h3 className="text-lg font-medium mb-3">
+                {isEditing ? 'Editar Variante' : 'Nova Variante de Preço'}
+              </h3>
+              
+              <form onSubmit={handleSaveVariant}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nome *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 py-2 border rounded-md ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="Ex: Padrão, Premium, Eco"
+                    />
+                    {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Multiplicador de Preço *
+                    </label>
+                    <input
+                      type="number"
+                      name="multiplier"
+                      value={formData.multiplier}
+                      onChange={handleInputChange}
+                      step="0.05"
+                      min="0.1"
+                      className={`w-full px-3 py-2 border rounded-md ${errors.multiplier ? 'border-red-500' : 'border-gray-300'}`}
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      1.0 = preço base, 1.5 = +50%, 0.8 = -20%
+                    </p>
+                    {errors.multiplier && <p className="mt-1 text-sm text-red-500">{errors.multiplier}</p>}
+                  </div>
+                  
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Descrição
+                    </label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      rows={2}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      placeholder="Descrição opcional da variante..."
+                    />
+                  </div>
+                  
+                  <div className="md:col-span-2">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="isDefault"
+                        name="isDefault"
+                        checked={formData.isDefault}
+                        onChange={handleCheckboxChange}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="isDefault" className="ml-2 block text-sm text-gray-700">
+                        Definir como variante padrão
+                      </label>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1 ml-6">
+                      A variante padrão será pré-selecionada ao criar novos pedidos
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="mt-4 flex justify-end space-x-2">
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center"
+                  >
+                    <MdClose className="mr-1" /> Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
+                  >
+                    <MdSave className="mr-1" /> Salvar
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Variants list */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">Variantes de Preço</h2>
+            
+            {variants.length === 0 ? (
+              <div className="text-center py-10 bg-gray-50 rounded-md">
+                <p className="text-gray-500">Nenhuma variante de preço definida</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Crie variantes para oferecer opções diferentes do mesmo serviço
+                </p>
+                {!isAdding && (
+                  <button
+                    onClick={() => setIsAdding(true)}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+                  >
+                    <MdAdd className="inline mr-1" /> Adicionar Primeira Variante
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Nome
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Descrição
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Preço
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Padrão
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Ações
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {variants.map(variant => (
+                      <tr key={variant.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="font-medium text-gray-900">{variant.name}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-gray-500 line-clamp-2">
+                            {variant.description || '-'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-gray-900">
+                            {formatCurrency(service.basePrice * variant.multiplier)}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            ({variant.multiplier > 1 ? '+' : ''}{((variant.multiplier - 1) * 100).toFixed(0)}%)
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {variant.isDefault ? (
+                            <span className="flex items-center text-green-600">
+                              <MdCheckCircle className="mr-1" /> Padrão
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleSetDefault(variant.id)}
+                              className="text-xs text-blue-600 hover:text-blue-800"
+                            >
+                              Definir como padrão
+                            </button>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => handleEditVariant(variant)}
+                              className="text-indigo-600 hover:text-indigo-900"
+                              title="Editar"
+                            >
+                              <MdEdit />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteVariant(variant.id)}
+                              className="text-red-600 hover:text-red-900"
+                              title="Excluir"
+                              disabled={variants.length === 1 && variant.isDefault}
+                            >
+                              <MdDelete />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex justify-between">
+        <Link
+          to={`/services/${serviceId}`}
+          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center"
+        >
+          <MdArrowBack className="mr-1" /> Voltar para Detalhes do Serviço
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default PriceVariantsPage; 
