@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdPrint, MdDownload, MdOutlineLocalShipping, MdLocationOn, MdPerson, MdEmail, MdPhone, MdMessage, MdOutlineCalendarToday, MdAccessTime, MdPayment, MdReceipt } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Dados de exemplo para um único pedido
 const SAMPLE_ORDER = {
   id: 'DS-1535',
@@ -455,4 +458,11 @@ const OrderDetailPage = () => {
   );
 };
 
-export default OrderDetailPage; 
+export default OrderDetailPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

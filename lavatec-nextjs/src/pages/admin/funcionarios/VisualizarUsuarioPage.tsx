@@ -18,6 +18,9 @@ import {
   MdVerified
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock user data
 const mockUsers = [
   { 
@@ -387,4 +390,11 @@ const VisualizarUsuarioPage: React.FC = () => {
   );
 };
 
-export default VisualizarUsuarioPage; 
+export default VisualizarUsuarioPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

@@ -12,6 +12,9 @@ import {
   MdBarChart
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data to match the screenshot
 const mockCampaigns = [
   {
@@ -225,4 +228,11 @@ const CampaignsPage = () => {
   );
 };
 
-export default CampaignsPage; 
+export default CampaignsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

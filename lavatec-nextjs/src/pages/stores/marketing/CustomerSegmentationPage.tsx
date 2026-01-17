@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const CustomerSegmentationPage = () => {
   const navigate = useNavigate();
   const [segments, setSegments] = useState([
@@ -134,4 +137,11 @@ const CustomerSegmentationPage = () => {
   );
 };
 
-export default CustomerSegmentationPage; 
+export default CustomerSegmentationPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

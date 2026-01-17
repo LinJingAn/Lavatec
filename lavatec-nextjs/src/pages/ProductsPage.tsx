@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { MdAdd, MdSearch, MdFilterList, MdClose, MdLocalShipping } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 interface Product {
   id: string;
   name: string;
@@ -188,4 +191,11 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage; 
+export default ProductsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

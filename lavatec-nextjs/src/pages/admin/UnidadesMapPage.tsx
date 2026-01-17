@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdLocationOn, MdInfo, MdLocationSearching } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for units with their locations
 const mockUnidades = [
   { 
@@ -217,4 +220,11 @@ const UnidadesMapPage: React.FC = () => {
   );
 };
 
-export default UnidadesMapPage; 
+export default UnidadesMapPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

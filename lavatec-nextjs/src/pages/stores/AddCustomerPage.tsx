@@ -19,6 +19,9 @@ const customerSchema = z.object({
 
 type FormData = z.infer<typeof customerSchema>;
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const AddCustomerPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -384,4 +387,11 @@ const AddCustomerPage: React.FC = () => {
   );
 };
 
-export default AddCustomerPage; 
+export default AddCustomerPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

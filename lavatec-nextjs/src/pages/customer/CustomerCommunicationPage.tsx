@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import CustomerCommunicationLog from '../../components/customer/CustomerCommunicationLog';
 import { MdArrowBack, MdPerson } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 interface Customer {
   id: number;
   name: string;
@@ -99,4 +102,11 @@ const CustomerCommunicationPage: React.FC = () => {
   );
 };
 
-export default CustomerCommunicationPage; 
+export default CustomerCommunicationPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

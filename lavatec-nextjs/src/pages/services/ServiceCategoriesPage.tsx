@@ -13,6 +13,9 @@ import {
 } from 'react-icons/md';
 import { ServiceCategory, getCategoryName } from '../../models/ServiceTypes';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for service categories
 const mockServiceCategories = [
   { 
@@ -308,4 +311,11 @@ const ServiceCategoriesPage: React.FC = () => {
   );
 };
 
-export default ServiceCategoriesPage; 
+export default ServiceCategoriesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

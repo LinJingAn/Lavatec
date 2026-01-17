@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdSend } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const SMSPage = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
@@ -168,4 +171,11 @@ const SMSPage = () => {
   );
 };
 
-export default SMSPage; 
+export default SMSPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

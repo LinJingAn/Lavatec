@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import { useSidebar } from '@/contexts/SidebarContext';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const RelatoriosPage = () => {
   const navigate = useNavigate();
   const { closeSecondarySidebar } = useSidebar();
@@ -190,4 +193,11 @@ const RelatoriosPage = () => {
   );
 };
 
-export default RelatoriosPage; 
+export default RelatoriosPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

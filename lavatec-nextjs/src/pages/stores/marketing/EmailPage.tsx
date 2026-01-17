@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdSend } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const EmailPage = () => {
   const navigate = useNavigate();
   const [emailSubject, setEmailSubject] = useState('');
@@ -137,4 +140,11 @@ const EmailPage = () => {
   );
 };
 
-export default EmailPage; 
+export default EmailPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

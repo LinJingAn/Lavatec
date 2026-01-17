@@ -9,6 +9,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const SystemConfigPage = () => {
   const navigate = useNavigate();
   const [companyProfile, setCompanyProfile] = useState({
@@ -684,4 +687,11 @@ const SystemConfigPage = () => {
   );
 };
 
-export default SystemConfigPage; 
+export default SystemConfigPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

@@ -30,6 +30,9 @@ import {
 } from 'recharts';
 import { useSidebar } from '@/contexts/SidebarContext';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const FinancialDashboardPage = () => {
   const navigate = useNavigate();
   const { closeSecondarySidebar } = useSidebar();
@@ -321,4 +324,11 @@ const FinancialDashboardPage = () => {
   );
 };
 
-export default FinancialDashboardPage; 
+export default FinancialDashboardPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

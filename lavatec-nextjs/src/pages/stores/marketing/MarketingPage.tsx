@@ -11,6 +11,9 @@ import {
   MdArticle
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const marketingModules = [
   {
     id: 'automated-flows',
@@ -105,4 +108,11 @@ const MarketingPage = () => {
   );
 };
 
-export default MarketingPage; 
+export default MarketingPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

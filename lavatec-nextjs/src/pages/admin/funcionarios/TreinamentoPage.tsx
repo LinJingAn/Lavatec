@@ -14,6 +14,9 @@ import {
   MdAccessTime
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for training courses
 const MOCK_COURSES = [
   {
@@ -724,4 +727,11 @@ const TreinamentoPage = () => {
   );
 };
 
-export default TreinamentoPage; 
+export default TreinamentoPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

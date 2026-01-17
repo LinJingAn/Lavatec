@@ -26,6 +26,9 @@ import {
 } from '../../models/PricingTable';
 import { formatCurrency } from '../../lib/utils';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const PriceCalculatorPage: React.FC = () => {
   // State
   const [isLoading, setIsLoading] = useState(true);
@@ -438,4 +441,11 @@ const PriceCalculatorPage: React.FC = () => {
   );
 };
 
-export default PriceCalculatorPage; 
+export default PriceCalculatorPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

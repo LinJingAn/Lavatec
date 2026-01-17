@@ -23,6 +23,9 @@ import CustomerSpendingAnalytics from '../../components/customer/CustomerSpendin
 import WashingPreferencesPanel from '../../components/customers/WashingPreferencesPanel';
 import { WashingPreferences, DEFAULT_WASHING_PREFERENCES } from '../../models/CustomerPreferences';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for a single customer
 const MOCK_CUSTOMER = {
   id: 2,
@@ -527,4 +530,11 @@ const CustomerDetailPage: React.FC = () => {
   );
 };
 
-export default CustomerDetailPage; 
+export default CustomerDetailPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

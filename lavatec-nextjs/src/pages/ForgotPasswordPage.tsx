@@ -125,4 +125,11 @@ const ForgotPasswordPage = () => {
   );
 };
 
-export default ForgotPasswordPage; 
+export default ForgotPasswordPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

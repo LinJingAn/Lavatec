@@ -2,6 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdAdd } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const AutomatedCampaignsPage = () => {
   const navigate = useNavigate();
 
@@ -48,4 +51,11 @@ const AutomatedCampaignsPage = () => {
   );
 };
 
-export default AutomatedCampaignsPage; 
+export default AutomatedCampaignsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

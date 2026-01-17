@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdSave, MdEdit, MdDelete, MdRefresh, MdEmail, MdBlock, MdCheck } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data to simulate API fetch
 const MOCK_USER = {
   id: '1',
@@ -681,4 +684,11 @@ const FuncionarioDetalhesPage = () => {
   );
 };
 
-export default FuncionarioDetalhesPage; 
+export default FuncionarioDetalhesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

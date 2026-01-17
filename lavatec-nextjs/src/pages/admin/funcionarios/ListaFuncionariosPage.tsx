@@ -14,6 +14,9 @@ import {
   MdArrowBack
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for employees
 const MOCK_EMPLOYEES = [
   { 
@@ -514,4 +517,11 @@ const ListaFuncionariosPage = () => {
   );
 };
 
-export default ListaFuncionariosPage; 
+export default ListaFuncionariosPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

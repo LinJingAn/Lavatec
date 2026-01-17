@@ -10,6 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const UserAccessControlPage = () => {
   const navigate = useNavigate();
   const [roles, setRoles] = useState([
@@ -521,4 +524,11 @@ const UserAccessControlPage = () => {
   );
 };
 
-export default UserAccessControlPage; 
+export default UserAccessControlPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

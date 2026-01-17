@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdAdd, MdEdit, MdDelete, MdFilterList, MdFileDownload } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for schedules
 const MOCK_SCHEDULES = [
   {
@@ -334,4 +337,11 @@ const HorariosPage = () => {
   );
 };
 
-export default HorariosPage; 
+export default HorariosPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

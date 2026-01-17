@@ -18,6 +18,9 @@ import {
   MdNotifications
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const AddOrderPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -747,4 +750,11 @@ const AddOrderPage = () => {
   );
 };
 
-export default AddOrderPage; 
+export default AddOrderPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdSave } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 interface UnidadForm {
   name: string;
   address: string;
@@ -334,4 +337,11 @@ const AddUnidadPage: React.FC = () => {
   );
 };
 
-export default AddUnidadPage; 
+export default AddUnidadPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

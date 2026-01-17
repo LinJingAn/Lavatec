@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 interface FinanceiroProps {}
 
 const FinanceiroPage: React.FC<FinanceiroProps> = () => {
@@ -21,4 +24,11 @@ const FinanceiroPage: React.FC<FinanceiroProps> = () => {
   return null;
 };
 
-export default FinanceiroPage; 
+export default FinanceiroPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

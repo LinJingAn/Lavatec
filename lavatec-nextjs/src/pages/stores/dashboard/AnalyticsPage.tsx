@@ -5,6 +5,9 @@ import { PerformanceTrends } from '@/components/dashboard/PerformanceTrends';
 import { DashboardWidgets } from '@/components/dashboard/DashboardWidgets';
 import { Widget } from '@/components/dashboard/DashboardWidgets';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const AnalyticsPage: React.FC = () => {
   // Example data - in a real app, this would come from an API
   const performanceData = {
@@ -159,4 +162,11 @@ const AnalyticsPage: React.FC = () => {
   );
 };
 
-export default AnalyticsPage; 
+export default AnalyticsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

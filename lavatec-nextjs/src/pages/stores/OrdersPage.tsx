@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { MdSearch, MdFilterList, MdAdd, MdDownload, MdPrint, MdClose, MdCheck, MdOutlineLocalShipping, MdPerson } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Order status types and their corresponding components
 interface OrderStatusProps {
   status: string;
@@ -459,4 +462,11 @@ OrdersPage.defaultProps = {
   initialFilter: undefined
 };
 
-export default OrdersPage; 
+export default OrdersPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

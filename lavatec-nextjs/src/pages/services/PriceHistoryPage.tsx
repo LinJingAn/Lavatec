@@ -18,6 +18,9 @@ import {
 } from '../../models/PricingTable';
 import { formatCurrency, formatDate } from '../../lib/utils';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const PriceHistoryPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [priceHistory, setPriceHistory] = useState<PriceHistoryEntry[]>([]);
@@ -423,4 +426,11 @@ const PriceHistoryPage: React.FC = () => {
   );
 };
 
-export default PriceHistoryPage; 
+export default PriceHistoryPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

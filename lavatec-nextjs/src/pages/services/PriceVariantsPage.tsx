@@ -18,6 +18,9 @@ import {
 } from '../../models/ServiceTypes';
 import { formatCurrency } from '../../lib/utils';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 interface PriceVariantFormData {
   id?: string;
   name: string;
@@ -472,4 +475,11 @@ const PriceVariantsPage: React.FC = () => {
   );
 };
 
-export default PriceVariantsPage; 
+export default PriceVariantsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

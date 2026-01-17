@@ -22,6 +22,9 @@ import { Switch } from '@/components/ui/switch';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useSidebar } from '@/contexts/SidebarContext';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const ContasPagarPage = () => {
   const navigate = useNavigate();
   const { closeSecondarySidebar } = useSidebar();
@@ -452,4 +455,11 @@ const ContasPagarPage = () => {
   );
 };
 
-export default ContasPagarPage; 
+export default ContasPagarPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

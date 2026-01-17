@@ -1,5 +1,8 @@
 import { Link as RouterLink } from 'react-router-dom'
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const UnauthorizedPage = () => {
   return (
     <div 
@@ -16,4 +19,11 @@ const UnauthorizedPage = () => {
   )
 }
 
-export default UnauthorizedPage 
+export default UnauthorizedPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}

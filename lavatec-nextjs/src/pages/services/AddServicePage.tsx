@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { MdSave, MdCancel, MdAdd, MdDelete, MdOutlineDryCleaning } from 'react-icons/md';
 import { ServiceCategory, PriceVariant, getCategoryName } from '../../models/ServiceTypes';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const AddServicePage: React.FC = () => {
   const navigate = useNavigate();
   
@@ -546,4 +549,11 @@ const AddServicePage: React.FC = () => {
   );
 };
 
-export default AddServicePage; 
+export default AddServicePage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

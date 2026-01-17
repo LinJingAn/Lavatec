@@ -10,6 +10,9 @@ import {
   MdFilterList
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for email templates
 const mockTemplates = [
   {
@@ -233,4 +236,11 @@ const EmailTemplatesPage: React.FC = () => {
   );
 };
 
-export default EmailTemplatesPage; 
+export default EmailTemplatesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

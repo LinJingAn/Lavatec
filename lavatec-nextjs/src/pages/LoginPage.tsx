@@ -184,4 +184,11 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage; 
+export default LoginPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

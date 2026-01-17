@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Define interfaces for better type safety
 interface UnitData {
   id: string;
@@ -415,4 +418,11 @@ const EditUnidadPage: React.FC = () => {
   );
 };
 
-export default EditUnidadPage; 
+export default EditUnidadPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

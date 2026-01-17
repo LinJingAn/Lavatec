@@ -13,6 +13,9 @@ import {
   MdSchedule
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for push notifications
 const mockNotifications = [
   {
@@ -391,4 +394,11 @@ const PushNotificationsPage: React.FC = () => {
   );
 };
 
-export default PushNotificationsPage; 
+export default PushNotificationsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

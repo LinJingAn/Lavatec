@@ -13,6 +13,9 @@ import {
   MdLock
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for employees
 const MOCK_EMPLOYEES = [
   { 
@@ -498,4 +501,11 @@ const FuncionariosPage = () => {
   );
 };
 
-export default FuncionariosPage; 
+export default FuncionariosPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

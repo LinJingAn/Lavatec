@@ -25,6 +25,9 @@ const userSchema = z.object({
   hireDate: z.string().min(1, 'Data de contratação é obrigatória')
 });
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Password schema (only used when creating new user or changing password)
 const passwordSchema = z.object({
   password: z.string().min(8, 'Senha deve ter pelo menos 8 caracteres'),
@@ -591,4 +594,11 @@ const EditarUsuarioPage: React.FC = () => {
   );
 };
 
-export default EditarUsuarioPage; 
+export default EditarUsuarioPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

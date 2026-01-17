@@ -12,6 +12,9 @@ import {
   MdEvent
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const GerenciarFuncionariosPage = () => {
   const modules = [
     {
@@ -107,4 +110,11 @@ const GerenciarFuncionariosPage = () => {
   );
 };
 
-export default GerenciarFuncionariosPage; 
+export default GerenciarFuncionariosPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

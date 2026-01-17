@@ -8,6 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Label } from '../../components/ui/label';
 import { RadioGroup, RadioGroupItem } from '../../components/ui/radio-group';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const SelfServicePage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -453,4 +456,11 @@ const SelfServicePage = () => {
   );
 };
 
-export default SelfServicePage; 
+export default SelfServicePage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

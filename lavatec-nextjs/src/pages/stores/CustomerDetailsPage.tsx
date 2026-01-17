@@ -3,6 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { MdArrowBack, MdEdit, MdDelete, MdPerson, MdPhone, MdEmail, MdLocationOn, MdHistory, MdShoppingBag } from 'react-icons/md';
 import { Customer } from '@/models/Customer';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Extended customer type for this page with additional properties from mock data
 interface CustomerWithDetails extends Customer {
   orders?: Array<{
@@ -531,4 +534,11 @@ const CustomerDetailsPage = () => {
   );
 };
 
-export default CustomerDetailsPage; 
+export default CustomerDetailsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

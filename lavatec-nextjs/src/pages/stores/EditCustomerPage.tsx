@@ -19,6 +19,9 @@ const customerSchema = z.object({
 
 type FormData = z.infer<typeof customerSchema>;
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock customer data (in a real app, this would be fetched from API)
 const MOCK_CUSTOMER = {
   id: 2,
@@ -439,4 +442,11 @@ const EditCustomerPage: React.FC = () => {
   );
 };
 
-export default EditCustomerPage; 
+export default EditCustomerPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

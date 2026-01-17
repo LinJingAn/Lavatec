@@ -22,6 +22,9 @@ import {
   getCareLevelDescription
 } from '../../models/GarmentCategories';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const GarmentCategoriesPage: React.FC = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<GarmentCategory[]>([]);
@@ -589,4 +592,11 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({ category, onClose
   );
 };
 
-export default GarmentCategoriesPage; 
+export default GarmentCategoriesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

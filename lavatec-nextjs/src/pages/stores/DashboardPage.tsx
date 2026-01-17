@@ -11,6 +11,9 @@ import {
   MdLocalShipping
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const DashboardPage = () => {
   const navigate = useNavigate();
 
@@ -29,4 +32,11 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage; 
+export default DashboardPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

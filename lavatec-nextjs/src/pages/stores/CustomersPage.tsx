@@ -32,6 +32,9 @@ import {
   MdOutlineDownload
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Extended mock data for customers with more attributes for filtering
 const mockCustomers = [
   {
@@ -1274,4 +1277,11 @@ const CustomersPage = () => {
   );
 };
 
-export default CustomersPage; 
+export default CustomersPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

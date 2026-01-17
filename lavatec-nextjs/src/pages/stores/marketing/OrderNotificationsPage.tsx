@@ -7,6 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const OrderNotificationsPage = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([
@@ -153,4 +156,11 @@ const OrderNotificationsPage = () => {
   );
 };
 
-export default OrderNotificationsPage; 
+export default OrderNotificationsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

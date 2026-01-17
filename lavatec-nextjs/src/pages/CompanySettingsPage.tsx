@@ -6,6 +6,9 @@ import { useAuth } from '../contexts/AuthContext';
 // Supabase removed - using backend API
 import { Company, Branch } from '../types/database.types';
 
+// Disable static generation - this page uses Auth context
+export const dynamic = 'force-dynamic';
+
 // Company information validation schema
 const companySchema = z.object({
   name: z.string().min(2, { message: 'Nome da empresa é obrigatório' }),
@@ -631,4 +634,11 @@ const CompanySettingsPage = () => {
   );
 };
 
-export default CompanySettingsPage; 
+export default CompanySettingsPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

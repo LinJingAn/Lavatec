@@ -26,6 +26,9 @@ const initialService: Omit<ServiceType, 'id' | 'createdAt' | 'updatedAt'> = {
   applicableGarmentTypes: []
 };
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const SERVICE_CATEGORIES = [
   { id: 'laundry', name: 'Lavanderia' },
   { id: 'drycleaning', name: 'Lavagem a Seco' },
@@ -491,4 +494,11 @@ const ServiceFormPage: React.FC = () => {
   );
 };
 
-export default ServiceFormPage; 
+export default ServiceFormPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

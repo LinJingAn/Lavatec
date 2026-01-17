@@ -4,6 +4,9 @@ import { MdChevronLeft, MdWarning, MdCheckCircle } from 'react-icons/md';
 import { PerformanceTrends } from '@/components/dashboard/PerformanceTrends';
 import { DashboardWidgets, Widget } from '@/components/dashboard/DashboardWidgets';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const performanceData = [
   { 
     id: 1, 
@@ -116,4 +119,11 @@ const PerformancePage: React.FC = () => {
   );
 };
 
-export default PerformancePage; 
+export default PerformancePage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

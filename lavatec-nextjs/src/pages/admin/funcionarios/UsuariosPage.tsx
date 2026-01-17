@@ -11,6 +11,9 @@ import {
 } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for users
 const mockUsers = [
   { 
@@ -333,4 +336,11 @@ const UsuariosPage: React.FC = () => {
   );
 };
 
-export default UsuariosPage; 
+export default UsuariosPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

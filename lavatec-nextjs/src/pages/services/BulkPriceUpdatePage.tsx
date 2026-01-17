@@ -26,6 +26,9 @@ import {
 } from '../../models/PricingTable';
 import { formatCurrency } from '../../lib/utils';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const BulkPriceUpdatePage: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -605,4 +608,11 @@ const BulkPriceUpdatePage: React.FC = () => {
   );
 };
 
-export default BulkPriceUpdatePage; 
+export default BulkPriceUpdatePage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

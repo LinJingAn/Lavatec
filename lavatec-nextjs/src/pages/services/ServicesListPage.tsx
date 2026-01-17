@@ -20,6 +20,9 @@ import {
 } from '../../models/ServiceTypes';
 import { formatCurrency } from '../../lib/utils';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const ServicesListPage: React.FC = () => {
   const [services, setServices] = useState<ServiceType[]>([]);
   const [filteredServices, setFilteredServices] = useState<ServiceType[]>([]);
@@ -533,4 +536,11 @@ const ServicesListPage: React.FC = () => {
   );
 };
 
-export default ServicesListPage; 
+export default ServicesListPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

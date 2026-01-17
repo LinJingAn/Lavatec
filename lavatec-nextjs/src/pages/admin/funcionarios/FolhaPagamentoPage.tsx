@@ -12,6 +12,9 @@ import {
   MdCalendarToday
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for employee payroll
 const MOCK_PAYROLL = [
   {
@@ -455,4 +458,11 @@ const FolhaPagamentoPage = () => {
   );
 };
 
-export default FolhaPagamentoPage; 
+export default FolhaPagamentoPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

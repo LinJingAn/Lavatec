@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdInfo, MdPeople, MdEdit, MdDelete } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Initial category data
 const initialCategories = [
   {
@@ -397,4 +400,11 @@ const CustomerCategoriesPage: React.FC = () => {
   );
 };
 
-export default CustomerCategoriesPage; 
+export default CustomerCategoriesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

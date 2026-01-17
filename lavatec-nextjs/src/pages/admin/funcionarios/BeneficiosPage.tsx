@@ -15,6 +15,9 @@ import {
   MdLocalAtm
 } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for benefits
 const MOCK_BENEFITS = [
   {
@@ -555,4 +558,11 @@ const BeneficiosPage = () => {
   );
 };
 
-export default BeneficiosPage; 
+export default BeneficiosPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

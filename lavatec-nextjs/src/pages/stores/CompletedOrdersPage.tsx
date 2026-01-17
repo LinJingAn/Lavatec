@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import OrdersPage from './OrdersPage';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const PedidosConcluidosPage: React.FC = () => {
   // Add debug logging
   useEffect(() => {
@@ -12,4 +15,11 @@ const PedidosConcluidosPage: React.FC = () => {
   return <OrdersPage initialFilter="completed" />;
 };
 
-export default PedidosConcluidosPage; 
+export default PedidosConcluidosPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

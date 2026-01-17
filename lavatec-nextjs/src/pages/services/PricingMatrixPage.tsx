@@ -26,6 +26,9 @@ import {
 } from '../../models/PricingTable';
 import { formatCurrency } from '../../lib/utils';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const PricingMatrixPage: React.FC = () => {
   console.log('PricingMatrixPage rendering');
   
@@ -683,4 +686,11 @@ const PriceCalculator: React.FC<PriceCalculatorProps> = ({ services, garmentType
 
 // Make sure we're exporting the component properly
 console.log('PricingMatrixPage is being exported');
-export default PricingMatrixPage; 
+export default PricingMatrixPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

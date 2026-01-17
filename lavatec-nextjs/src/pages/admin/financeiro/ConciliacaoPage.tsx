@@ -8,6 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSidebar } from '@/contexts/SidebarContext';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const ConciliacaoPage = () => {
   const navigate = useNavigate();
   const { closeSecondarySidebar } = useSidebar();
@@ -291,4 +294,11 @@ const ConciliacaoPage = () => {
   );
 };
 
-export default ConciliacaoPage; 
+export default ConciliacaoPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

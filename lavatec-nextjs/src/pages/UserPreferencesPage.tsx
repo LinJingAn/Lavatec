@@ -5,6 +5,9 @@ import { z } from 'zod';
 import { useAuth } from '../contexts/AuthContext';
 // Supabase removed - using backend API
 
+// Disable static generation - this page uses Auth context
+export const dynamic = 'force-dynamic';
+
 // User preferences schema
 const preferencesSchema = z.object({
   defaultBranchId: z.string().optional(),
@@ -353,4 +356,11 @@ const UserPreferencesPage = () => {
   );
 };
 
-export default UserPreferencesPage; 
+export default UserPreferencesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

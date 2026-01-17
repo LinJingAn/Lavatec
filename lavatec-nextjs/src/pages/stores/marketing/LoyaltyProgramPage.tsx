@@ -8,6 +8,9 @@ import { Select } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const LoyaltyProgramPage = () => {
   const navigate = useNavigate();
   
@@ -310,4 +313,11 @@ const LoyaltyProgramPage = () => {
   );
 };
 
-export default LoyaltyProgramPage; 
+export default LoyaltyProgramPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

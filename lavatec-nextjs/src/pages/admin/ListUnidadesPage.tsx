@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdEdit, MdDelete, MdSearch, MdFilterList, MdAdd } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 // Mock data for units
 const mockUnidades = [
   { id: 1, name: 'São José Centro', address: 'Avenida Central, Rua 1', status: 'active', employees: 15, machines: 12 },
@@ -146,4 +149,11 @@ const ListUnidadesPage: React.FC = () => {
   );
 };
 
-export default ListUnidadesPage; 
+export default ListUnidadesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

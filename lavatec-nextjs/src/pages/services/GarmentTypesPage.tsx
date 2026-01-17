@@ -12,6 +12,9 @@ import {
 // Interface for the component's props
 interface GarmentTypesPageProps {}
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const GarmentTypesPage: React.FC<GarmentTypesPageProps> = () => {
   const navigate = useNavigate();
   
@@ -456,4 +459,11 @@ const GarmentTypesPage: React.FC<GarmentTypesPageProps> = () => {
   );
 };
 
-export default GarmentTypesPage; 
+export default GarmentTypesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

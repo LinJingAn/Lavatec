@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const TestPage: React.FC = () => {
   console.log('TestPage rendering');
   
@@ -40,4 +43,11 @@ const TestPage: React.FC = () => {
   );
 };
 
-export default TestPage; 
+export default TestPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

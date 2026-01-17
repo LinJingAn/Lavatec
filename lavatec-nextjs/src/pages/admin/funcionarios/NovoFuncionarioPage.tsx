@@ -21,6 +21,9 @@ const newUserSchema = z.object({
 
 type FormData = z.infer<typeof newUserSchema>;
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 const NovoFuncionarioPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
@@ -502,4 +505,11 @@ const NovoFuncionarioPage = () => {
   );
 };
 
-export default NovoFuncionarioPage; 
+export default NovoFuncionarioPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import CustomerNotes from '../../components/customer/CustomerNotes';
 import { MdArrowBack, MdPerson } from 'react-icons/md';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 interface Customer {
   id: number;
   name: string;
@@ -99,4 +102,11 @@ const CustomerNotesPage: React.FC = () => {
   );
 };
 
-export default CustomerNotesPage; 
+export default CustomerNotesPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 

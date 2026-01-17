@@ -3,6 +3,9 @@ import { MdClose, MdOutlineLocalLaundryService, MdRefresh, MdSearch, MdMoreVert,
 import { LaundryIcon } from '../../components/LaundryIcons';
 import { useNavigate } from 'react-router-dom';
 
+// Disable static generation - this page uses React Router
+export const dynamic = 'force-dynamic';
+
 interface OrderItem {
   id: string;
   name: string;
@@ -1014,4 +1017,11 @@ const PDVPage: React.FC = () => {
   );
 };
 
-export default PDVPage; 
+export default PDVPage;
+
+// Force dynamic rendering for Pages Router
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+} 
