@@ -1,10 +1,14 @@
-import { Box, Heading, Text } from '@chakra-ui/react'
+import { Box, Typography } from '@mui/material'
 
 const HomePage = () => {
   return (
     <Box>
-      <Heading>Bem-vindo ao Lavatec</Heading>
-      <Text mt={4}>Sistema de Gerenciamento de Lavanderia</Text>
+      <Typography variant="h4" component="h1">
+        Bem-vindo ao Lavatec
+      </Typography>
+      <Typography variant="body1" sx={{ mt: 2 }}>
+        Sistema de Gerenciamento de Lavanderia
+      </Typography>
     </Box>
   )
 }

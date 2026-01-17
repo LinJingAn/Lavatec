@@ -8,3 +8,7 @@ export { default as UserPreferencesPage } from './UserPreferencesPage'
 export { default as ProductsPage } from './ProductsPage'
 export { default as UserProfilePage } from './UserProfilePage'
 export { default as DashboardOverviewPage } from './DashboardOverviewPage'
+
+// Default export for Next.js page requirement
+import HomePage from './HomePage';
+export default HomePage;

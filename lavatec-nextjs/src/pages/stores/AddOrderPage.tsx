@@ -29,8 +29,8 @@ const AddOrderPage = () => {
       price: 0,
       specialInstructions: '',
       barcode: '',
-      photos: [],
-      defectPhotos: [],
+      photos: [] as string[],
+      defectPhotos: [] as string[],
       priceAdjustment: {
         amount: 0,
         reason: '',
@@ -52,11 +52,11 @@ const AddOrderPage = () => {
   });
 
   // Refs for file inputs
-  const photoInputRefs = useRef([]);
-  const defectPhotoInputRefs = useRef([]);
+  const photoInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const defectPhotoInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Handle input changes
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -65,9 +65,9 @@ const AddOrderPage = () => {
   };
 
   // Handle item changes
-  const handleItemChange = (index, field, value) => {
+  const handleItemChange = (index: number, field: string, value: string) => {
     const newItems = [...formData.items];
-    newItems[index][field] = value;
+    (newItems[index] as any)[field] = value;
     setFormData({
       ...formData,
       items: newItems
@@ -75,10 +75,10 @@ const AddOrderPage = () => {
   };
 
   // Handle nested object changes (for price adjustment)
-  const handleNestedItemChange = (index, nestedObject, field, value) => {
+  const handleNestedItemChange = (index: number, nestedObject: string, field: string, value: string | boolean | number) => {
     const newItems = [...formData.items];
-    newItems[index][nestedObject] = {
-      ...newItems[index][nestedObject],
+    (newItems[index] as any)[nestedObject] = {
+      ...(newItems[index] as any)[nestedObject],
       [field]: value
     };
     setFormData({
@@ -88,17 +88,17 @@ const AddOrderPage = () => {
   };
 
   // Handle file uploads for photos
-  const handlePhotoUpload = (index, type, event) => {
-    const file = event.target.files[0];
+  const handlePhotoUpload = (index: number, type: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (e) => {
       const newItems = [...formData.items];
       if (type === 'photo') {
-        newItems[index].photos = [...(newItems[index].photos || []), e.target.result];
+        newItems[index].photos = [...(newItems[index].photos || []), e.target?.result as string ?? ''];
       } else if (type === 'defect') {
-        newItems[index].defectPhotos = [...(newItems[index].defectPhotos || []), e.target.result];
+        newItems[index].defectPhotos = [...(newItems[index].defectPhotos || []), e.target?.result as string ?? ''];
       }
       setFormData({
         ...formData,
@@ -109,7 +109,7 @@ const AddOrderPage = () => {
   };
 
   // Generate barcode for an item
-  const generateBarcode = (index) => {
+  const generateBarcode = (index: number) => {
     // Simple mock barcode generation - in real app would be more sophisticated
     const barcode = `LDY-${Date.now()}-${index}`;
     const newItems = [...formData.items];
@@ -121,7 +121,7 @@ const AddOrderPage = () => {
   };
 
   // Remove a photo
-  const removePhoto = (itemIndex, photoIndex, type) => {
+  const removePhoto = (itemIndex: number, photoIndex: number, type: string) => {
     const newItems = [...formData.items];
     if (type === 'photo') {
       newItems[itemIndex].photos = newItems[itemIndex].photos.filter((_, idx) => idx !== photoIndex);
@@ -145,8 +145,8 @@ const AddOrderPage = () => {
         price: 0,
         specialInstructions: '',
         barcode: '',
-        photos: [],
-        defectPhotos: [],
+        photos: [] as string[],
+        defectPhotos: [] as string[],
         priceAdjustment: {
           amount: 0,
           reason: '',
@@ -157,7 +157,7 @@ const AddOrderPage = () => {
   };
 
   // Remove item
-  const removeItem = (index) => {
+  const removeItem = (index: number) => {
     const newItems = [...formData.items];
     newItems.splice(index, 1);
     setFormData({
@@ -191,7 +191,7 @@ const AddOrderPage = () => {
   };
 
   // Add tracking change handler
-  const handleTrackingChange = (field, value) => {
+  const handleTrackingChange = (field: string, value: string) => {
     setFormData({
       ...formData,
       tracking: {
@@ -202,7 +202,7 @@ const AddOrderPage = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Generate tracking code if tracking is enabled
@@ -317,7 +317,6 @@ const AddOrderPage = () => {
                     name="paymentMethod"
                     value={formData.paymentMethod}
                     onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded-md"
                   >
                     <option value="card">Cartão</option>
                     <option value="cash">Dinheiro</option>
@@ -364,7 +363,7 @@ const AddOrderPage = () => {
                       <input
                         type="text"
                         value={item.name}
-                        onChange={(e) => handleItemChange(index, 'name', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleItemChange(index, 'name', e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md"
                         placeholder="Ex: Camisa, Calça, etc."
                         required
@@ -376,7 +375,7 @@ const AddOrderPage = () => {
                       </label>
                       <select
                         value={item.category}
-                        onChange={(e) => handleItemChange(index, 'category', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleItemChange(index, 'category', e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md"
                       >
                         <option value="dry-cleaning">Lavagem a Seco</option>
@@ -394,7 +393,7 @@ const AddOrderPage = () => {
                         type="number"
                         min="1"
                         value={item.quantity}
-                        onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value) || 1)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleItemChange(index, 'quantity', String(parseInt(e.target.value) || 1))}
                         className="w-full p-2 border border-gray-300 rounded-md"
                         required
                       />
@@ -408,7 +407,7 @@ const AddOrderPage = () => {
                         min="0"
                         step="0.01"
                         value={item.price}
-                        onChange={(e) => handleItemChange(index, 'price', parseFloat(e.target.value) || 0)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleItemChange(index, 'price', String(parseFloat(e.target.value) || 0))}
                         className="w-full p-2 border border-gray-300 rounded-md"
                         required
                       />
@@ -460,7 +459,7 @@ const AddOrderPage = () => {
                           <MdPhotoCamera size={24} />
                           <input
                             type="file"
-                            ref={el => photoInputRefs.current[index] = el}
+                            ref={el => { photoInputRefs.current[index] = el; }}
                             accept="image/*"
                             className="hidden"
                             onChange={(e) => handlePhotoUpload(index, 'photo', e)}
@@ -497,7 +496,7 @@ const AddOrderPage = () => {
                           <MdPhotoCamera size={24} />
                           <input
                             type="file"
-                            ref={el => defectPhotoInputRefs.current[index] = el}
+                            ref={el => { defectPhotoInputRefs.current[index] = el; }}
                             accept="image/*"
                             className="hidden"
                             onChange={(e) => handlePhotoUpload(index, 'defect', e)}
@@ -550,7 +549,7 @@ const AddOrderPage = () => {
                             index, 
                             'priceAdjustment', 
                             'isDiscount', 
-                            e.target.value === 'true'
+                            e.target.value === 'true' ? 'true' : 'false' as 'true' | 'false'
                           )}
                           className="w-full p-2 border border-gray-300 rounded-md"
                         >
@@ -568,7 +567,7 @@ const AddOrderPage = () => {
                             index, 
                             'priceAdjustment', 
                             'amount', 
-                            parseFloat(e.target.value) || 0
+                            String(parseFloat(e.target.value) || 0)
                           )}
                           className="w-full p-2 border border-gray-300 rounded-md"
                           placeholder="Valor"
@@ -667,7 +666,7 @@ const AddOrderPage = () => {
                     type="checkbox" 
                     id="enableTracking"
                     checked={formData.tracking.enableTracking}
-                    onChange={(e) => handleTrackingChange('enableTracking', e.target.checked)}
+                    onChange={(e) => handleTrackingChange('enableTracking', e.target.checked.toString())}
                     className="mr-2"
                   />
                   <label htmlFor="enableTracking" className="text-sm">
@@ -683,7 +682,7 @@ const AddOrderPage = () => {
                           type="checkbox" 
                           id="sendNotifications"
                           checked={formData.tracking.sendNotifications}
-                          onChange={(e) => handleTrackingChange('sendNotifications', e.target.checked)}
+                          onChange={(e) => handleTrackingChange('sendNotifications', e.target.checked.toString())}
                           className="mr-2"
                         />
                         <label htmlFor="sendNotifications" className="text-sm">
@@ -698,7 +697,7 @@ const AddOrderPage = () => {
                           </label>
                           <select
                             value={formData.tracking.notificationChannel}
-                            onChange={(e) => handleTrackingChange('notificationChannel', e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleTrackingChange('notificationChannel', e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded-md"
                           >
                             <option value="sms">SMS</option>
@@ -716,7 +715,7 @@ const AddOrderPage = () => {
                           type="number"
                           min="1"
                           value={formData.tracking.estimatedHours}
-                          onChange={(e) => handleTrackingChange('estimatedHours', parseInt(e.target.value) || 24)}
+                          onChange={(e) => handleTrackingChange('estimatedHours', String(parseInt(e.target.value) || 24))}
                           className="w-full p-2 border border-gray-300 rounded-md"
                         />
                       </div>

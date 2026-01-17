@@ -1,6 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MdArrowBack, MdEdit, MdDelete, MdPerson, MdPhone, MdEmail, MdLocationOn, MdHistory, MdShoppingBag } from 'react-icons/md';
+import { Customer } from '@/models/Customer';
+
+// Extended customer type for this page with additional properties from mock data
+interface CustomerWithDetails extends Customer {
+  orders?: Array<{
+    id: string;
+    date: string;
+    status: string;
+    total: number;
+  }>;
+  contracts?: Array<{
+    id: string;
+    type: string;
+    startDate: string;
+    endDate: string;
+    value: number;
+    status?: string;
+  }>;
+  notes?: string;
+  lastOrder?: string;
+}
 
 // Mock data - same as in CustomersPage
 const mockCustomers = [
@@ -122,13 +143,13 @@ const mockCustomers = [
 const CustomerDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [customer, setCustomer] = useState(null);
+  const [customer, setCustomer] = useState<CustomerWithDetails | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   
   useEffect(() => {
     if (id) {
-      const foundCustomer = mockCustomers.find(c => c.id === id);
-      setCustomer(foundCustomer);
+      const foundCustomer = mockCustomers.find(c => c.id === id) as CustomerWithDetails | undefined;
+      setCustomer(foundCustomer ?? null);
     }
   }, [id]);
   
@@ -170,7 +191,7 @@ const CustomerDetailsPage = () => {
             <MdArrowBack className="mr-1" /> Voltar para lista de clientes
           </button>
           <h1 className="text-2xl font-semibold text-gray-800">{customer.name}</h1>
-          <p className="text-gray-500">{customer.code}</p>
+          <p className="text-gray-500">{customer.id}</p>
         </div>
         
         <div className="flex space-x-3 mt-4 md:mt-0">
@@ -192,13 +213,15 @@ const CustomerDetailsPage = () => {
       {/* Customer status badge */}
       <div className="mb-6">
         <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-          customer.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          customer.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
         }`}>
-          {customer.status === 'active' ? 'Ativo' : 'Inativo'}
+          {customer.isActive ? 'Ativo' : 'Inativo'}
         </span>
         <span className={`ml-2 px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-          customer.category === 'Premium' ? 'bg-purple-100 text-purple-800' : 
-          customer.category === 'Standard' ? 'bg-blue-100 text-blue-800' : 
+          customer.category === 'regular' ? 'bg-purple-100 text-purple-800' : 
+          customer.category === 'heavy' ? 'bg-blue-100 text-blue-800' : 
+          customer.category === 'occasional' ? 'bg-green-100 text-green-800' : 
+          customer.category === 'rare' ? 'bg-yellow-100 text-yellow-800' : 
           'bg-green-100 text-green-800'
         }`}>
           {customer.category}
@@ -253,7 +276,7 @@ const CustomerDetailsPage = () => {
                 <MdPerson className="text-gray-400 mt-1 mr-3" size={20} />
                 <div>
                   <p className="text-sm text-gray-500">Contato</p>
-                  <p className="text-gray-800">{customer.contact}</p>
+                  <p className="text-gray-800">{customer.name}</p>
                 </div>
               </div>
               
@@ -285,7 +308,7 @@ const CustomerDetailsPage = () => {
                 <MdHistory className="text-gray-400 mt-1 mr-3" size={20} />
                 <div>
                   <p className="text-sm text-gray-500">Último Pedido</p>
-                  <p className="text-gray-800">{new Date(customer.lastOrder).toLocaleDateString('pt-BR')}</p>
+                  <p className="text-gray-800">{new Date(customer.lastVisit ?? '').toLocaleDateString('pt-BR')}</p>
                 </div>
               </div>
               
@@ -317,19 +340,19 @@ const CustomerDetailsPage = () => {
               <div>
                 <p className="text-sm text-gray-500">Contratos Ativos</p>
                 <p className="text-2xl font-bold text-gray-800">
-                  {customer.contracts.filter(c => !c.status || c.status !== 'expired').length}
+                  {customer.contracts?.filter(c => !c.status || c.status !== 'expired').length || 0}
                 </p>
               </div>
               
               <div>
                 <p className="text-sm text-gray-500">Último Pedido</p>
-                <p className="text-gray-800">{new Date(customer.lastOrder).toLocaleDateString('pt-BR')}</p>
+                <p className="text-gray-800">{customer.lastOrder ? new Date(customer.lastOrder).toLocaleDateString('pt-BR') : '-'}</p>
               </div>
               
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-sm text-gray-500">Status</p>
-                <p className={`font-semibold ${customer.status === 'active' ? 'text-green-600' : 'text-red-600'}`}>
-                  {customer.status === 'active' ? 'Ativo' : 'Inativo'}
+                <p className={`font-semibold ${customer.isActive ? 'text-green-600' : 'text-red-600'}`}>
+                  {customer.isActive ? 'Ativo' : 'Inativo'}
                 </p>
               </div>
             </div>
@@ -371,7 +394,7 @@ const CustomerDetailsPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {customer.orders.map((order) => (
+                {customer.orders?.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {order.id}
@@ -402,7 +425,7 @@ const CustomerDetailsPage = () => {
                     </td>
                   </tr>
                 ))}
-                {customer.orders.length === 0 && (
+                {(!customer.orders || customer.orders.length === 0) && (
                   <tr>
                     <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
                       Nenhum pedido encontrado.
@@ -455,7 +478,7 @@ const CustomerDetailsPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {customer.contracts.map((contract) => (
+                {customer.contracts?.map((contract) => (
                   <tr key={contract.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {contract.id}
@@ -492,7 +515,7 @@ const CustomerDetailsPage = () => {
                     </td>
                   </tr>
                 ))}
-                {customer.contracts.length === 0 && (
+                {(!customer.contracts || customer.contracts.length === 0) && (
                   <tr>
                     <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500">
                       Nenhum contrato encontrado.

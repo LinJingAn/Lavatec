@@ -15,7 +15,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -231,23 +231,33 @@ const ContasReceberPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
               <Select
                 value={filters.status}
-                onChange={(e) => handleFilterChange('status', e.target.value)}
+                onValueChange={(value) => handleFilterChange('status', value)}
               >
-                <option value="all">Todos</option>
-                <option value="pending">Pendente</option>
-                <option value="overdue">Em Atraso</option>
-                <option value="paid">Pago</option>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="pending">Pendente</SelectItem>
+                  <SelectItem value="overdue">Em Atraso</SelectItem>
+                  <SelectItem value="paid">Pago</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Envelhecimento</label>
               <Select
                 value={filters.aging}
-                onChange={(e) => handleFilterChange('aging', e.target.value)}
+                onValueChange={(value) => handleFilterChange('aging', value)}
               >
-                <option value="all">Todos</option>
-                <option value="overdue">Em Atraso</option>
-                <option value="upcoming">A Vencer</option>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um período" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="overdue">Em Atraso</SelectItem>
+                  <SelectItem value="upcoming">A Vencer</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <div className="flex-1">

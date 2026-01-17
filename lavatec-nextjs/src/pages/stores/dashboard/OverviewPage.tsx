@@ -1,6 +1,6 @@
 import React from 'react';
 import { DashboardMetrics } from '@/components/dashboard/DashboardMetrics';
-import { DashboardWidgets } from '@/components/dashboard/DashboardWidgets';
+import { DashboardWidgets, Widget } from '@/components/dashboard/DashboardWidgets';
 
 const OverviewPage: React.FC = () => {
   // Example data - in a real app, this would come from an API
@@ -50,7 +50,7 @@ const OverviewPage: React.FC = () => {
     }
   ];
 
-  const handleWidgetsChange = (newWidgets: any[]) => {
+  const handleWidgetsChange = (newWidgets: Widget[]) => {
     // In a real app, this would save the widget layout to the backend
     console.log('Widgets alterados:', newWidgets);
   };
@@ -62,7 +62,7 @@ const OverviewPage: React.FC = () => {
       <DashboardMetrics data={metricsData} />
       
       <DashboardWidgets 
-        widgets={widgets} 
+        widgets={widgets as Widget[]} 
         onWidgetsChange={handleWidgetsChange} 
       />
     </div>

@@ -512,19 +512,23 @@ export const calculatePrice = (input: PriceCalculatorInput): PriceCalculatorResu
       // Check if rule applies
       switch (rule.conditionType) {
         case 'quantity':
-          shouldApply = quantity >= rule.condition.minQuantity;
+          shouldApply = rule.condition.minQuantity !== undefined && quantity >= rule.condition.minQuantity;
           break;
         case 'customer_type':
-          shouldApply = garment.materialType === rule.condition.customerType;
+          shouldApply = rule.condition.customerType !== undefined && garment.materialType === rule.condition.customerType;
           break;
         case 'season':
-          const currentDate = new Date();
-          const seasonStart = new Date(rule.condition.seasonStart);
-          const seasonEnd = new Date(rule.condition.seasonEnd);
-          shouldApply = currentDate >= seasonStart && currentDate <= seasonEnd;
+          if (rule.condition.seasonStart && rule.condition.seasonEnd) {
+            const currentDate = new Date();
+            const seasonStart = new Date(rule.condition.seasonStart);
+            const seasonEnd = new Date(rule.condition.seasonEnd);
+            shouldApply = currentDate >= seasonStart && currentDate <= seasonEnd;
+          } else {
+            shouldApply = false;
+          }
           break;
         case 'promotion':
-          shouldApply = rule.condition.promotionCode === 'vip';
+          shouldApply = rule.condition.promotionCode !== undefined && rule.condition.promotionCode === 'vip';
           break;
         default:
           shouldApply = false;

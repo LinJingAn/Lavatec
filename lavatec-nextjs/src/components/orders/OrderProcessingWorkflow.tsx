@@ -52,7 +52,17 @@ const SAMPLE_BATCHES = [
 ];
 
 // Status display helper
-const StatusStep = ({ 
+interface StatusStepProps {
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ size?: number }>;
+  isActive: boolean;
+  isCompleted: boolean;
+  onClick?: () => void;
+  isClickable?: boolean;
+}
+
+const StatusStep: React.FC<StatusStepProps> = ({ 
   title, 
   description, 
   icon: Icon, 

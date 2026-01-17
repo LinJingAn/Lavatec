@@ -6,7 +6,7 @@ export interface PickupNotification {
   customerName: string;
   customerPhone: string;
   estimatedPickupTime: string;
-  status: 'pending' | 'ready' | 'delayed' | 'completed';
+  status: 'pending' | 'ready' | 'partial' | 'delayed' | 'completed';
   type: 'arrival' | 'ready' | 'delay' | 'reminder';
 }
 
@@ -15,7 +15,7 @@ export class PickupNotificationService {
   private notificationService: NotificationService;
 
   private constructor() {
-    this.notificationService = new NotificationService();
+    this.notificationService = NotificationService.getInstance();
   }
 
   public static getInstance(): PickupNotificationService {
@@ -27,61 +27,61 @@ export class PickupNotificationService {
 
   public async sendPickupReadyNotification(notification: PickupNotification): Promise<void> {
     const message = `Your order #${notification.orderNumber} is ready for pickup. Please proceed to our pickup counter with your ID.`;
-    await this.notificationService.sendSMS(notification.customerPhone, message);
-    await this.notificationService.sendPushNotification({
-      userId: notification.orderId,
+    await this.notificationService.sendBulkNotifications([{
+      type: 'info',
       title: 'Order Ready for Pickup',
-      body: message,
-      data: {
-        type: 'pickup_ready',
+      message,
+      recipient_id: notification.orderId,
+      metadata: {
         orderId: notification.orderId,
-        orderNumber: notification.orderNumber
+        orderNumber: notification.orderNumber,
+        customerPhone: notification.customerPhone
       }
-    });
+    }]);
   }
 
   public async sendCustomerArrivalNotification(notification: PickupNotification): Promise<void> {
     const message = `Customer ${notification.customerName} has arrived for pickup of order #${notification.orderNumber}`;
-    await this.notificationService.sendStaffNotification({
+    await this.notificationService.sendBulkNotifications([{
+      type: 'info',
       title: 'Customer Arrival',
       message,
-      priority: 'high',
-      type: 'pickup_arrival',
-      data: {
+      recipient_id: notification.orderId,
+      metadata: {
         orderId: notification.orderId,
-        orderNumber: notification.orderNumber
+        orderNumber: notification.orderNumber,
+        customerName: notification.customerName
       }
-    });
+    }]);
   }
 
   public async sendPickupDelayNotification(notification: PickupNotification, delayMinutes: number): Promise<void> {
     const message = `We apologize, but your order #${notification.orderNumber} needs ${delayMinutes} more minutes. We'll notify you as soon as it's ready.`;
-    await this.notificationService.sendSMS(notification.customerPhone, message);
-    await this.notificationService.sendPushNotification({
-      userId: notification.orderId,
+    await this.notificationService.sendBulkNotifications([{
+      type: 'warning',
       title: 'Pickup Delay',
-      body: message,
-      data: {
-        type: 'pickup_delay',
+      message,
+      recipient_id: notification.orderId,
+      metadata: {
         orderId: notification.orderId,
-        orderNumber: notification.orderNumber
+        orderNumber: notification.orderNumber,
+        delayMinutes
       }
-    });
+    }]);
   }
 
   public async sendPickupReminderNotification(notification: PickupNotification): Promise<void> {
     const message = `Reminder: Your order #${notification.orderNumber} is waiting for pickup. We'll hold it for 48 hours.`;
-    await this.notificationService.sendSMS(notification.customerPhone, message);
-    await this.notificationService.sendPushNotification({
-      userId: notification.orderId,
+    await this.notificationService.sendBulkNotifications([{
+      type: 'info',
       title: 'Pickup Reminder',
-      body: message,
-      data: {
-        type: 'pickup_reminder',
+      message,
+      recipient_id: notification.orderId,
+      metadata: {
         orderId: notification.orderId,
         orderNumber: notification.orderNumber
       }
-    });
+    }]);
   }
 
   public async markNotificationAsRead(notificationId: string): Promise<void> {

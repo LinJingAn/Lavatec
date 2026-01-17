@@ -103,7 +103,7 @@ const BeneficiosPage = () => {
   const [benefits, setBenefits] = useState(MOCK_BENEFITS);
   const [activeTab, setActiveTab] = useState('list'); // 'list', 'enrollment', 'stats'
   const [showAddBenefitModal, setShowAddBenefitModal] = useState(false);
-  const [selectedBenefit, setSelectedBenefit] = useState(null);
+  const [selectedBenefit, setSelectedBenefit] = useState<typeof MOCK_BENEFITS[0] | null>(null);
   const [employeeBenefits] = useState(MOCK_EMPLOYEE_BENEFITS);
   
   const handleBackToMain = () => {
@@ -115,12 +115,12 @@ const BeneficiosPage = () => {
     setShowAddBenefitModal(true);
   };
   
-  const handleEditBenefit = (benefit) => {
+  const handleEditBenefit = (benefit: typeof MOCK_BENEFITS[0]) => {
     setSelectedBenefit(benefit);
     setShowAddBenefitModal(true);
   };
   
-  const handleDeleteBenefit = (id) => {
+  const handleDeleteBenefit = (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir este benefício?')) {
       const updatedBenefits = benefits.filter(benefit => benefit.id !== id);
       setBenefits(updatedBenefits);
@@ -145,7 +145,7 @@ const BeneficiosPage = () => {
   }).sort((a, b) => b.enrollmentCount - a.enrollmentCount);
   
   // Calculate benefit category distribution
-  const categoryDistribution = {};
+  const categoryDistribution: Record<string, { count: number; totalCost: number }> = {};
   benefits.forEach(benefit => {
     if (!categoryDistribution[benefit.category]) {
       categoryDistribution[benefit.category] = {
@@ -158,7 +158,7 @@ const BeneficiosPage = () => {
   });
   
   // Get category icon
-  const getCategoryIcon = (category) => {
+  const getCategoryIcon = (category: string) => {
     switch(category) {
       case 'Saúde':
         return <MdLocalHospital className="text-red-500" size={24} />;

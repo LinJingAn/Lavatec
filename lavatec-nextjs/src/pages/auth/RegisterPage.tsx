@@ -35,6 +35,9 @@ const registerSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
+// Disable static generation - this page uses React Router and Auth context
+export const dynamic = 'force-dynamic';
+
 const RegisterPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

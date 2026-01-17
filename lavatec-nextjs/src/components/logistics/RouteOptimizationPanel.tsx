@@ -9,8 +9,8 @@ import {
   CardContent,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
-  ListItemSecondary,
   Chip,
   IconButton,
   Dialog,
@@ -158,10 +158,10 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs>
+          <Grid size="grow">
             <Typography variant="h6">Route Planning & Optimization</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Button
               variant="contained"
               startIcon={<MdTimeline />}
@@ -175,32 +175,36 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
       </Box>
 
       <Grid container spacing={2} sx={{ flexGrow: 1, p: 2 }}>
-        <Grid item xs={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Paper sx={{ height: '100%', overflow: 'auto' }}>
             <List>
               {routes.map((route) => (
                 <ListItem
                   key={route.id}
-                  button
-                  selected={selectedRoute?.id === route.id}
-                  onClick={() => handleRouteSelect(route)}
+                  secondaryAction={
+                    <Chip
+                      label={route.status}
+                      size="small"
+                      color={route.status === 'completed' ? 'success' : 'primary'}
+                    />
+                  }
                 >
-                  <ListItemText
-                    primary={`Route #${route.id}`}
-                    secondary={`${route.stops.length} stops • ${route.totalDistance.toFixed(1)} km`}
-                  />
-                  <Chip
-                    label={route.status}
-                    size="small"
-                    color={route.status === 'completed' ? 'success' : 'primary'}
-                  />
+                  <ListItemButton
+                    selected={selectedRoute?.id === route.id}
+                    onClick={() => handleRouteSelect(route)}
+                  >
+                    <ListItemText
+                      primary={`Route #${route.id}`}
+                      secondary={`${route.stops.length} stops • ${route.totalDistance.toFixed(1)} km`}
+                    />
+                  </ListItemButton>
                 </ListItem>
               ))}
             </List>
           </Paper>
         </Grid>
 
-        <Grid item xs={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Paper sx={{ height: '100%' }}>
             <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''}>
               <GoogleMap
@@ -228,7 +232,7 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
             Route Details
           </Typography>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Assign Driver</InputLabel>
                 <Select
@@ -243,7 +247,7 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Time Window</InputLabel>
                 <Select

@@ -101,7 +101,7 @@ export const OrderStaging: React.FC<OrderStagingProps> = ({
       {/* Location Overview */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {stagingLocations.map(location => (
-          <Grid item xs={12} sm={6} md={4} key={location.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={location.id}>
             <Paper sx={{ p: 2 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                 <Typography variant="subtitle1">{location.name}</Typography>
@@ -128,7 +128,7 @@ export const OrderStaging: React.FC<OrderStagingProps> = ({
       </Typography>
       <Grid container spacing={2}>
         {stagedOrders.map(order => (
-          <Grid item xs={12} sm={6} md={4} key={order.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={order.id}>
             <Paper sx={{ p: 2 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="subtitle1">#{order.orderNumber}</Typography>

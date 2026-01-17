@@ -16,8 +16,9 @@ import {
   Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Promotion, DiscountType, PromotionTrigger, PromotionStatus } from '../../models/Promotion';
+import { DiscountType, PromotionTrigger, PromotionStatus } from '../../models/Promotion';
 import { PromotionService } from '../../services/PromotionService';
+import type { Promotion } from '../../services/promotionApiService';
 
 interface PromotionFormProps {
   open: boolean;
@@ -32,7 +33,22 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
   onClose,
   onSubmit,
 }) => {
-  const [formData, setFormData] = useState<Partial<Promotion>>({
+  // Internal form data structure (using camelCase for form fields)
+  const [formData, setFormData] = useState<{
+    name?: string;
+    description?: string;
+    discountType?: string;
+    discountValue?: number;
+    trigger?: string;
+    startDate?: Date;
+    endDate?: Date;
+    status?: string;
+    applicableCustomerTypes?: string[];
+    stackable?: boolean;
+    coupon_code?: string;
+    max_usage_count?: number;
+    max_usage_per_customer?: number;
+  }>({
     name: '',
     description: '',
     discountType: 'percentage',
@@ -42,6 +58,9 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
     status: 'scheduled',
     applicableCustomerTypes: [],
     stackable: false,
+    coupon_code: '',
+    max_usage_count: 0,
+    max_usage_per_customer: 0,
   });
 
   const [generateCoupon, setGenerateCoupon] = useState(false);
@@ -49,10 +68,21 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
 
   useEffect(() => {
     if (promotion) {
+      // Convert API promotion (snake_case) to form data (camelCase)
       setFormData({
-        ...promotion,
-        startDate: new Date(promotion.startDate),
-        endDate: promotion.endDate ? new Date(promotion.endDate) : undefined,
+        name: promotion.name,
+        description: promotion.description || '',
+        discountType: promotion.discount_type,
+        discountValue: promotion.discount_value,
+        trigger: promotion.trigger,
+        startDate: new Date(promotion.start_date),
+        endDate: promotion.end_date ? new Date(promotion.end_date) : undefined,
+        status: promotion.status,
+        applicableCustomerTypes: promotion.applicable_customer_types || [],
+        stackable: promotion.stackable,
+        coupon_code: promotion.coupon_code || '',
+        max_usage_count: promotion.max_usage_count || 0,
+        max_usage_per_customer: promotion.max_usage_per_customer || 0,
       });
     } else {
       resetForm();
@@ -70,11 +100,14 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
       status: 'scheduled',
       applicableCustomerTypes: [],
       stackable: false,
+      coupon_code: '',
+      max_usage_count: 0,
+      max_usage_per_customer: 0,
     });
     setGenerateCoupon(false);
   };
 
-  const handleInputChange = (field: keyof Promotion, value: any) => {
+  const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -85,15 +118,28 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
     setGenerateCoupon(event.target.checked);
     if (event.target.checked) {
       const code = await promotionService.generateCouponCode();
-      handleInputChange('couponCode', code);
+      handleInputChange('coupon_code', code);
     } else {
-      handleInputChange('couponCode', undefined);
+      handleInputChange('coupon_code', undefined);
     }
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(formData);
+    // Convert form data (camelCase) to API format (snake_case)
+    const apiData: Partial<Promotion> = {
+      name: formData.name,
+      description: formData.description,
+      discount_type: formData.discountType as 'percentage' | 'fixed',
+      discount_value: formData.discountValue,
+      trigger: formData.trigger,
+      start_date: formData.startDate?.toISOString().split('T')[0],
+      end_date: formData.endDate?.toISOString().split('T')[0],
+      status: formData.status as 'active' | 'inactive' | 'expired',
+      applicable_customer_types: formData.applicableCustomerTypes,
+      stackable: formData.stackable,
+    };
+    onSubmit(apiData);
   };
 
   return (
@@ -104,7 +150,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Promotion Name"
@@ -114,7 +160,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Description"
@@ -125,7 +171,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Discount Type</InputLabel>
                 <Select
@@ -140,7 +186,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
               </FormControl>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 fullWidth
                 type="number"
@@ -155,7 +201,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Trigger Type</InputLabel>
                 <Select
@@ -173,7 +219,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
               </FormControl>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               {formData.trigger === 'coupon_code' && (
                 <FormControl fullWidth>
                   <FormControlLabel
@@ -187,7 +233,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
                   />
                   {generateCoupon ? (
                     <TextField
-                      value={formData.couponCode}
+                      value={formData.coupon_code}
                       disabled
                       fullWidth
                       sx={{ mt: 2 }}
@@ -195,8 +241,8 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
                   ) : (
                     <TextField
                       label="Coupon Code"
-                      value={formData.couponCode}
-                      onChange={(e) => handleInputChange('couponCode', e.target.value)}
+                      value={formData.coupon_code}
+                      onChange={(e) => handleInputChange('coupon_code', e.target.value)}
                       fullWidth
                       sx={{ mt: 2 }}
                     />
@@ -205,7 +251,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
               )}
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <DatePicker
                 label="Start Date"
                 value={formData.startDate}
@@ -214,7 +260,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <DatePicker
                 label="End Date (Optional)"
                 value={formData.endDate}
@@ -223,27 +269,27 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 fullWidth
                 type="number"
                 label="Maximum Usage Count"
-                value={formData.maxUsageCount}
-                onChange={(e) => handleInputChange('maxUsageCount', parseInt(e.target.value))}
+                value={formData.max_usage_count}
+                onChange={(e) => handleInputChange('max_usage_count', parseInt(e.target.value))}
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 fullWidth
                 type="number"
                 label="Maximum Usage Per Customer"
-                value={formData.maxUsagePerCustomer}
-                onChange={(e) => handleInputChange('maxUsagePerCustomer', parseInt(e.target.value))}
+                value={formData.max_usage_per_customer}
+                onChange={(e) => handleInputChange('max_usage_per_customer', parseInt(e.target.value))}
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <FormControlLabel
                 control={
                   <Switch

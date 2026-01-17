@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MdChevronLeft, MdWarning, MdCheckCircle } from 'react-icons/md';
 import { PerformanceTrends } from '@/components/dashboard/PerformanceTrends';
-import { DashboardWidgets } from '@/components/dashboard/DashboardWidgets';
+import { DashboardWidgets, Widget } from '@/components/dashboard/DashboardWidgets';
 
 const performanceData = [
   { 
@@ -109,7 +109,7 @@ const PerformancePage: React.FC = () => {
       <PerformanceTrends data={performanceDataExample} />
       
       <DashboardWidgets 
-        widgets={widgets} 
+        widgets={widgets as Widget[]} 
         onWidgetsChange={handleWidgetsChange} 
       />
     </div>

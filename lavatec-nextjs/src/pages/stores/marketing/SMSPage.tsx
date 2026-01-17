@@ -87,27 +87,27 @@ const SMSPage = () => {
             <div className="grid grid-cols-2 gap-2">
               <button 
                 className="text-sm bg-gray-100 p-1 rounded hover:bg-gray-200"
-                onClick={() => setMessage(message + " {{customer_name}}")}
+                onClick={() => setMessage(message + " {customer_name}")}
               >
-                {{customer_name}}
+                {'{customer_name}'}
               </button>
               <button 
                 className="text-sm bg-gray-100 p-1 rounded hover:bg-gray-200"
-                onClick={() => setMessage(message + " {{order_number}}")}
+                onClick={() => setMessage(message + " {order_number}")}
               >
-                {{order_number}}
+                {'{order_number}'}
               </button>
               <button 
                 className="text-sm bg-gray-100 p-1 rounded hover:bg-gray-200"
-                onClick={() => setMessage(message + " {{discount_code}}")}
+                onClick={() => setMessage(message + " {discount_code}")}
               >
-                {{discount_code}}
+                {'{discount_code}'}
               </button>
               <button 
                 className="text-sm bg-gray-100 p-1 rounded hover:bg-gray-200"
-                onClick={() => setMessage(message + " {{store_name}}")}
+                onClick={() => setMessage(message + " {store_name}")}
               >
-                {{store_name}}
+                {'{store_name}'}
               </button>
             </div>
           </div>

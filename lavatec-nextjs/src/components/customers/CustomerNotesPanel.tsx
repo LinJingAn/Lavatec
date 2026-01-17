@@ -9,7 +9,6 @@ import {
   MdFeedback, 
   MdOutlineThumbUp,
   MdPushPin,
-  MdPushPinOutlined,
   MdPublic,
   MdPublicOff,
   MdInfo,
@@ -435,7 +434,7 @@ const CustomerNotesPanel: React.FC<CustomerNotesPanelProps> = ({
                       className={`p-1 rounded-full ${note.isPinned ? 'text-yellow-600 hover:bg-yellow-100' : 'text-gray-400 hover:bg-gray-100'}`}
                       title={note.isPinned ? 'Desafixar' : 'Fixar no topo'}
                     >
-                      {note.isPinned ? <MdPushPin /> : <MdPushPinOutlined />}
+                      <MdPushPin className={note.isPinned ? '' : 'opacity-40'} />
                     </button>
                     
                     <button 

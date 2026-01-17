@@ -264,7 +264,7 @@ const InventoryReportPage = () => {
                 // Calculate days since last restock
                 const lastRestockDate = new Date(item.lastRestock);
                 const today = new Date();
-                const diffTime = Math.abs(today - lastRestockDate);
+                const diffTime = Math.abs(today.getTime() - lastRestockDate.getTime()) as number;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 
                 return (

@@ -85,21 +85,18 @@ const FinancialReportsPage: React.FC = () => {
             <Input
               type="date"
               value={dateRange.start}
-              onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-              className="w-40"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDateRange({ ...dateRange, start: e.target.value })}
             />
             <span>até</span>
             <Input
               type="date"
               value={dateRange.end}
-              onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-              className="w-40"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDateRange({ ...dateRange, end: e.target.value })}
             />
           </div>
           <Select
             value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-            className="w-40"
+            onValueChange={(value: string) => setSelectedBranch(value)}
           >
             <option value="all">Todas as Filiais</option>
             <option value="downtown">Centro</option>
@@ -210,8 +207,7 @@ const FinancialReportsPage: React.FC = () => {
           <div className="flex space-x-2">
             <Select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-40"
+              onValueChange={(value: string) => setSortBy(value)}
             >
               <option value="amount">Valor</option>
               <option value="daysOverdue">Dias em Atraso</option>

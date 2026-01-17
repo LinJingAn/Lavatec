@@ -354,7 +354,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({ category, onClose
   const isEditing = !!category;
   
   const [formData, setFormData] = useState<Omit<GarmentCategory, 'createdAt' | 'updatedAt'>>({
-    id: category?.id || '',
+    id: category?.id || ('') as GarmentCategoryId,
     name: category?.name || '',
     description: category?.description || '',
     defaultCareLevel: category?.defaultCareLevel || 'standard',

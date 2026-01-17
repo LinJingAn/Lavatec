@@ -129,10 +129,6 @@ import RegularCustomersPage from './pages/stores/customers/RegularCustomersPage'
 import HeavyCustomersPage from './pages/stores/customers/HeavyCustomersPage'
 import PDVHistoryPage from './pages/stores/pdv/PDVHistoryPage'
 
-import AdminPage from './pages/AdminPage'
-import MainDashboard from './pages/MainDashboard'
-import StoreDashboard from './pages/StoreDashboard'
-
 function App() {
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>

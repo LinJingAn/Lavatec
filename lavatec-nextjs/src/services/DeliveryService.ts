@@ -161,6 +161,138 @@ export class DeliveryService {
     }
   }
 
+  async getPickupOrders(): Promise<any[]> {
+    try {
+      // TODO: Implement pickup orders endpoint in backend
+      // For now, return empty array
+      const response = await api.get('/deliveries/pickup');
+      return response.data.orders || [];
+    } catch (error) {
+      console.error('Error getting pickup orders:', error);
+      // Return empty array on error to prevent UI crashes
+      return [];
+    }
+  }
+
+  async searchPickupOrders(query: string): Promise<any[]> {
+    try {
+      // TODO: Implement pickup orders search endpoint in backend
+      const response = await api.get(`/deliveries/pickup/search?q=${encodeURIComponent(query)}`);
+      return response.data.orders || [];
+    } catch (error) {
+      console.error('Error searching pickup orders:', error);
+      return [];
+    }
+  }
+
+  async confirmPickup(data: {
+    orderId: string;
+    items: string[];
+    signature: string;
+    idPhoto: string | null;
+    isPartialPickup: boolean;
+    verificationDetails: {
+      verifiedAt: string;
+      verifiedBy: string;
+      idVerified: boolean;
+      photoVerified: boolean;
+    };
+  }): Promise<void> {
+    try {
+      await api.post(`/deliveries/pickup/${data.orderId}/confirm`, {
+        items: data.items,
+        signature: data.signature,
+        idPhoto: data.idPhoto,
+        isPartialPickup: data.isPartialPickup,
+        verificationDetails: data.verificationDetails,
+      });
+    } catch (error) {
+      console.error('Error confirming pickup:', error);
+      throw error;
+    }
+  }
+
+  async updateOrderLocation(orderId: string, locationId: string): Promise<void> {
+    try {
+      await api.put(`/deliveries/pickup/${orderId}/location`, {
+        locationId,
+      });
+    } catch (error) {
+      console.error('Error updating order location:', error);
+      throw error;
+    }
+  }
+
+  async getActiveRoutes(): Promise<DeliveryRoute[]> {
+    try {
+      const response = await api.get('/deliveries/routes/active');
+      return response.data.routes || [];
+    } catch (error) {
+      console.error('Error getting active routes:', error);
+      return [];
+    }
+  }
+
+  async optimizeRoutes(
+    deliveries: Delivery[],
+    drivers: DeliveryDriver[]
+  ): Promise<DeliveryRoute[]> {
+    try {
+      const response = await api.post('/deliveries/routes/optimize', {
+        deliveries,
+        drivers,
+      });
+      return response.data.routes || [];
+    } catch (error) {
+      console.error('Error optimizing routes:', error);
+      throw error;
+    }
+  }
+
+  async assignDriverToRoute(routeId: string, driverId: string): Promise<void> {
+    try {
+      await api.put(`/deliveries/routes/${routeId}/assign`, {
+        driverId,
+      });
+    } catch (error) {
+      console.error('Error assigning driver to route:', error);
+      throw error;
+    }
+  }
+
+  async deleteRoute(routeId: string): Promise<void> {
+    try {
+      await api.delete(`/deliveries/routes/${routeId}`);
+    } catch (error) {
+      console.error('Error deleting route:', error);
+      throw error;
+    }
+  }
+
+  async updateRoute(route: DeliveryRoute): Promise<DeliveryRoute> {
+    try {
+      const response = await api.put(`/deliveries/routes/${route.id}`, route);
+      return response.data.route;
+    } catch (error) {
+      console.error('Error updating route:', error);
+      throw error;
+    }
+  }
+
+  async createRoute(route: Omit<DeliveryRoute, 'id' | 'createdAt' | 'updatedAt'>): Promise<DeliveryRoute> {
+    try {
+      const response = await api.post('/deliveries/routes', {
+        ...route,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      return response.data.route;
+    } catch (error) {
+      console.error('Error creating route:', error);
+      throw error;
+    }
+  }
+
   private async generateTrackingNumber(): Promise<string> {
     const prefix = 'DEL';
     const timestamp = Date.now().toString(36).toUpperCase();

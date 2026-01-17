@@ -6,9 +6,9 @@ import {
   PriceCalculatorInput,
   PriceCalculatorResult,
   calculatePrice,
-  generateMockGarmentTypes,
-  generateMockPriceMatrix,
-  generateMockPricingRules
+  mockGarmentTypes,
+  mockPriceMatrix,
+  mockPricingRules
 } from '../models/PricingTable';
 
 // Service to handle pricing operations
@@ -45,7 +45,7 @@ class PricingService {
     const now = Date.now();
     if (now - this.lastFetchTime.garmentTypes > this.cacheTTL || this.cache.garmentTypes.length === 0) {
       // In a real app, this would be an API call
-      this.cache.garmentTypes = generateMockGarmentTypes();
+      this.cache.garmentTypes = mockGarmentTypes;
       this.lastFetchTime.garmentTypes = now;
     }
     return this.cache.garmentTypes;
@@ -56,7 +56,7 @@ class PricingService {
     const now = Date.now();
     if (now - this.lastFetchTime.priceMatrix > this.cacheTTL || this.cache.priceMatrix.length === 0) {
       // In a real app, this would be an API call
-      this.cache.priceMatrix = generateMockPriceMatrix();
+      this.cache.priceMatrix = mockPriceMatrix;
       this.lastFetchTime.priceMatrix = now;
     }
     return this.cache.priceMatrix;
@@ -67,7 +67,7 @@ class PricingService {
     const now = Date.now();
     if (now - this.lastFetchTime.pricingRules > this.cacheTTL || this.cache.pricingRules.length === 0) {
       // In a real app, this would be an API call
-      this.cache.pricingRules = generateMockPricingRules();
+      this.cache.pricingRules = mockPricingRules;
       this.lastFetchTime.pricingRules = now;
     }
     return this.cache.pricingRules;
@@ -115,7 +115,7 @@ class PricingService {
       throw new Error('Price not found for the given service and garment combination');
     }
 
-    return matrixEntry.price;
+    return matrixEntry.basePrice;
   }
 
   // Update price for a service-garment combination
@@ -133,8 +133,8 @@ class PricingService {
     // Update the price and lastUpdated date
     this.cache.priceMatrix[index] = {
       ...this.cache.priceMatrix[index],
-      price: newPrice,
-      lastUpdated: new Date().toISOString().split('T')[0]
+      basePrice: newPrice,
+      updatedAt: new Date().toISOString()
     };
 
     return true;

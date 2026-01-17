@@ -21,8 +21,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { Promotion, PromotionAnalytics as PromotionAnalyticsType } from '../../models/Promotion';
+import { PromotionAnalytics as PromotionAnalyticsType } from '../../models/Promotion';
 import { PromotionService } from '../../services/PromotionService';
+import type { Promotion } from '../../services/promotionApiService';
 
 interface PromotionAnalyticsProps {
   promotions: Promotion[];
@@ -110,7 +111,7 @@ export const PromotionAnalytics: React.FC<PromotionAnalyticsProps> = ({ promotio
   return (
     <Box sx={{ p: 3 }}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth>
             <InputLabel>Select Promotion</InputLabel>
             <Select
@@ -127,7 +128,7 @@ export const PromotionAnalytics: React.FC<PromotionAnalyticsProps> = ({ promotio
           </FormControl>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth>
             <InputLabel>Timeframe</InputLabel>
             <Select value={timeframe} onChange={handleTimeframeChange} label="Timeframe">
@@ -140,7 +141,7 @@ export const PromotionAnalytics: React.FC<PromotionAnalyticsProps> = ({ promotio
 
         {analytics && (
           <>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -151,7 +152,7 @@ export const PromotionAnalytics: React.FC<PromotionAnalyticsProps> = ({ promotio
               </Card>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -164,7 +165,7 @@ export const PromotionAnalytics: React.FC<PromotionAnalyticsProps> = ({ promotio
               </Card>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -177,7 +178,7 @@ export const PromotionAnalytics: React.FC<PromotionAnalyticsProps> = ({ promotio
               </Card>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>

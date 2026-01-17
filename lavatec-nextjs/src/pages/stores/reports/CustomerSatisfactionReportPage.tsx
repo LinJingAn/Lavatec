@@ -116,7 +116,7 @@ const CustomerSatisfactionReportPage = () => {
     : satisfactionData.recentFeedback.filter(item => item.service === serviceFilter);
 
   // Function to render stars based on rating
-  const renderStars = (rating) => {
+  const renderStars = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
@@ -251,7 +251,7 @@ const CustomerSatisfactionReportPage = () => {
           <h2 className="text-xl font-semibold mb-4">Ratings Distribution</h2>
           <div className="space-y-3">
             {[5, 4, 3, 2, 1].map(rating => {
-              const count = satisfactionData.reviewsByRating[rating];
+              const count = satisfactionData.reviewsByRating[rating as keyof typeof satisfactionData.reviewsByRating];
               const percentage = (count / satisfactionData.totalReviews) * 100;
               
               return (
@@ -296,7 +296,7 @@ const CustomerSatisfactionReportPage = () => {
             {Object.entries(satisfactionData.serviceRatings).map(([service, rating]) => (
               <div key={service} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
-                  <h3 className="font-medium">{serviceNames[service]}</h3>
+                  <h3 className="font-medium">{serviceNames[service as keyof typeof serviceNames]}</h3>
                 </div>
                 <div className="flex items-center">
                   <span className="font-bold text-lg mr-2">{rating.toFixed(1)}</span>
@@ -438,7 +438,7 @@ const CustomerSatisfactionReportPage = () => {
                       {renderStars(feedback.rating)}
                     </div>
                     <span className="ml-2 text-sm text-gray-500">
-                      {serviceNames[feedback.service]} • {new Date(feedback.date).toLocaleDateString()}
+                      {serviceNames[feedback.service as keyof typeof serviceNames]} • {new Date(feedback.date).toLocaleDateString()}
                     </span>
                   </div>
                 </div>

@@ -8,7 +8,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondary,
   IconButton,
   Dialog,
   DialogTitle,
@@ -154,7 +153,7 @@ export const RouteOptimization: React.FC<RouteOptimizationProps> = ({
 
       <Grid container spacing={2}>
         {routes.map((route) => (
-          <Grid item xs={12} md={6} key={route.id}>
+          <Grid size={{ xs: 12, md: 6 }} key={route.id}>
             <Card>
               <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>

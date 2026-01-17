@@ -1,5 +1,5 @@
 import { jsPDF } from 'jspdf';
-import { Invoice, InvoiceTemplate, InvoiceStatus, LaundryOrder, AccountingMetadata } from '../models';
+import { Invoice, InvoiceTemplate, InvoiceStatus, LaundryOrder, AccountingMetadata, InvoiceItem, OrderItem } from '../models';
 import { api } from '../utils/api';
 
 export class InvoiceService {
@@ -37,7 +37,7 @@ export class InvoiceService {
     }
     
     // Items validation
-    invoice.items.forEach((item, index) => {
+    invoice.items.forEach((item: InvoiceItem, index: number) => {
       if (item.total !== item.quantity * item.unitPrice * (1 + item.tax)) {
         errors.push(`Item ${index + 1}: Total amount does not match calculation`);
       }
@@ -72,8 +72,8 @@ export class InvoiceService {
 
   async generateInvoiceFromOrder(
     order: LaundryOrder,
-    templateId?: string,
-    companyDetails: Invoice['companyDetails']
+    companyDetails: Invoice['companyDetails'],
+    templateId?: string
   ): Promise<Invoice> {
     try {
       // Get default template if templateId not provided
@@ -84,7 +84,7 @@ export class InvoiceService {
       }
 
       // Create invoice items from order items
-      const items = order.items.map(item => ({
+      const items = order.items.map((item: OrderItem) => ({
         id: crypto.randomUUID(),
         description: `${item.serviceName} - ${item.garmentType}`,
         quantity: item.quantity,
@@ -100,8 +100,8 @@ export class InvoiceService {
       }));
 
       // Calculate totals
-      const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
-      const tax = items.reduce((sum, item) => sum + item.tax, 0);
+      const subtotal = items.reduce((sum: number, item: { subtotal: number }) => sum + item.subtotal, 0);
+      const tax = items.reduce((sum: number, item: { tax: number }) => sum + item.tax, 0);
       const total = subtotal + tax;
 
       // Create invoice with accounting metadata
@@ -110,7 +110,7 @@ export class InvoiceService {
         orderId: order.id,
         customerId: order.customerId,
         customerName: order.customerName,
-        customerEmail: order.customerEmail,
+        customerEmail: '', // LaundryOrder doesn't have customerEmail, will need to be fetched separately
         customerPhone: order.customerPhone,
         status: 'draft',
         items,
@@ -185,7 +185,7 @@ export class InvoiceService {
           doc.text('Total', 160, y);
           
           y += 10;
-          invoice.items.forEach(item => {
+          invoice.items.forEach((item: InvoiceItem) => {
             doc.text(item.description, 20, y);
             doc.text(item.quantity.toString(), 100, y);
             doc.text(`$${item.unitPrice.toFixed(2)}`, 130, y);
@@ -255,7 +255,7 @@ export class InvoiceService {
                .replace(/{{currency}}/g, invoice.currency);
     
     // Replace items table with accounting codes
-    const itemsHtml = invoice.items.map(item => `
+    const itemsHtml = invoice.items.map((item: InvoiceItem) => `
       <tr>
         <td>${item.description}</td>
         <td>${item.quantity}</td>
@@ -322,7 +322,7 @@ export class InvoiceService {
         sentAt: new Date(),
         to: invoice.customerEmail,
         status: 'failed',
-        error: error.message
+        error: (error as Error).message
       });
       throw error;
     }

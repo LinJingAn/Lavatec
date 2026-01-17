@@ -16,6 +16,9 @@ const forgotPasswordSchema = z.object({
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
+// Disable static generation - this page uses React Router and Auth context
+export const dynamic = 'force-dynamic';
+
 const ForgotPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

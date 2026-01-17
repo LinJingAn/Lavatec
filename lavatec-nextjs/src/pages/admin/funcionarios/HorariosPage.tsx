@@ -59,7 +59,7 @@ const HorariosPage = () => {
     department: '',
     type: ''
   });
-  const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [selectedSchedule, setSelectedSchedule] = useState<typeof MOCK_SCHEDULES[0] | null>(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   
   const handleBackToMain = () => {
@@ -71,12 +71,12 @@ const HorariosPage = () => {
     setShowScheduleModal(true);
   };
   
-  const handleEditSchedule = (schedule) => {
+  const handleEditSchedule = (schedule: typeof MOCK_SCHEDULES[0]) => {
     setSelectedSchedule(schedule);
     setShowScheduleModal(true);
   };
   
-  const handleDeleteSchedule = (id) => {
+  const handleDeleteSchedule = (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir este horário?')) {
       const updatedSchedules = schedules.filter(schedule => schedule.id !== id);
       setSchedules(updatedSchedules);
@@ -88,7 +88,7 @@ const HorariosPage = () => {
     setShowFilters(!showFilters);
   };
   
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters({
       ...filters,

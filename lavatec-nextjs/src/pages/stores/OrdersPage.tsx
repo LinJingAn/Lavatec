@@ -3,7 +3,11 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { MdSearch, MdFilterList, MdAdd, MdDownload, MdPrint, MdClose, MdCheck, MdOutlineLocalShipping, MdPerson } from 'react-icons/md';
 
 // Order status types and their corresponding components
-const OrderStatus = ({ status }) => {
+interface OrderStatusProps {
+  status: string;
+}
+
+const OrderStatus: React.FC<OrderStatusProps> = ({ status }) => {
   let bgColor = "bg-gray-100";
   let textColor = "text-gray-600";
   let statusText = status;
@@ -118,6 +122,15 @@ const SAMPLE_ORDERS = [
   }
 ];
 
+interface Order {
+  id: string;
+  customer: { name: string; id: string };
+  status: string;
+  status_time: string;
+  total: number;
+  store: { name: string; id: string; location: string };
+}
+
 interface OrdersPageProps {
   initialFilter?: 'active' | 'completed' | 'all';
 }
@@ -125,7 +138,7 @@ interface OrdersPageProps {
 const OrdersPage: React.FC<OrdersPageProps> = ({ initialFilter }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   
   // Add debug logging
   useEffect(() => {
@@ -169,7 +182,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ initialFilter }) => {
   });
 
   // Handler for order selection
-  const handleOrderClick = (order) => {
+  const handleOrderClick = (order: Order) => {
     navigate(`/stores/orders/${order.id}`);
   };
 

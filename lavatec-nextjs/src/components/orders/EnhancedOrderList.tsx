@@ -67,10 +67,11 @@ const EnhancedOrderList: React.FC<EnhancedOrderListProps> = ({
             : b.status.localeCompare(a.status);
         }
         if (sortField === 'priority') {
-          const priorityWeight = { true: 1, false: 0 };
+          const priorityWeightA = a.isPriority ? 1 : 0;
+          const priorityWeightB = b.isPriority ? 1 : 0;
           return sortDirection === 'asc'
-            ? priorityWeight[a.isPriority] - priorityWeight[b.isPriority]
-            : priorityWeight[b.isPriority] - priorityWeight[a.isPriority];
+            ? priorityWeightA - priorityWeightB
+            : priorityWeightB - priorityWeightA;
         }
         return 0;
       });

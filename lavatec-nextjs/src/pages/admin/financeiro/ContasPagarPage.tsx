@@ -17,7 +17,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -246,37 +246,52 @@ const ContasPagarPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
               <Select
                 value={filters.status}
-                onChange={(e) => handleFilterChange('status', e.target.value)}
+                onValueChange={(value) => handleFilterChange('status', value)}
               >
-                <option value="all">Todos</option>
-                <option value="pending">Pendente</option>
-                <option value="overdue">Em Atraso</option>
-                <option value="paid">Pago</option>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="pending">Pendente</SelectItem>
+                  <SelectItem value="overdue">Em Atraso</SelectItem>
+                  <SelectItem value="paid">Pago</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
               <Select
                 value={filters.category}
-                onChange={(e) => handleFilterChange('category', e.target.value)}
+                onValueChange={(value) => handleFilterChange('category', value)}
               >
-                <option value="all">Todas</option>
-                <option value="Materiais">Materiais</option>
-                <option value="Serviços">Serviços</option>
-                <option value="Equipamentos">Equipamentos</option>
-                <option value="Outros">Outros</option>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="Materiais">Materiais</SelectItem>
+                  <SelectItem value="Serviços">Serviços</SelectItem>
+                  <SelectItem value="Equipamentos">Equipamentos</SelectItem>
+                  <SelectItem value="Outros">Outros</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Aprovação</label>
               <Select
                 value={filters.approvalStatus}
-                onChange={(e) => handleFilterChange('approvalStatus', e.target.value)}
+                onValueChange={(value) => handleFilterChange('approvalStatus', value)}
               >
-                <option value="all">Todos</option>
-                <option value="pending">Pendente</option>
-                <option value="approved">Aprovado</option>
-                <option value="rejected">Rejeitado</option>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="pending">Pendente</SelectItem>
+                  <SelectItem value="approved">Aprovado</SelectItem>
+                  <SelectItem value="rejected">Rejeitado</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <div className="flex-1">

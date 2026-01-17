@@ -5,7 +5,7 @@ import {
   DiscountType,
   PromotionStatus 
 } from '../models/Promotion';
-import { CustomerType } from '../models/Customer';
+import { Customer } from '../models/Customer';
 
 // Re-export Promotion interface for backward compatibility
 export type { Promotion };
@@ -52,7 +52,8 @@ export class PromotionService {
         discount_value: (promotion as any).discount_percentage || 0,
         start_date: promotion.start_date,
         end_date: promotion.end_date,
-        usage_limit: (promotion as any).max_usage_count,
+        max_usage_count: (promotion as any).max_usage_count,
+        trigger: (promotion as any).trigger || 'order_value',
       };
       
       const response = await backendPromotionService.createPromotion(createData);
@@ -71,7 +72,8 @@ export class PromotionService {
         discount_type: (promotion as any).discount_type,
         discount_value: (promotion as any).discount_percentage || (promotion as any).discount_value,
         end_date: promotion.end_date,
-        usage_limit: (promotion as any).max_usage_count,
+        max_usage_count: (promotion as any).max_usage_count,
+        trigger: (promotion as any).trigger || 'order_value',
       };
       
       const response = await backendPromotionService.updatePromotion(id, updateData);
@@ -158,7 +160,7 @@ export class PromotionService {
       }
 
       // Check usage limits
-      if (promotion.usage_limit && promotion.usage_count >= promotion.usage_limit) {
+      if (promotion.max_usage_count && promotion.usage_count && promotion.usage_count >= promotion.max_usage_count) {
         return { valid: false, error: 'Promotion usage limit reached' };
       }
 
@@ -214,7 +216,7 @@ export class PromotionService {
 
   async updatePromotionStatus(promotionId: string, status: PromotionStatus): Promise<void> {
     try {
-      await backendPromotionService.updatePromotion(promotionId, { status: status as string });
+      await backendPromotionService.updatePromotion(promotionId, { status: status as 'active' | 'expired' | 'inactive' });
     } catch (error: any) {
       console.error('Error updating promotion status:', error);
       throw new Error(error.message || 'Failed to update promotion status');

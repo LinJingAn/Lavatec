@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { MdChevronLeft } from 'react-icons/md';
 import { PerformanceTrends } from '@/components/dashboard/PerformanceTrends';
 import { DashboardWidgets } from '@/components/dashboard/DashboardWidgets';
+import { Widget } from '@/components/dashboard/DashboardWidgets';
 
 const AnalyticsPage: React.FC = () => {
   // Example data - in a real app, this would come from an API
@@ -151,7 +152,7 @@ const AnalyticsPage: React.FC = () => {
       <PerformanceTrends data={performanceData} />
       
       <DashboardWidgets 
-        widgets={widgets} 
+        widgets={widgets as Widget[]} 
         onWidgetsChange={handleWidgetsChange} 
       />
     </div>

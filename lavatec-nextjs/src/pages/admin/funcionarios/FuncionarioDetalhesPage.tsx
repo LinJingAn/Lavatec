@@ -37,13 +37,13 @@ const MOCK_USER = {
 };
 
 // Format date for display
-const formatDate = (dateString) => {
+const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('pt-BR');
 };
 
 // Format datetime for display
-const formatDateTime = (dateString) => {
+const formatDateTime = (dateString: string) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 };
@@ -51,7 +51,7 @@ const formatDateTime = (dateString) => {
 const FuncionarioDetalhesPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<typeof MOCK_USER | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -104,22 +104,22 @@ const FuncionarioDetalhesPage = () => {
     if (isEditing) {
       // Reset form data if canceling edit
       setFormData({
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        department: user.department,
-        address: user.address,
-        city: user.city,
-        state: user.state,
-        zipCode: user.zipCode,
-        birthDate: user.birthDate,
-        hireDate: user.hireDate
+        name: user?.name || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
+        role: user?.role || '',
+        department: user?.department || '',
+        address: user?.address || '',
+        city: user?.city || '',
+        state: user?.state || '',
+        zipCode: user?.zipCode || '',
+        birthDate: user?.birthDate || '',
+        hireDate: user?.hireDate || ''
       });
     }
   };
   
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -127,34 +127,40 @@ const FuncionarioDetalhesPage = () => {
     }));
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // In a real app, send updated data to API
-    setUser(prev => ({
-      ...prev,
-      ...formData
-    }));
+    setUser(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        ...formData
+      };
+    });
     setIsEditing(false);
     alert('Dados do funcionário atualizados com sucesso!');
   };
   
   const handleResetPassword = () => {
     // In a real app, call API to reset password
-    alert(`Senha resetada para o usuário: ${user.name}`);
+    alert(`Senha resetada para o usuário: ${user?.name || ''}`);
   };
   
   const handleSendEmail = () => {
     // In a real app, open email composition interface
-    alert(`Preparando para enviar email para: ${user.email}`);
+    alert(`Preparando para enviar email para: ${user?.email || ''}`);
   };
   
   const handleDisableUser = () => {
     // In a real app, call API to disable/enable user
-    const newStatus = user.status === 'Ativo' ? 'Inativo' : 'Ativo';
-    setUser(prev => ({
-      ...prev,
-      status: newStatus
-    }));
+    const newStatus = user?.status === 'Ativo' ? 'Inativo' : 'Ativo';
+    setUser(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        status: newStatus
+      };
+    });
     alert(`Status do usuário alterado para: ${newStatus}`);
   };
   
@@ -164,7 +170,7 @@ const FuncionarioDetalhesPage = () => {
   
   const handleDeleteUser = () => {
     // In a real app, call API to delete user
-    alert(`Usuário ${user.name} excluído com sucesso!`);
+    alert(`Usuário ${user?.name || ''} excluído com sucesso!`);
     navigate('/funcionarios');
   };
   
@@ -248,7 +254,7 @@ const FuncionarioDetalhesPage = () => {
           ) : (
             <>
               <button 
-                onClick={handleSubmit}
+                onClick={() => handleSubmit(new Event('submit') as unknown as React.FormEvent<HTMLFormElement>)}
                 className="flex items-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
               >
                 <MdSave className="mr-1" /> Salvar
@@ -269,19 +275,19 @@ const FuncionarioDetalhesPage = () => {
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center">
             <div className="bg-blue-100 text-blue-800 font-bold rounded-full h-16 w-16 flex items-center justify-center text-xl mr-4">
-              {user.name.split(' ').map(name => name[0]).join('').slice(0, 2).toUpperCase()}
+              {user?.name?.split(' ').map(name => name[0]).join('').slice(0, 2).toUpperCase() || ''}
             </div>
             <div>
-              <h2 className="text-xl font-bold">{user.name}</h2>
-              <p className="text-gray-600">{user.email}</p>
+              <h2 className="text-xl font-bold">{user?.name || ''}</h2>
+              <p className="text-gray-600">{user?.email || ''}</p>
               <div className="flex mt-1">
                 <span className={`px-2 py-1 rounded-full text-xs mr-2 ${
-                  user.status === 'Ativo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  user?.status === 'Ativo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                 }`}>
-                  {user.status}
+                  {user?.status || ''}
                 </span>
                 <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
-                  {user.role}
+                  {user?.role || ''}
                 </span>
               </div>
             </div>
@@ -366,7 +372,7 @@ const FuncionarioDetalhesPage = () => {
                         required
                       />
                     ) : (
-                      <p className="py-2">{user.email}</p>
+                      <p className="py-2">{user?.email || ''}</p>
                     )}
                   </div>
                   
@@ -384,7 +390,7 @@ const FuncionarioDetalhesPage = () => {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <p className="py-2">{user.phone}</p>
+                      <p className="py-2">{user?.phone || ''}</p>
                     )}
                   </div>
                   
@@ -402,7 +408,7 @@ const FuncionarioDetalhesPage = () => {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <p className="py-2">{formatDate(user.birthDate)}</p>
+                      <p className="py-2">{formatDate(user?.birthDate || '')}</p>
                     )}
                   </div>
                   
@@ -420,7 +426,7 @@ const FuncionarioDetalhesPage = () => {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <p className="py-2">{user.address}</p>
+                      <p className="py-2">{user?.address || ''}</p>
                     )}
                   </div>
                   
@@ -439,7 +445,7 @@ const FuncionarioDetalhesPage = () => {
                           onChange={handleInputChange}
                         />
                       ) : (
-                        <p className="py-2">{user.city}</p>
+                        <p className="py-2">{user?.city || ''}</p>
                       )}
                     </div>
                     
@@ -457,7 +463,7 @@ const FuncionarioDetalhesPage = () => {
                           onChange={handleInputChange}
                         />
                       ) : (
-                        <p className="py-2">{user.state}</p>
+                        <p className="py-2">{user?.state || ''}</p>
                       )}
                     </div>
                   </div>
@@ -476,7 +482,7 @@ const FuncionarioDetalhesPage = () => {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <p className="py-2">{user.zipCode}</p>
+                      <p className="py-2">{user?.zipCode || ''}</p>
                     )}
                   </div>
                 </div>
@@ -504,7 +510,7 @@ const FuncionarioDetalhesPage = () => {
                         <option value="Suporte">Suporte</option>
                       </select>
                     ) : (
-                      <p className="py-2">{user.role}</p>
+                      <p className="py-2">{user?.role || ''}</p>
                     )}
                   </div>
                   
@@ -529,7 +535,7 @@ const FuncionarioDetalhesPage = () => {
                         <option value="Recursos Humanos">Recursos Humanos</option>
                       </select>
                     ) : (
-                      <p className="py-2">{user.department}</p>
+                      <p className="py-2">{user?.department || ''}</p>
                     )}
                   </div>
                   
@@ -547,7 +553,7 @@ const FuncionarioDetalhesPage = () => {
                         onChange={handleInputChange}
                       />
                     ) : (
-                      <p className="py-2">{formatDate(user.hireDate)}</p>
+                      <p className="py-2">{formatDate(user?.hireDate || '')}</p>
                     )}
                   </div>
                   
@@ -559,7 +565,7 @@ const FuncionarioDetalhesPage = () => {
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         user.status === 'Ativo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                       }`}>
-                        {user.status}
+                        {user?.status || ''}
                       </span>
                     </p>
                   </div>
@@ -568,7 +574,7 @@ const FuncionarioDetalhesPage = () => {
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Data de Cadastro
                     </label>
-                    <p className="py-2">{formatDate(user.createdAt)}</p>
+                    <p className="py-2">{formatDate(user?.createdAt || '' )}</p>
                   </div>
                   
                   <div className="mb-4">

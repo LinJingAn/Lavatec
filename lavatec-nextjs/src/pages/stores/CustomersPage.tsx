@@ -11,7 +11,6 @@ import {
   MdEmail,
   MdLocationOn,
   MdShoppingCart,
-  MdLaundry,
   MdNotes,
   MdArrowDropDown,
   MdArrowBack,
@@ -596,15 +595,15 @@ const CustomersPage = () => {
     updateUrlWithFilters();
   }, [searchTerm, filterStatus, filters.category, currentPage]);
   
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
   
-  const handleFilterChange = (name, value) => {
+  const handleFilterChange = (name: string, value: string) => {
     setFilters(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleTagToggle = (tag) => {
+  const handleTagToggle = (tag: string) => {
     setFilters(prev => {
       const currentTags = [...prev.tags];
       const tagIndex = currentTags.indexOf(tag);
@@ -659,7 +658,7 @@ const CustomersPage = () => {
     setShowSaveFilterModal(false);
   };
   
-  const loadSavedFilter = (savedFilter) => {
+  const loadSavedFilter = (savedFilter: { name: string; filters: any }) => {
     setFilters({
       ...filters,
       ...savedFilter.filters
@@ -682,17 +681,17 @@ const CustomersPage = () => {
     }
   };
   
-  const deleteSavedFilter = (index) => {
+  const deleteSavedFilter = (index: number) => {
     const newSavedFilters = [...savedFilters];
     newSavedFilters.splice(index, 1);
     setSavedFilters(newSavedFilters);
   };
   
-  const handleStatusFilter = (status) => {
+  const handleStatusFilter = (status: string) => {
     setFilterStatus(status);
   };
   
-  const handleSort = (field) => {
+  const handleSort = (field: string) => {
     if (sortBy === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -702,14 +701,14 @@ const CustomersPage = () => {
   };
   
   // Pagination handlers
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
   const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
   const firstPage = () => setCurrentPage(1);
   const lastPage = () => setCurrentPage(totalPages);
   
   // Bulk actions
-  const toggleSelectCustomer = (id) => {
+  const toggleSelectCustomer = (id: string) => {
     setSelectedCustomers(prev => {
       if (prev.includes(id)) {
         return prev.filter(customerId => customerId !== id);
@@ -734,7 +733,7 @@ const CustomersPage = () => {
     }
   };
   
-  const handleBulkStatusChange = (status) => {
+  const handleBulkStatusChange = (status: string) => {
     setCustomers(prev => 
       prev.map(customer => 
         selectedCustomers.includes(customer.id) 
@@ -763,16 +762,16 @@ const CustomersPage = () => {
     navigate('/stores/customers/add');
   };
   
-  const handleViewCustomer = (id) => {
+  const handleViewCustomer = (id: string) => {
     navigate(`/stores/customers/view/${id}`);
   };
   
-  const handleEditCustomer = (id, e) => {
+  const handleEditCustomer = (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     navigate(`/stores/customers/edit/${id}`);
   };
   
-  const handleDeleteCustomer = (id, e) => {
+  const handleDeleteCustomer = (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
       setCustomers(prevCustomers => 

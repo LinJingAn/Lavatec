@@ -4,7 +4,7 @@ import { MdArrowBack, MdCheckCircle, MdWarning, MdSync, MdSearch } from 'react-i
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSidebar } from '@/contexts/SidebarContext';
 
@@ -54,9 +54,14 @@ const ConciliacaoPage = () => {
         </div>
         <div className="flex space-x-3">
           <Select defaultValue="current-month">
-            <option value="current-month">Mês Atual</option>
-            <option value="last-month">Mês Anterior</option>
-            <option value="custom">Período Personalizado</option>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione um período" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="current-month">Mês Atual</SelectItem>
+              <SelectItem value="last-month">Mês Anterior</SelectItem>
+              <SelectItem value="custom">Período Personalizado</SelectItem>
+            </SelectContent>
           </Select>
           <Button>
             Atualizar
@@ -113,16 +118,23 @@ const ConciliacaoPage = () => {
               <div className="flex justify-between items-center">
                 <CardTitle className="text-lg">Transações Bancárias</CardTitle>
                 <div className="flex w-1/3">
-                  <Input 
-                    placeholder="Buscar transação..." 
-                    className="mr-2"
-                    prefix={<MdSearch />}
-                  />
+                  <div className="relative mr-2 flex-1">
+                    <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <Input 
+                      placeholder="Buscar transação..." 
+                      className="pl-10"
+                    />
+                  </div>
                   <Select defaultValue="all">
-                    <option value="all">Todos</option>
-                    <option value="conciliado">Conciliados</option>
-                    <option value="pendente">Pendentes</option>
-                    <option value="divergente">Divergentes</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filtrar por status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="conciliado">Conciliados</SelectItem>
+                      <SelectItem value="pendente">Pendentes</SelectItem>
+                      <SelectItem value="divergente">Divergentes</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
               </div>
@@ -212,16 +224,23 @@ const ConciliacaoPage = () => {
               <div className="flex justify-between items-center">
                 <CardTitle className="text-lg">Notas Fiscais de Fornecedores</CardTitle>
                 <div className="flex w-1/3">
-                  <Input 
-                    placeholder="Buscar nota fiscal..." 
-                    className="mr-2"
-                    prefix={<MdSearch />}
-                  />
+                  <div className="relative mr-2 flex-1">
+                    <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <Input 
+                      placeholder="Buscar nota fiscal..." 
+                      className="pl-10"
+                    />
+                  </div>
                   <Select defaultValue="all">
-                    <option value="all">Todos</option>
-                    <option value="conciliado">Conciliados</option>
-                    <option value="pendente">Pendentes</option>
-                    <option value="divergente">Divergentes</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filtrar por status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="conciliado">Conciliados</SelectItem>
+                      <SelectItem value="pendente">Pendentes</SelectItem>
+                      <SelectItem value="divergente">Divergentes</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
               </div>

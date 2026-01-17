@@ -85,21 +85,20 @@ const CustomerAnalyticsPage: React.FC = () => {
             <Input
               type="date"
               value={dateRange.start}
-              onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDateRange({ ...dateRange, start: e.target.value })}
               className="w-40"
             />
             <span>até</span>
             <Input
               type="date"
               value={dateRange.end}
-              onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDateRange({ ...dateRange, end: e.target.value })}
               className="w-40"
             />
           </div>
           <Select
             value={selectedSegment}
-            onChange={(e) => setSelectedSegment(e.target.value)}
-            className="w-40"
+            onValueChange={(value) => setSelectedSegment(value)}
           >
             <option value="all">Todos os Segmentos</option>
             <option value="high">Alto Valor</option>
@@ -176,8 +175,7 @@ const CustomerAnalyticsPage: React.FC = () => {
           <div className="flex space-x-2">
             <Select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-40"
+              onValueChange={(value: string) => setSortBy(value)}
             >
               <option value="ltv">LTV</option>
               <option value="orders">Pedidos</option>

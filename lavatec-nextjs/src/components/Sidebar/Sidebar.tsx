@@ -22,7 +22,6 @@ import {
   MdOutlineLocalLaundryService,
   MdOutlineDryCleaning,
   MdOutlinePayment,
-  MdOutlineMarketing,
   MdOutlineCampaign,
   MdOutlineLocalShipping,
   MdAttachMoney

@@ -8,7 +8,7 @@ import {
 } from 'recharts';
 import { formatCurrency } from '@/lib/utils';
 
-interface Widget {
+export interface Widget {
   id: string;
   type: 'chart' | 'metric' | 'table';
   title: string;

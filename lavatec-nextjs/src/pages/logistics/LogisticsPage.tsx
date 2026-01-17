@@ -35,7 +35,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-export const LogisticsPage: React.FC = () => {
+const LogisticsPage: React.FC = () => {
   const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -86,4 +86,7 @@ export const LogisticsPage: React.FC = () => {
       </Paper>
     </Container>
   );
-}; 
+};
+
+export default LogisticsPage;
+export { LogisticsPage }; 

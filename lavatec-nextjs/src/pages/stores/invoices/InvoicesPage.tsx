@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdFirstPage, MdLastPage, MdFilterList } from 'react-icons/md';
 
+interface Invoice {
+  id: string;
+  number: string;
+  date: string;
+  customer: string;
+  total: number;
+  status: string;
+}
+
 const InvoicesPage = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('unpaid');
@@ -8,7 +17,7 @@ const InvoicesPage = () => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   
   // Sample data - empty for this demo as the screenshot shows no data
-  const invoices = [];
+  const invoices: Invoice[] = [];
   
   const toggleFilter = () => {
     setFilterOpen(!filterOpen);

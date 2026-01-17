@@ -106,11 +106,11 @@ const FolhaPagamentoPage = () => {
     alert('Funcionalidade para processar folha de pagamento será implementada em breve.');
   };
   
-  const handleEditPayrollEntry = (id) => {
+  const handleEditPayrollEntry = (id: number) => {
     alert(`Editar lançamento ID: ${id}`);
   };
   
-  const handleDeletePayrollEntry = (id) => {
+  const handleDeletePayrollEntry = (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir este lançamento?')) {
       const updatedEntries = payrollEntries.filter(entry => entry.id !== id);
       setPayrollEntries(updatedEntries);
@@ -122,7 +122,7 @@ const FolhaPagamentoPage = () => {
     setShowFilters(!showFilters);
   };
   
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters({
       ...filters,
@@ -137,7 +137,7 @@ const FolhaPagamentoPage = () => {
     });
   };
   
-  const handlePeriodChange = (e) => {
+  const handlePeriodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPeriod(e.target.value);
   };
   

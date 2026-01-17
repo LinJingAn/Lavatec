@@ -44,10 +44,10 @@ const UserProfilePage = () => {
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      first_name: dbUser?.first_name || '',
-      last_name: dbUser?.last_name || '',
+      first_name: dbUser?.name?.split(' ')[0] || '',
+      last_name: dbUser?.name?.split(' ').slice(1).join(' ') || '',
       email: user?.email || '',
-      phone_number: dbUser?.phone_number || '',
+      phone_number: (dbUser as any)?.phone_number || '',
     },
   });
 
@@ -65,10 +65,10 @@ const UserProfilePage = () => {
   useEffect(() => {
     if (dbUser) {
       resetProfile({
-        first_name: dbUser.first_name || '',
-        last_name: dbUser.last_name || '',
+        first_name: dbUser.name?.split(' ')[0] || '',
+        last_name: dbUser.name?.split(' ').slice(1).join(' ') || '',
         email: user?.email || '',
-        phone_number: dbUser.phone_number || '',
+        phone_number: (dbUser as any).phone_number || '',
       });
       setIsPageLoading(false);
     }
@@ -83,9 +83,8 @@ const UserProfilePage = () => {
       
       // Use the updateUserData function from the auth context
       const { error } = await updateUserData({
-        first_name: data.first_name,
-        last_name: data.last_name,
-        phone_number: data.phone_number
+        name: `${data.first_name} ${data.last_name}`.trim(),
+        ...(data.phone_number && { phone_number: data.phone_number } as any)
       });
       
       if (error) {
@@ -185,8 +184,8 @@ const UserProfilePage = () => {
                     className="w-[150px] h-[150px] rounded-full bg-gray-300 flex items-center justify-center mb-4 mx-auto"
                   >
                     <span className="text-4xl text-white">
-                      {dbUser?.first_name?.[0] || ''}
-                      {dbUser?.last_name?.[0] || ''}
+                      {dbUser?.name?.split(' ')[0]?.[0] || ''}
+                      {dbUser?.name?.split(' ').slice(1).join(' ')?.[0] || ''}
                     </span>
                   </div>
                   <p>{user?.email}</p>

@@ -97,7 +97,7 @@ const TreinamentoPage = () => {
   const [courses, setCourses] = useState(MOCK_COURSES);
   const [activeTab, setActiveTab] = useState('courses'); // 'courses', 'enrollment', 'stats'
   const [showAddCourseModal, setShowAddCourseModal] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState<typeof MOCK_COURSES[0] | null>(null);
   const [employeeTraining] = useState(MOCK_EMPLOYEE_TRAINING);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -114,12 +114,12 @@ const TreinamentoPage = () => {
     setShowAddCourseModal(true);
   };
   
-  const handleEditCourse = (course) => {
+  const handleEditCourse = (course: typeof MOCK_COURSES[0]) => {
     setSelectedCourse(course);
     setShowAddCourseModal(true);
   };
   
-  const handleDeleteCourse = (id) => {
+  const handleDeleteCourse = (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir este curso?')) {
       const updatedCourses = courses.filter(course => course.id !== id);
       setCourses(updatedCourses);
@@ -131,7 +131,7 @@ const TreinamentoPage = () => {
     setShowFilters(!showFilters);
   };
   
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters({
       ...filters,

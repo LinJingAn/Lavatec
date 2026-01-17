@@ -4,7 +4,7 @@ import { MdArrowBack, MdSecurity, MdGroup, MdLock, MdHistory, MdPhoneAndroid } f
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -404,16 +404,21 @@ const UserAccessControlPage = () => {
                     <Label>Método Padrão</Label>
                     <Select
                       value={twoFactorAuth.defaultMethod}
-                      onChange={(e) => setTwoFactorAuth({
+                      onValueChange={(value) => setTwoFactorAuth({
                         ...twoFactorAuth,
-                        defaultMethod: e.target.value
+                        defaultMethod: value
                       })}
                     >
-                      {twoFactorAuth.methods.map((method) => (
-                        <option key={method} value={method} className="capitalize">
-                          {method}
-                        </option>
-                      ))}
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione um método" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {twoFactorAuth.methods.map((method) => (
+                          <SelectItem key={method} value={method} className="capitalize">
+                            {method}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </div>
                   <div className="flex items-center justify-between">

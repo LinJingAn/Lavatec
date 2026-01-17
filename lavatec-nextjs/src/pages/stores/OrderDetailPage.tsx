@@ -52,7 +52,7 @@ const SAMPLE_ORDER = {
 };
 
 // Componente de status do pedido
-const OrderStatus = ({ status }) => {
+const OrderStatus = ({ status }: { status: string }) => {
   let bgColor = "bg-gray-100";
   let textColor = "text-gray-600";
   let statusText = status;
@@ -111,10 +111,10 @@ const OrderDetailPage = () => {
   
   // Calcular preço total para cada categoria
   const categoryTotals = order.items.reduce((acc, item) => {
-    if (!acc[item.category]) {
-      acc[item.category] = 0;
+    if (!(acc as Record<string, number>)[item.category]) {
+      (acc as Record<string, number>)[item.category] = 0;
     }
-    acc[item.category] += (item.price * item.quantity);
+    (acc as Record<string, number>)[item.category] += (item.price * item.quantity);
     return acc;
   }, {});
 

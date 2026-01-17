@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
-  Card,
   Container,
   Grid,
   Tab,
@@ -11,13 +10,18 @@ import {
   useTheme,
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import { Promotion, PromotionStatus } from '../../models/Promotion';
+import { PromotionStatus } from '../../models/Promotion';
 import { PromotionService } from '../../services/PromotionService';
+import type { Promotion } from '../../services/promotionApiService';
 import { PromotionList } from '../../components/promotions/PromotionList';
 import { PromotionForm } from '../../components/promotions/PromotionForm';
 import { PromotionAnalytics } from '../../components/promotions/PromotionAnalytics';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { ErrorAlert } from '../../components/common/ErrorAlert';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/card';
+import { Label } from '../../components/ui/label';
+import { Input } from '../../components/ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../../components/ui/select';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -94,15 +98,18 @@ const PromotionsPage = () => {
       setLoading(true);
       if (selectedPromotion) {
         // Update existing promotion
-        await promotionService.updatePromotionStatus(
-          selectedPromotion.id,
-          promotionData.status as PromotionStatus
-        );
+        // Map API status to model PromotionStatus for updatePromotionStatus
+        const status = promotionData.status;
+        if (status) {
+          // Map 'inactive' to 'paused' for the model type
+          const modelStatus: PromotionStatus = status === 'inactive' ? 'paused' : (status as PromotionStatus);
+          await promotionService.updatePromotionStatus(selectedPromotion.id, modelStatus);
+        }
       } else {
-        // Create new promotion
+        // Create new promotion - promotionData is already in API format from PromotionForm
         await promotionService.createPromotion(promotionData as Omit<
           Promotion,
-          'id' | 'currentUsageCount' | 'createdAt' | 'updatedAt'
+          'id' | 'created_at' | 'updated_at'
         >);
       }
       await loadPromotions();

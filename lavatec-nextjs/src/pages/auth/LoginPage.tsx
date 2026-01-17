@@ -20,6 +20,9 @@ const loginSchema = z.object({
 // TypeScript type for the form values
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+// Disable static generation - this page uses React Router and Auth context
+export const dynamic = 'force-dynamic';
+
 const LoginPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);

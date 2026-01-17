@@ -8,8 +8,8 @@ import {
   Button,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
-  ListItemSecondary,
   Chip,
   Dialog,
   DialogTitle,
@@ -39,7 +39,6 @@ import SignaturePad from 'react-signature-canvas';
 import { Delivery, DeliveryStatus } from '../../models/Delivery';
 import { DeliveryService } from '../../services/DeliveryService';
 import { OrderStaging } from './OrderStaging';
-import { useNotification } from '../../hooks/useNotification';
 import { PickupNotificationService } from '../../services/PickupNotificationService';
 import { useDebounce } from '../../hooks/useDebounce';
 import Webcam from 'react-webcam';
@@ -60,6 +59,7 @@ interface PickupOrder {
   location: string;
   verificationRequired: boolean;
   customerPhone: string;
+  createdAt?: string | Date;
 }
 
 interface PickupVerificationDialogProps {
@@ -100,7 +100,12 @@ const PickupVerificationDialog: React.FC<PickupVerificationDialogProps> = ({
           <Typography>
             Name: {order?.customerName}
             <br />
-            Order Date: {new Date(order?.createdAt).toLocaleDateString()}
+            {order?.createdAt && (
+              <>
+                Order Date: {new Date(order.createdAt).toLocaleDateString()}
+                <br />
+              </>
+            )}
           </Typography>
         </Box>
 
@@ -157,12 +162,13 @@ export const PickupManagement: React.FC = () => {
   const [showVerificationDialog, setShowVerificationDialog] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
-  const { sendNotification } = useNotification();
-  const deliveryService = new DeliveryService();
+  const deliveryService = DeliveryService.getInstance();
   const [isSearching, setIsSearching] = useState(false);
   const [showIDVerification, setShowIDVerification] = useState(false);
   const [idPhotoTaken, setIdPhotoTaken] = useState<string | null>(null);
   const [customerPhone, setCustomerPhone] = useState('');
+  const [signature, setSignature] = useState<any>(null);
+  const [idVerified, setIdVerified] = useState(false);
   const webcamRef = useRef<Webcam>(null);
   const debouncedSearch = useDebounce(searchQuery, 300);
   const pickupNotificationService = PickupNotificationService.getInstance();
@@ -327,10 +333,10 @@ export const PickupManagement: React.FC = () => {
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs>
+          <Grid size="grow">
             <Typography variant="h6">Pickup Management</Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Autocomplete
               freeSolo
               options={orders}
@@ -387,8 +393,6 @@ export const PickupManagement: React.FC = () => {
           {filteredOrders.map(order => (
             <Paper key={order.id} sx={{ mb: 2, p: 2 }}>
               <ListItem
-                button
-                onClick={() => handleOrderSelect(order)}
                 secondaryAction={
                   <Chip
                     label={order.status}
@@ -400,10 +404,12 @@ export const PickupManagement: React.FC = () => {
                   />
                 }
               >
-                <ListItemText
-                  primary={`#${order.orderNumber} - ${order.customerName}`}
-                  secondary={`Location: ${order.location} | Items: ${order.items.length}`}
-                />
+                <ListItemButton onClick={() => handleOrderSelect(order)}>
+                  <ListItemText
+                    primary={`#${order.orderNumber} - ${order.customerName}`}
+                    secondary={`Location: ${order.location} | Items: ${order.items.length}`}
+                  />
+                </ListItemButton>
               </ListItem>
             </Paper>
           ))}
@@ -419,7 +425,7 @@ export const PickupManagement: React.FC = () => {
         <DialogTitle>Verify Pickup - Order #{selectedOrder?.orderNumber}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="subtitle1" gutterBottom>
                 Customer Information
               </Typography>
@@ -470,7 +476,7 @@ export const PickupManagement: React.FC = () => {
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="subtitle1" gutterBottom>
                 Select Items for Pickup
               </Typography>
@@ -499,6 +505,16 @@ export const PickupManagement: React.FC = () => {
                     ref={(ref) => setSignature(ref)}
                   />
                 </Paper>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={idVerified}
+                      onChange={(e) => setIdVerified(e.target.checked)}
+                    />
+                  }
+                  label="ID Verified"
+                  sx={{ mt: 1 }}
+                />
                 <Button
                   size="small"
                   onClick={() => signature?.clear()}

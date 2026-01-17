@@ -120,7 +120,10 @@ const CompanySettingsPage = () => {
     if (branch) {
       // Edit mode - set form values
       Object.keys(branchSchema.shape).forEach((key) => {
-        setBranchValue(key as keyof BranchFormValues, branch[key as keyof Branch] || '');
+        const value = branch[key as keyof Branch];
+        // Convert boolean to string, handle undefined/null, otherwise use string value
+        const stringValue = typeof value === 'boolean' ? String(value) : (value || '');
+        setBranchValue(key as keyof BranchFormValues, stringValue);
       });
     } else {
       // Create mode - reset form

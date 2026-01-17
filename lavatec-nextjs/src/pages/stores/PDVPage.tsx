@@ -703,7 +703,7 @@ const PDVPage: React.FC = () => {
               {selectedGroupItems.map(item => (
                 <button
                   key={item.id}
-                  onClick={() => handleAddItem(item)}
+                  onClick={() => handleAddItem({ ...item, quantity: 1 } as OrderItem)}
                   className="flex flex-col items-center justify-center p-3 rounded-lg hover:bg-gray-50 select-none"
                   style={{
                     WebkitTapHighlightColor: 'transparent',

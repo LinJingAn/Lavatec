@@ -17,7 +17,8 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({
   customer,
   className = '' 
 }) => {
-  const totalOrderValue = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // Calculate total from items (fallback if subtotal not available)
+  const calculatedSubtotal = order.items.reduce((sum, item) => sum + (item.subtotal || item.unitPrice * item.quantity), 0);
   
   return (
     <Card className={`${className}`}>
@@ -64,16 +65,16 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({
               {order.items.map((item, index) => (
                 <div key={index} className="flex justify-between py-1 border-b border-gray-100 text-sm">
                   <div>
-                    <span className="font-medium">{item.quantity}x</span> {item.name}
+                    <span className="font-medium">{item.quantity}x</span> {item.serviceName}
                     {item.description && (
                       <p className="text-xs text-gray-500">{item.description}</p>
                     )}
                   </div>
                   <div className="text-right">
-                    <div>{formatCurrency(item.price * item.quantity)}</div>
+                    <div>{formatCurrency(item.subtotal || item.unitPrice * item.quantity)}</div>
                     {item.quantity > 1 && (
                       <div className="text-xs text-gray-500">
-                        ({formatCurrency(item.price)} cada)
+                        ({formatCurrency(item.unitPrice)} cada)
                       </div>
                     )}
                   </div>
@@ -86,15 +87,15 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({
           <div className="border-t border-gray-200 pt-4">
             <div className="flex justify-between font-medium">
               <span>Subtotal</span>
-              <span>{formatCurrency(totalOrderValue)}</span>
+              <span>{formatCurrency(order.subtotal)}</span>
             </div>
-            {order.deliveryFee > 0 && (
+            {order.tax > 0 && (
               <div className="flex justify-between mt-2 text-sm">
-                <span>Taxa de Entrega</span>
-                <span>{formatCurrency(order.deliveryFee)}</span>
+                <span>Taxa</span>
+                <span>{formatCurrency(order.tax)}</span>
               </div>
             )}
-            {order.discount > 0 && (
+            {order.discount && order.discount > 0 && (
               <div className="flex justify-between mt-2 text-sm text-green-600">
                 <span>Desconto</span>
                 <span>- {formatCurrency(order.discount)}</span>
@@ -102,7 +103,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({
             )}
             <div className="flex justify-between mt-4 text-lg font-bold">
               <span>Total</span>
-              <span>{formatCurrency(totalOrderValue + order.deliveryFee - order.discount)}</span>
+              <span>{formatCurrency(order.total)}</span>
             </div>
           </div>
           
@@ -115,16 +116,22 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({
           )}
           
           {/* Delivery Information */}
-          {order.deliveryAddress && (
+          {order.deliveredDate && (
             <div className="border-t border-gray-200 pt-4">
-              <h3 className="text-sm font-medium text-gray-500">Endereço de Entrega</h3>
-              <p className="mt-2 text-sm text-gray-600">{order.deliveryAddress}</p>
-              {order.scheduledDelivery && (
-                <div className="mt-2 flex items-center text-sm text-gray-600">
-                  <CalendarDays className="mr-2 h-4 w-4 text-gray-400" />
-                  <span>Agendado para {formatDate(order.scheduledDelivery)}</span>
-                </div>
-              )}
+              <h3 className="text-sm font-medium text-gray-500">Informações de Entrega</h3>
+              <div className="mt-2 flex items-center text-sm text-gray-600">
+                <CalendarDays className="mr-2 h-4 w-4 text-gray-400" />
+                <span>Entregue em {formatDate(order.deliveredDate)}</span>
+              </div>
+            </div>
+          )}
+          {order.completedDate && !order.deliveredDate && (
+            <div className="border-t border-gray-200 pt-4">
+              <h3 className="text-sm font-medium text-gray-500">Informações de Conclusão</h3>
+              <div className="mt-2 flex items-center text-sm text-gray-600">
+                <CalendarDays className="mr-2 h-4 w-4 text-gray-400" />
+                <span>Concluído em {formatDate(order.completedDate)}</span>
+              </div>
             </div>
           )}
         </div>

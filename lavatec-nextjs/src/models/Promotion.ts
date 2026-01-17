@@ -1,6 +1,6 @@
-import { CustomerType } from './Customer';
-
 export type DiscountType = 'percentage' | 'fixed_amount';
+
+export type CustomerType = 'regular' | 'heavy' | 'occasional' | 'rare';
 
 export type PromotionTrigger = 
   | 'order_value' 

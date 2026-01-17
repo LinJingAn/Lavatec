@@ -57,7 +57,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-export const SupplyInventoryPage: React.FC = () => {
+const SupplyInventoryPage: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
   const [supplies, setSupplies] = useState<SupplyItem[]>([]);
   const [vendors, setVendors] = useState<Vendor[]>([]);
@@ -147,7 +147,7 @@ export const SupplyInventoryPage: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Alerts Section */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Paper sx={{ p: 2, mb: 3, bgcolor: alerts.length > 0 ? '#fff3e0' : 'background.paper' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <MdWarning size={24} color="#ed6c02" />
@@ -168,7 +168,7 @@ export const SupplyInventoryPage: React.FC = () => {
         </Grid>
 
         {/* Main Content */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Paper sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={tabValue} onChange={handleTabChange}>
@@ -303,4 +303,7 @@ export const SupplyInventoryPage: React.FC = () => {
       </Snackbar>
     </Container>
   );
-}; 
+};
+
+export default SupplyInventoryPage;
+export { SupplyInventoryPage }; 

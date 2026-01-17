@@ -83,21 +83,18 @@ const OperationalReportsPage: React.FC = () => {
             <Input
               type="date"
               value={dateRange.start}
-              onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-              className="w-40"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDateRange({ ...dateRange, start: e.target.value })}
             />
             <span>até</span>
             <Input
               type="date"
               value={dateRange.end}
-              onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-              className="w-40"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDateRange({ ...dateRange, end: e.target.value })}
             />
           </div>
           <Select
             value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
-            className="w-40"
+            onValueChange={(value: string) => setSelectedService(value)}
           >
             <option value="all">Todos os Serviços</option>
             <option value="wash">Lavar e Dobrar</option>
@@ -171,8 +168,7 @@ const OperationalReportsPage: React.FC = () => {
           <div className="flex space-x-2">
             <Select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-40"
+              onValueChange={(value: string) => setSortBy(value)}
             >
               <option value="efficiency">Eficiência</option>
               <option value="quality">Qualidade</option>

@@ -4,7 +4,7 @@ import { MdArrowBack, MdBusiness, MdAccessTime, MdSettings, MdNotifications, MdI
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -265,14 +265,19 @@ const SystemConfigPage = () => {
                   <Label>Política de Cancelamento</Label>
                   <Select
                     value={serviceConfig.cancellationPolicy}
-                    onChange={(e) => setServiceConfig({
+                    onValueChange={(value) => setServiceConfig({
                       ...serviceConfig,
-                      cancellationPolicy: e.target.value
+                      cancellationPolicy: value
                     })}
                   >
-                    <option value="1h">1 hora</option>
-                    <option value="24h">24 horas</option>
-                    <option value="48h">48 horas</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione uma política" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1h">1 hora</SelectItem>
+                      <SelectItem value="24h">24 horas</SelectItem>
+                      <SelectItem value="48h">48 horas</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
@@ -391,70 +396,95 @@ const SystemConfigPage = () => {
                   <Label>Idioma</Label>
                   <Select
                     value={systemPreferences.language}
-                    onChange={(e) => setSystemPreferences({
+                    onValueChange={(value) => setSystemPreferences({
                       ...systemPreferences,
-                      language: e.target.value
+                      language: value
                     })}
                   >
-                    <option value="pt-BR">Português (Brasil)</option>
-                    <option value="en-US">English (US)</option>
-                    <option value="es-ES">Español</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um idioma" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pt-BR">Português (Brasil)</SelectItem>
+                      <SelectItem value="en-US">English (US)</SelectItem>
+                      <SelectItem value="es-ES">Español</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Fuso Horário</Label>
                   <Select
                     value={systemPreferences.timezone}
-                    onChange={(e) => setSystemPreferences({
+                    onValueChange={(value) => setSystemPreferences({
                       ...systemPreferences,
-                      timezone: e.target.value
+                      timezone: value
                     })}
                   >
-                    <option value="America/Sao_Paulo">São Paulo (GMT-3)</option>
-                    <option value="America/New_York">New York (GMT-4)</option>
-                    <option value="Europe/London">London (GMT+1)</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um fuso horário" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="America/Sao_Paulo">São Paulo (GMT-3)</SelectItem>
+                      <SelectItem value="America/New_York">New York (GMT-4)</SelectItem>
+                      <SelectItem value="Europe/London">London (GMT+1)</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Formato de Data</Label>
                   <Select
                     value={systemPreferences.dateFormat}
-                    onChange={(e) => setSystemPreferences({
+                    onValueChange={(value) => setSystemPreferences({
                       ...systemPreferences,
-                      dateFormat: e.target.value
+                      dateFormat: value
                     })}
                   >
-                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um formato" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
+                      <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
+                      <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Moeda</Label>
                   <Select
                     value={systemPreferences.currency}
-                    onChange={(e) => setSystemPreferences({
+                    onValueChange={(value) => setSystemPreferences({
                       ...systemPreferences,
-                      currency: e.target.value
+                      currency: value
                     })}
                   >
-                    <option value="BRL">BRL (R$)</option>
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione uma moeda" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="BRL">BRL (R$)</SelectItem>
+                      <SelectItem value="USD">USD ($)</SelectItem>
+                      <SelectItem value="EUR">EUR (€)</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Tema</Label>
                   <Select
                     value={systemPreferences.theme}
-                    onChange={(e) => setSystemPreferences({
+                    onValueChange={(value) => setSystemPreferences({
                       ...systemPreferences,
-                      theme: e.target.value
+                      theme: value
                     })}
                   >
-                    <option value="light">Claro</option>
-                    <option value="dark">Escuro</option>
-                    <option value="system">Sistema</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um tema" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">Claro</SelectItem>
+                      <SelectItem value="dark">Escuro</SelectItem>
+                      <SelectItem value="system">Sistema</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
               </div>
@@ -493,17 +523,22 @@ const SystemConfigPage = () => {
                       <Label>Provedor</Label>
                       <Select
                         value={integrations.paymentGateway.provider}
-                        onChange={(e) => setIntegrations({
+                        onValueChange={(value) => setIntegrations({
                           ...integrations,
                           paymentGateway: {
                             ...integrations.paymentGateway,
-                            provider: e.target.value
+                            provider: value
                           }
                         })}
                       >
-                        <option value="mercadopago">Mercado Pago</option>
-                        <option value="stripe">Stripe</option>
-                        <option value="paypal">PayPal</option>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um provedor" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="mercadopago">Mercado Pago</SelectItem>
+                          <SelectItem value="stripe">Stripe</SelectItem>
+                          <SelectItem value="paypal">PayPal</SelectItem>
+                        </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-2">
@@ -548,16 +583,21 @@ const SystemConfigPage = () => {
                       <Label>Provedor</Label>
                       <Select
                         value={integrations.calendar.provider}
-                        onChange={(e) => setIntegrations({
+                        onValueChange={(value) => setIntegrations({
                           ...integrations,
                           calendar: {
                             ...integrations.calendar,
-                            provider: e.target.value
+                            provider: value
                           }
                         })}
                       >
-                        <option value="google">Google Calendar</option>
-                        <option value="outlook">Microsoft Outlook</option>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um provedor" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="google">Google Calendar</SelectItem>
+                          <SelectItem value="outlook">Microsoft Outlook</SelectItem>
+                        </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-2">
@@ -602,16 +642,21 @@ const SystemConfigPage = () => {
                       <Label>Provedor</Label>
                       <Select
                         value={integrations.sms.provider}
-                        onChange={(e) => setIntegrations({
+                        onValueChange={(value) => setIntegrations({
                           ...integrations,
                           sms: {
                             ...integrations.sms,
-                            provider: e.target.value
+                            provider: value
                           }
                         })}
                       >
-                        <option value="twilio">Twilio</option>
-                        <option value="aws">AWS SNS</option>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um provedor" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="twilio">Twilio</SelectItem>
+                          <SelectItem value="aws">AWS SNS</SelectItem>
+                        </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-2">

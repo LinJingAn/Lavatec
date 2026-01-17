@@ -41,8 +41,12 @@ const ProtectedRoute = ({ requiredRole, children }: ProtectedRouteProps) => {
   }
 
   // If a specific role is required and user doesn't have it, redirect to unauthorized
-  if (requiredRole && dbUser && !hasRole(requiredRole)) {
-    return <Navigate to="/unauthorized" replace />;
+  if (requiredRole && dbUser) {
+    // Map 'customer' to 'user' for hasRole function
+    const roleToCheck = requiredRole === 'customer' ? 'user' : requiredRole;
+    if (!hasRole(roleToCheck)) {
+      return <Navigate to="/unauthorized" replace />;
+    }
   }
 
   // Render children or outlet

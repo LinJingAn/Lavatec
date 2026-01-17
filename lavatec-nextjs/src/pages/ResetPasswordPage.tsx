@@ -29,6 +29,9 @@ const resetPasswordSchema = z
 
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
+// Disable static generation - this page uses React Router and Auth context
+export const dynamic = 'force-dynamic';
+
 const ResetPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

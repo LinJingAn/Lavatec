@@ -32,11 +32,9 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ events, className = '' })
 
   const getStatusIcon = (status: OrderStatus) => {
     switch (status) {
-      case 'completed':
       case 'delivered':
         return <Check className="h-5 w-5 text-green-500" />;
       case 'cancelled':
-      case 'returned':
         return <AlertCircle className="h-5 w-5 text-red-500" />;
       default:
         return <Clock className="h-5 w-5 text-blue-500" />;

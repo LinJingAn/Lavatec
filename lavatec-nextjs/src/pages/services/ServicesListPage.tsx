@@ -78,8 +78,8 @@ const ServicesListPage: React.FC = () => {
         valueB = getCategoryName(b.categoryId as ServiceCategory);
       }
       
-      if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
-      if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+      if (valueA && valueB && valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+      if (valueA && valueB && valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
     

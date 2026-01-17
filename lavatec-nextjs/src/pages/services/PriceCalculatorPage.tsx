@@ -122,7 +122,7 @@ const PriceCalculatorPage: React.FC = () => {
     const entry = priceMatrix.find(
       e => e.serviceTypeId === serviceId && e.garmentTypeId === garmentId
     );
-    return entry ? entry.price : null;
+    return entry ? entry.basePrice : null;
   };
 
   if (isLoading) {

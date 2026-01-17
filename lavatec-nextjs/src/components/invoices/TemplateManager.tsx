@@ -291,6 +291,9 @@ const TemplateManager: React.FC<TemplateManagerProps> = ({
   );
 };
 
+// Template placeholder helpers
+const tpl = (name: string) => `{{${name}}}`;
+
 // Default template content
 const defaultTemplateContent = `
 <!DOCTYPE html>
@@ -332,9 +335,9 @@ const defaultTemplateContent = `
     </table>
     
     <div class="totals">
-      <p>Subtotal: ${{subtotal}}</p>
-      <p>Tax: ${{tax}}</p>
-      <p class="total">Total: ${{total}}</p>
+      <p>Subtotal: $${tpl('subtotal')}</p>
+      <p>Tax: $${tpl('tax')}</p>
+      <p class="total">Total: $${tpl('total')}</p>
     </div>
   </div>
 </body>

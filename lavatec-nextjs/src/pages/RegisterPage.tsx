@@ -35,6 +35,9 @@ const registerSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
+// Disable static generation - this page uses React Router and Auth context
+export const dynamic = 'force-dynamic';
+
 const RegisterPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -66,11 +69,8 @@ const RegisterPage = () => {
       const { error: signUpError, user } = await signUp(
         data.adminEmail,
         data.adminPassword,
-        {
-          first_name: data.adminFirstName,
-          last_name: data.adminLastName,
-          role: 'admin',
-        }
+        `${data.adminFirstName} ${data.adminLastName}`,
+        'admin'
       );
 
       if (signUpError) {

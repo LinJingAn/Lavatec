@@ -18,8 +18,9 @@ import {
   Block as BlockIcon,
   CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
-import { Promotion, PromotionStatus } from '../../models/Promotion';
+import { PromotionStatus } from '../../models/Promotion';
 import { PromotionService } from '../../services/PromotionService';
+import type { Promotion } from '../../services/promotionApiService';
 
 interface PromotionListProps {
   promotions: Promotion[];
@@ -34,22 +35,20 @@ export const PromotionList: React.FC<PromotionListProps> = ({
 }) => {
   const promotionService = PromotionService.getInstance();
 
-  const getStatusColor = (status: PromotionStatus) => {
+  const getStatusColor = (status: 'active' | 'inactive' | 'expired') => {
     switch (status) {
       case 'active':
         return 'success';
-      case 'scheduled':
-        return 'info';
+      case 'inactive':
+        return 'warning';
       case 'expired':
         return 'error';
-      case 'paused':
-        return 'warning';
       default:
         return 'default';
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -93,22 +92,22 @@ export const PromotionList: React.FC<PromotionListProps> = ({
                   </Box>
                 </TableCell>
                 <TableCell>
-                  {promotion.discountType === 'percentage' ? 'Percentage' : 'Fixed Amount'}
+                  {promotion.discount_type === 'percentage' ? 'Percentage' : 'Fixed Amount'}
                 </TableCell>
                 <TableCell>
-                  {promotion.discountType === 'percentage'
-                    ? `${promotion.discountValue}%`
-                    : `$${promotion.discountValue.toFixed(2)}`}
+                  {promotion.discount_type === 'percentage'
+                    ? `${promotion.discount_value}%`
+                    : `$${promotion.discount_value.toFixed(2)}`}
                 </TableCell>
                 <TableCell>
                   <Box>
-                    <div>From: {formatDate(promotion.startDate)}</div>
-                    {promotion.endDate && <div>To: {formatDate(promotion.endDate)}</div>}
+                    <div>From: {formatDate(promotion.start_date)}</div>
+                    {promotion.end_date && <div>To: {formatDate(promotion.end_date)}</div>}
                   </Box>
                 </TableCell>
                 <TableCell>
-                  {promotion.currentUsageCount}
-                  {promotion.maxUsageCount && ` / ${promotion.maxUsageCount}`}
+                  {promotion.usage_count || 0}
+                  {promotion.max_usage_count && ` / ${promotion.max_usage_count}`}
                 </TableCell>
                 <TableCell>
                   <Chip
