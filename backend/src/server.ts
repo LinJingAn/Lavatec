@@ -13,6 +13,7 @@ import invoiceRoutes from './routes/invoiceRoutes.js';
 import deliveryRoutes from './routes/deliveryRoutes.js';
 import promotionRoutes from './routes/promotionRoutes.js';
 import supplyRoutes from './routes/supplyRoutes.js';
+import smsRoutes from './routes/smsRoutes.js';
 
 const app: Express = express();
 
@@ -65,6 +66,7 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/deliveries', deliveryRoutes);
 app.use('/api/promotions', promotionRoutes);
 app.use('/api/supplies', supplyRoutes);
+app.use('/api/sms', smsRoutes);
 
 app.use(errorHandler);
 

@@ -87,10 +87,11 @@ const RegisterPage = () => {
 
       setSuccess(true);
       
-      // Redirecionar para página de boas-vindas após 3 segundos
+      // Redirect to wait for verification page
+      // The backend sends verification email automatically
       setTimeout(() => {
-        navigate('/onboarding');
-      }, 3000);
+        navigate('/wait-for-verification');
+      }, 2000);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       
@@ -129,12 +130,15 @@ const RegisterPage = () => {
         )}
 
         {success && (
-          <div className="bg-green-50 p-4 rounded-md mb-6">
-            <p className="text-green-600 font-medium text-center">
+          <div className="bg-green-50 p-4 rounded-md mb-6 border border-green-200">
+            <p className="text-green-600 font-medium text-center mb-2">
               Registro realizado com sucesso!
             </p>
+            <p className="text-green-700 text-sm text-center mb-3">
+              Uma mensagem de verificação foi enviada para seu email. Por favor, verifique sua caixa de entrada e clique no link de verificação para ativar sua conta.
+            </p>
             <p className="text-green-600 text-sm text-center">
-              Sua empresa foi cadastrada. Redirecionando para a página de boas-vindas...
+              Redirecionando para a página de boas-vindas...
             </p>
           </div>
         )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNotification, NotificationType } from '@/hooks/useNotification';
+import { useNotification, NotificationType } from '@/contexts/NotificationContext';
 import { X } from 'lucide-react';
 
 const notificationStyles: Record<NotificationType, string> = {
@@ -9,28 +9,25 @@ const notificationStyles: Record<NotificationType, string> = {
   warning: 'bg-yellow-50 text-yellow-800 border-yellow-200'
 };
 
-export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const NotificationDisplay: React.FC = () => {
   const { notifications, removeNotification } = useNotification();
 
   return (
-    <>
-      {children}
-      <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
-        {notifications.map((notification) => (
-          <div
-            key={notification.id}
-            className={`${notificationStyles[notification.type]} border rounded-lg p-4 shadow-lg flex items-start gap-3 min-w-[300px] max-w-md`}
+    <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
+      {notifications.map((notification) => (
+        <div
+          key={notification.id}
+          className={`${notificationStyles[notification.type]} border rounded-lg p-4 shadow-lg flex items-start gap-3 min-w-[300px] max-w-md animate-in slide-in-from-right`}
+        >
+          <div className="flex-1">{notification.message}</div>
+          <button
+            onClick={() => removeNotification(notification.id)}
+            className="text-gray-500 hover:text-gray-700 flex-shrink-0"
           >
-            <div className="flex-1">{notification.message}</div>
-            <button
-              onClick={() => removeNotification(notification.id)}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        ))}
-      </div>
-    </>
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }; 

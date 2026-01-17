@@ -116,6 +116,12 @@ export const login = async (
       throw new AppError('Invalid credentials', 401);
     }
 
+    // Check if email is verified (optional - can be made required)
+    // Uncomment the following lines to require email verification before login:
+    // if (!user.email_verified) {
+    //   throw new AppError('Please verify your email address before logging in. Check your inbox for the verification email.', 403);
+    // }
+
     const token = jwt.sign(
       { userId: user.id, role: user.role },
       config.jwt.secret as string,
@@ -123,7 +129,7 @@ export const login = async (
     );
 
     res.json({
-      message: 'Login successful',
+      message: user.email_verified ? 'Login successful' : 'Login successful. Please verify your email address.',
       token,
       user: {
         id: user.id,
@@ -133,6 +139,7 @@ export const login = async (
         branch_id: user.branch_id,
         email_verified: user.email_verified,
       },
+      requiresVerification: !user.email_verified,
     });
   } catch (error) {
     next(error);

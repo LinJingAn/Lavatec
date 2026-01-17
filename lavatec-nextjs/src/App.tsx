@@ -4,6 +4,8 @@ import { AuthProvider } from './contexts/AuthContext'
 import { SectionProvider } from './contexts/SectionContext'
 import { LocationProvider } from './contexts/LocationContext'
 import { SidebarProvider } from './contexts/SidebarContext'
+import { NotificationProvider } from './contexts/NotificationContext'
+import { NotificationDisplay } from './components/common/NotificationProvider'
 import MainLayout from './components/Layout/MainLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -12,6 +14,9 @@ import RegisterPage from './pages/auth/RegisterPage'
 import UnauthorizedPage from './pages/UnauthorizedPage'
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'
 import ResetPasswordPage from './pages/auth/ResetPasswordPage'
+import VerifyEmailPage from './pages/VerifyEmailPage'
+import ResendVerificationPage from './pages/ResendVerificationPage'
+import WaitForVerificationPage from './pages/WaitForVerificationPage'
 import UserProfilePage from './pages/UserProfilePage'
 import UserPreferencesPage from './pages/UserPreferencesPage'
 import CompanySettingsPage from './pages/CompanySettingsPage'
@@ -139,16 +144,20 @@ function App() {
         }}
       >
         <AuthProvider>
-          <SectionProvider>
-            <LocationProvider>
-              <SidebarProvider>
-                <Routes>
+          <NotificationProvider>
+            <SectionProvider>
+              <LocationProvider>
+                <SidebarProvider>
+                  <Routes>
                   {/* Public routes */}
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/unauthorized" element={<UnauthorizedPage />} />
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
+                  <Route path="/verify-email" element={<VerifyEmailPage />} />
+                  <Route path="/resend-verification" element={<ResendVerificationPage />} />
+                  <Route path="/wait-for-verification" element={<WaitForVerificationPage />} />
                   
                   {/* Protected routes with MainLayout */}
                   <Route element={<ProtectedRoute />}>
@@ -315,11 +324,13 @@ function App() {
                   
                   {/* Fallback route */}
                   <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-                <AIAgentChat />
-              </SidebarProvider>
-            </LocationProvider>
-          </SectionProvider>
+                  </Routes>
+                  <NotificationDisplay />
+                  <AIAgentChat />
+                </SidebarProvider>
+              </LocationProvider>
+            </SectionProvider>
+          </NotificationProvider>
         </AuthProvider>
       </Router>
     </ErrorBoundary>

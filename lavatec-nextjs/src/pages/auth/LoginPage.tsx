@@ -28,8 +28,9 @@ const LoginPage = () => {
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
   const navigate = useNavigate();
-  const { signIn, user, setDevUser } = useAuth();
+  const { signIn, user, setDevUser, emailVerified, resendVerificationEmail } = useAuth();
   
   const {
     register,
@@ -153,7 +154,37 @@ const LoginPage = () => {
           </p>
           
           {error && (
-            <p className="text-red-500 mb-4">{error}</p>
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+          )}
+
+          {needsVerification && (
+            <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+              <p className="text-yellow-800 font-medium mb-2">
+                Seu email ainda não foi verificado.
+              </p>
+              <p className="text-yellow-700 text-sm mb-3">
+                Por favor, verifique sua caixa de entrada e clique no link de verificação. Se você não recebeu o email, clique no botão abaixo para reenviar.
+              </p>
+              <button
+                type="button"
+                onClick={async () => {
+                  const email = (document.getElementById('email') as HTMLInputElement)?.value;
+                  if (email) {
+                    await resendVerificationEmail(email);
+                    setNeedsVerification(false);
+                    setSuccess(true);
+                    setTimeout(() => {
+                      navigate('/');
+                    }, 2000);
+                  }
+                }}
+                className="text-sm text-yellow-800 underline hover:text-yellow-900"
+              >
+                Reenviar email de verificação
+              </button>
+            </div>
           )}
           
           <form onSubmit={handleSubmit(onSubmit)}>

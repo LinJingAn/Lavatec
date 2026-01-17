@@ -10,6 +10,7 @@ interface DbUser {
   role: 'admin' | 'manager' | 'staff' | 'user';
   is_active: boolean;
   branch_id?: string;
+  email_verified?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -66,6 +67,12 @@ interface AuthContextType {
   }>;
   refreshUserData: () => Promise<void>;
   
+  // Email verification
+  emailVerified: boolean;
+  resendVerificationEmail: (email: string) => Promise<{
+    error: Error | null;
+  }>;
+  
   // Dev mode function
   setDevUser: () => void;
   
@@ -109,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           role: userData.role || 'user',
           is_active: userData.is_active !== false,
           branch_id: userData.branch_id,
+          email_verified: userData.email_verified || false,
           created_at: userData.created_at,
           updated_at: userData.updated_at,
         };
@@ -386,6 +394,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
   
+  // Resend verification email
+  const resendVerificationEmail = async (email: string) => {
+    setIsLoading(true);
+    setAuthError(null);
+    
+    try {
+      const response = await api.post('/auth/resend-verification', {
+        email,
+      });
+      
+      return { error: null };
+    } catch (error: any) {
+      console.error('Resend verification error:', error);
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to resend verification email';
+      setAuthError(new Error(errorMessage));
+      return { error: new Error(errorMessage) };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   // Update user profile data
   const updateUserData = async (data: Partial<DbUser>) => {
     setIsLoading(true);
@@ -412,6 +441,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           role: updatedUser.role || 'user',
           is_active: updatedUser.is_active !== false,
           branch_id: updatedUser.branch_id,
+          email_verified: updatedUser.email_verified || false,
           created_at: updatedUser.created_at,
           updated_at: updatedUser.updated_at,
         };

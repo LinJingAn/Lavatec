@@ -2,6 +2,8 @@ import { Response, NextFunction } from 'express';
 import pool from '../config/database.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { AuthRequest } from '../middleware/auth.js';
+import { smsService } from '../services/smsService.js';
+import { emailService } from '../services/emailService.js';
 
 const generateOrderNumber = (branchPrefix: string = 'LVT'): string => {
   const today = new Date();
@@ -202,6 +204,66 @@ export const createOrder = async (
       [order.id, 'created', 'Order created', userId]
     );
 
+    // Send notifications if enabled
+    try {
+      const customerResult = await pool.query(
+        'SELECT name, phone, email FROM customers WHERE id = $1',
+        [customer_id]
+      );
+
+      if (customerResult.rows.length > 0) {
+        const customer = customerResult.rows[0];
+        const orderData = await pool.query(
+          'SELECT notification_channel, send_notifications FROM orders WHERE id = $1',
+          [order.id]
+        );
+        const notificationSettings = orderData.rows[0] || { notification_channel: 'both', send_notifications: true };
+
+        if (notificationSettings.send_notifications) {
+          const channel = notificationSettings.notification_channel || 'both';
+          const promisedDate = new Date(promised_date).toLocaleDateString('pt-BR');
+
+          // Send SMS if channel is 'sms' or 'both'
+          if ((channel === 'sms' || channel === 'both') && customer.phone) {
+            try {
+              await smsService.sendOrderConfirmationSMS(
+                customer.phone,
+                orderNumber,
+                customer.name,
+                promisedDate
+              );
+            } catch (smsError) {
+              console.error('Failed to send SMS notification:', smsError);
+              // Don't fail the order creation if SMS fails
+            }
+          }
+
+          // Send Email if channel is 'email' or 'both'
+          if ((channel === 'email' || channel === 'both') && customer.email) {
+            try {
+              await emailService.sendEmail({
+                to: customer.email,
+                subject: `Pedido ${orderNumber} criado com sucesso - Lavatec`,
+                html: `
+                  <h1>Pedido Criado com Sucesso!</h1>
+                  <p>Olá ${customer.name},</p>
+                  <p>Seu pedido <strong>${orderNumber}</strong> foi criado com sucesso.</p>
+                  <p><strong>Data prometida:</strong> ${promisedDate}</p>
+                  <p>Obrigado por escolher Lavatec!</p>
+                `,
+              });
+            } catch (emailError) {
+              console.error('Failed to send email notification:', emailError);
+              // Don't fail the order creation if email fails
+            }
+          }
+        }
+      }
+    } catch (notificationError) {
+      console.error('Error sending notifications:', notificationError);
+      // Don't fail the order creation if notifications fail
+    }
+
     res.status(201).json({
       order: { ...order, items: orderItems.map((r) => r.rows[0]) },
     });
@@ -270,6 +332,72 @@ export const updateOrder = async (
          VALUES ($1, $2, $3, $4)`,
         [id, 'status_changed', `Status changed to ${updates.status}`, req.userId]
       );
+
+      // Send status update notifications
+      try {
+        const orderData = await pool.query(
+          `SELECT o.*, c.name as customer_name, c.phone, c.email, b.name as branch_name
+           FROM orders o
+           LEFT JOIN customers c ON o.customer_id = c.id
+           LEFT JOIN branches b ON o.branch_id = b.id
+           WHERE o.id = $1`,
+          [id]
+        );
+
+        if (orderData.rows.length > 0) {
+          const order = orderData.rows[0];
+          
+          if (order.send_notifications) {
+            const channel = order.notification_channel || 'both';
+
+            // Send SMS notification
+            if ((channel === 'sms' || channel === 'both') && order.phone) {
+              try {
+                await smsService.sendOrderStatusUpdateSMS(
+                  order.phone,
+                  order.order_number,
+                  updates.status,
+                  order.customer_name
+                );
+
+                // Special handling for 'ready' status
+                if (updates.status === 'ready') {
+                  await smsService.sendOrderReadySMS(
+                    order.phone,
+                    order.order_number,
+                    order.customer_name,
+                    order.branch_name
+                  );
+                }
+              } catch (smsError) {
+                console.error('Failed to send SMS status update:', smsError);
+              }
+            }
+
+            // Send Email notification
+            if ((channel === 'email' || channel === 'both') && order.email) {
+              try {
+                await emailService.sendEmail({
+                  to: order.email,
+                  subject: `Atualização do Pedido ${order.order_number} - Lavatec`,
+                  html: `
+                    <h1>Atualização do Pedido</h1>
+                    <p>Olá ${order.customer_name},</p>
+                    <p>O status do seu pedido <strong>${order.order_number}</strong> foi atualizado para: <strong>${updates.status}</strong></p>
+                    ${updates.status === 'ready' ? '<p>Seu pedido está pronto para retirada!</p>' : ''}
+                    <p>Acompanhe seu pedido em nosso sistema.</p>
+                  `,
+                });
+              } catch (emailError) {
+                console.error('Failed to send email status update:', emailError);
+              }
+            }
+          }
+        }
+      } catch (notificationError) {
+        console.error('Error sending status update notifications:', notificationError);
+        // Don't fail the status update if notifications fail
+      }
     }
 
     res.json({ order: result.rows[0] });
