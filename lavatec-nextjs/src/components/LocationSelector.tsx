@@ -69,7 +69,7 @@ const LocationSelector: React.FC = () => {
           </div>
 
           {/* Location list */}
-          <div className="max-h-64 overflow-y-auto scrollbar-hide">
+          <div className="max-h-64 overflow-y-auto scrollbar-hide overflow-x-hidden">
             {filteredLocations.map((location) => (
               <button
                 key={location.id}

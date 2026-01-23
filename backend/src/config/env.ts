@@ -58,5 +58,30 @@ export const config = {
       phoneNumber: process.env.TWILIO_WHATSAPP_NUMBER || process.env.TWILIO_PHONE_NUMBER || '',
     },
   },
+  // Phase 2 Configuration
+  pagarme: {
+    apiKey: process.env.PAGARME_API_KEY || '',
+    env: process.env.PAGARME_ENV || 'test', // 'test' or 'production'
+    webhookSecret: process.env.PAGARME_WEBHOOK_SECRET || '',
+  },
+  nfe: {
+    provider: process.env.NFE_PROVIDER || 'mock', // 'mock', 'focusnfe', 'webmaniabr'
+    focusNfe: {
+      url: process.env.FOCUS_NFE_URL || 'https://homologacao.focusnfe.com.br',
+      token: process.env.FOCUS_NFE_TOKEN || '',
+    },
+    ambiente: parseInt(process.env.NFE_AMBIENTE || '2', 10), // 1=Produção, 2=Homologação
+  },
+  tef: {
+    provider: process.env.TEF_PROVIDER || 'mock', // 'mock', 'sitef', 'stone'
+    sitef: {
+      serverIp: process.env.SITEF_SERVER_IP || '127.0.0.1',
+      storeId: process.env.SITEF_STORE_ID || '00000000',
+      terminalId: process.env.SITEF_TERMINAL_ID || '00000001',
+    },
+    stone: {
+      stoneCode: process.env.STONE_CODE || '',
+    },
+  },
 };
 

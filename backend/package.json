@@ -10,6 +10,7 @@
     "start": "node dist/server.js",
     "migrate": "tsx src/db/migrate.ts",
     "migrate:email-verification": "tsx src/db/migrateEmailVerification.ts",
+    "migrate:phase2": "tsx src/db/migratePhase2.ts",
     "seed": "tsx src/db/seed.ts"
   },
   "keywords": ["laundry", "management", "api"],

@@ -16,6 +16,8 @@ import supplyRoutes from './routes/supplyRoutes.js';
 import smsRoutes from './routes/smsRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import whatsappRoutes from './routes/whatsappRoutes.js';
+// Phase 2 Routes
+import phase2Routes from './routes/phase2Routes.js';
 
 const app: Express = express();
 
@@ -71,6 +73,9 @@ app.use('/api/supplies', supplyRoutes);
 app.use('/api/sms', smsRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
+
+// Phase 2: Financial, Admin, Dashboard, Pagar.me, NF-e, TEF
+app.use('/api', phase2Routes);
 
 app.use(errorHandler);
 
