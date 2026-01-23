@@ -5,6 +5,7 @@ import { SectionProvider } from './contexts/SectionContext'
 import { LocationProvider } from './contexts/LocationContext'
 import { SidebarProvider } from './contexts/SidebarContext'
 import { NotificationProvider } from './contexts/NotificationContext'
+import { ThemeProvider } from './contexts/ThemeContext'
 import { NotificationDisplay } from './components/common/NotificationProvider'
 import MainLayout from './components/Layout/MainLayout'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -138,6 +139,7 @@ import LandingPage from './pages/LandingPage'
 function App() {
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>
+      <ThemeProvider>
       <Router
         future={{
           v7_startTransition: true,
@@ -335,6 +337,7 @@ function App() {
           </NotificationProvider>
         </AuthProvider>
       </Router>
+      </ThemeProvider>
     </ErrorBoundary>
   )
 }

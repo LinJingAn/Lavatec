@@ -340,7 +340,7 @@ const RegisterPage = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-[50px] bg-primary-600 text-white rounded-md font-medium hover:bg-primary-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full h-[50px] bg-primary-600 text-white rounded-md font-medium hover:bg-primary-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-center"
               >
                 {isSubmitting ? "Processando..." : "Registrar Empresa"}
               </button>

@@ -110,12 +110,18 @@ const LoginPage = () => {
   const isDevelopment = process.env.NODE_ENV === 'development';
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-white">
+    <div className="min-h-screen w-full flex flex-col bg-white dark:bg-gray-900 transition-colors duration-200">
       {/* Add custom styles for this page */}
       <style>{`
         .login-input {
           background-color: white !important;
           background: white !important;
+        }
+        .dark .login-input {
+          background-color: #1e293b !important;
+          background: #1e293b !important;
+          color: #f1f5f9 !important;
+          border-color: #475569 !important;
         }
         .login-input:-webkit-autofill {
           -webkit-box-shadow: 0 0 0 1000px white inset !important;
@@ -123,48 +129,66 @@ const LoginPage = () => {
           background-color: white !important;
           background: white !important;
         }
+        .dark .login-input:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0 1000px #1e293b inset !important;
+          -webkit-text-fill-color: #f1f5f9 !important;
+          background-color: #1e293b !important;
+          background: #1e293b !important;
+        }
         .login-input:-webkit-autofill:hover {
           -webkit-box-shadow: 0 0 0 1000px white inset !important;
           -webkit-text-fill-color: #000 !important;
           background-color: white !important;
+        }
+        .dark .login-input:-webkit-autofill:hover {
+          -webkit-box-shadow: 0 0 0 1000px #1e293b inset !important;
+          -webkit-text-fill-color: #f1f5f9 !important;
         }
         .login-input:-webkit-autofill:focus {
           -webkit-box-shadow: 0 0 0 1000px white inset !important;
           -webkit-text-fill-color: #000 !important;
           background-color: white !important;
         }
+        .dark .login-input:-webkit-autofill:focus {
+          -webkit-box-shadow: 0 0 0 1000px #1e293b inset !important;
+          -webkit-text-fill-color: #f1f5f9 !important;
+        }
         .login-input:-webkit-autofill:active {
           -webkit-box-shadow: 0 0 0 1000px white inset !important;
           -webkit-text-fill-color: #000 !important;
           background-color: white !important;
+        }
+        .dark .login-input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 1000px #1e293b inset !important;
+          -webkit-text-fill-color: #f1f5f9 !important;
         }
       `}</style>
       
       <div className="max-w-[550px] w-full px-6 mx-auto pt-10">
         {/* Header Section */}
         <div className="mb-16">
-          <h1 className="text-2xl font-bold">Lavatec</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Lavatec</h1>
         </div>
 
         {/* Main Login Form */}
         <div className="w-full text-center">
-          <h2 className="text-3xl font-bold mb-3 text-center">Entrar</h2>
-          <p className="text-gray-600 mb-10 text-center">
+          <h2 className="text-3xl font-bold mb-3 text-center text-gray-900 dark:text-white">Entrar</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-10 text-center">
             Insira seu email abaixo para entrar na sua conta
           </p>
           
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-600 text-sm">{error}</p>
+            <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+              <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
             </div>
           )}
 
           {needsVerification && (
-            <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-              <p className="text-yellow-800 font-medium mb-2">
+            <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+              <p className="text-yellow-800 dark:text-yellow-300 font-medium mb-2">
                 Seu email ainda não foi verificado.
               </p>
-              <p className="text-yellow-700 text-sm mb-3">
+              <p className="text-yellow-700 dark:text-yellow-400 text-sm mb-3">
                 Por favor, verifique sua caixa de entrada e clique no link de verificação. Se você não recebeu o email, clique no botão abaixo para reenviar.
               </p>
               <button
@@ -180,7 +204,7 @@ const LoginPage = () => {
                     }, 2000);
                   }
                 }}
-                className="text-sm text-yellow-800 underline hover:text-yellow-900"
+                className="text-sm text-yellow-800 dark:text-yellow-300 underline hover:text-yellow-900 dark:hover:text-yellow-200"
               >
                 Reenviar email de verificação
               </button>
@@ -189,17 +213,16 @@ const LoginPage = () => {
           
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-6">
-              <p className="font-normal mb-2 text-left">Email</p>
+              <p className="font-normal mb-2 text-left text-gray-900 dark:text-gray-200">Email</p>
               <input
                 id="email"
                 type="email"
                 placeholder="meuemail@exemplo.com"
                 {...register('email')}
-                className="login-input h-[50px] w-full bg-white border border-gray-300 rounded-md px-3 mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                style={{ backgroundColor: 'white !important' }}
+                className="login-input h-[50px] w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white dark:placeholder-gray-400"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm text-left">
+                <p className="text-red-500 dark:text-red-400 text-sm text-left">
                   {errors.email.message}
                 </p>
               )}
@@ -207,10 +230,10 @@ const LoginPage = () => {
             
             <div className="mb-8">
               <div className="flex justify-between items-center mb-2">
-                <p className="font-normal text-left">Senha</p>
+                <p className="font-normal text-left text-gray-900 dark:text-gray-200">Senha</p>
                 <RouterLink
                   to="/forgot-password"
-                  className="text-blue-600 text-sm hover:text-blue-700"
+                  className="text-blue-600 dark:text-blue-400 text-sm hover:text-blue-700 dark:hover:text-blue-300"
                 >
                   Esqueceu sua senha?
                 </RouterLink>
@@ -220,15 +243,13 @@ const LoginPage = () => {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   {...register('password')}
-                  className="login-input h-[50px] w-full bg-white border border-gray-300 rounded-md px-3 pr-12 mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  style={{ backgroundColor: 'white !important' }}
+                  className="login-input h-[50px] w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 pr-12 mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white"
                 />
                 <button
                   type="button"
-                  className="absolute right-[2px] top-[5px] h-10 w-10 bg-white border border-gray-200 rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors duration-200"
+                  className="absolute right-[2px] top-[5px] h-10 w-10 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 text-gray-600 dark:text-gray-300"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  style={{ backgroundColor: 'white !important' }}
                 >
                   {showPassword ? (
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -254,7 +275,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-[50px] bg-blue-600 text-white rounded-md uppercase font-medium hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-[50px] bg-blue-600 dark:bg-blue-500 text-white rounded-md uppercase font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "ENTRANDO..." : "ENTRAR"}
             </button>
@@ -265,7 +286,7 @@ const LoginPage = () => {
                 type="button"
                 onClick={handleDevLogin}
                 disabled={isSubmitting}
-                className="w-full h-[50px] mt-3 bg-orange-500 text-white rounded-md uppercase font-medium hover:bg-orange-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-orange-600"
+                className="w-full h-[50px] mt-3 bg-orange-500 dark:bg-orange-600 text-white rounded-md uppercase font-medium hover:bg-orange-600 dark:hover:bg-orange-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-orange-600 dark:border-orange-500"
                 title="Development Mode - Quick Login"
               >
                 {isSubmitting ? "DEV LOGIN..." : "🔧 DEV LOGIN"}
@@ -274,15 +295,15 @@ const LoginPage = () => {
 
             {/* Dev Mode Info */}
             {isDevelopment && (
-              <div className="mt-2 p-2 bg-orange-50 border border-orange-200 rounded text-xs text-orange-700">
+              <div className="mt-2 p-2 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-700 rounded text-xs text-orange-700 dark:text-orange-300">
                 <strong>🔧 Modo Desenvolvimento:</strong> Clique no botão laranja para login rápido
               </div>
             )}
           </form>
           
-          <p className="text-center text-sm text-gray-600 mt-8">
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-8">
             Não tem uma conta?{' '}
-            <RouterLink to="/register" className="text-blue-600 hover:text-blue-700">
+            <RouterLink to="/register" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
               Criar conta
             </RouterLink>
           </p>

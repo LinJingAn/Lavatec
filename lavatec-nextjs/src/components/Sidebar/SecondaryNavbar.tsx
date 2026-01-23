@@ -44,8 +44,10 @@ const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({ to, label, active, 
     <NavLink
       to={to}
       className={`
-        flex items-center px-6 py-2.5 text-sm hover:bg-gray-50 cursor-pointer transition-colors duration-150
-        ${isActiveRoute ? 'text-blue-600 bg-blue-50 font-medium' : 'text-gray-600'}
+        flex items-center px-6 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-150
+        ${isActiveRoute 
+          ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 font-medium' 
+          : 'text-gray-600 dark:text-gray-300'}
       `}
       onClick={handleClick}
     >
@@ -100,12 +102,12 @@ const SecondaryNavbar: React.FC<SecondaryNavbarProps> = ({
   };
   
   return (
-    <div className="w-64 bg-white border-r border-gray-200 h-screen overflow-y-auto scrollbar-hide">
-      <div className="py-4 px-6 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-        <span className="font-medium text-gray-800">{title}</span>
+    <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen overflow-y-auto scrollbar-hide transition-colors duration-200">
+      <div className="py-4 px-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-between items-center">
+        <span className="font-medium text-gray-800 dark:text-gray-200">{title}</span>
         {showAddButton && (
           <button 
-            className="p-1 rounded-full text-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+            className="p-1 rounded-full text-blue-500 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
             onClick={handleAddClick}
             title={`Add ${title.toLowerCase()}`}
           >
