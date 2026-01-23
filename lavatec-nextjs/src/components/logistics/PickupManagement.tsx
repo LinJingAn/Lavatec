@@ -330,11 +330,11 @@ export const PickupManagement: React.FC = () => {
   );
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }} className="bg-white dark:bg-slate-800 transition-colors duration-300">
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }} className="dark:border-slate-700">
         <Grid container spacing={2} alignItems="center">
           <Grid size="grow">
-            <Typography variant="h6">Pickup Management</Typography>
+            <Typography variant="h6" className="text-slate-900 dark:text-white">Pickup Management</Typography>
           </Grid>
           <Grid>
             <Autocomplete
@@ -350,15 +350,17 @@ export const PickupManagement: React.FC = () => {
                   placeholder="Search by order # or customer"
                   value={searchQuery}
                   onChange={handleSearch}
+                  className="dark:bg-slate-700 dark:text-white"
                   InputProps={{
                     ...params.InputProps,
+                    className: "dark:text-white dark:bg-slate-700",
                     endAdornment: (
                       <>
                         {isSearching ? (
                           <CircularProgress size={20} />
                         ) : (
                           <InputAdornment position="end">
-                            <IconButton size="small">
+                            <IconButton size="small" className="dark:text-slate-300">
                               <MdQrCodeScanner />
                             </IconButton>
                           </InputAdornment>
@@ -386,12 +388,12 @@ export const PickupManagement: React.FC = () => {
           }}
         />
 
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom className="text-slate-900 dark:text-white">
           Pickup Orders
         </Typography>
         <List>
           {filteredOrders.map(order => (
-            <Paper key={order.id} sx={{ mb: 2, p: 2 }}>
+            <Paper key={order.id} sx={{ mb: 2, p: 2 }} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors duration-300">
               <ListItem
                 secondaryAction={
                   <Chip
@@ -401,13 +403,16 @@ export const PickupManagement: React.FC = () => {
                       order.status === 'partial' ? 'warning' :
                       order.status === 'ready' ? 'primary' : 'default'
                     }
+                    className="dark:bg-emerald-500"
                   />
                 }
+                className="dark:border-slate-700"
               >
-                <ListItemButton onClick={() => handleOrderSelect(order)}>
+                <ListItemButton onClick={() => handleOrderSelect(order)} className="dark:text-slate-300 dark:hover:bg-slate-700">
                   <ListItemText
                     primary={`#${order.orderNumber} - ${order.customerName}`}
                     secondary={`Location: ${order.location} | Items: ${order.items.length}`}
+                    className="dark:text-slate-400"
                   />
                 </ListItemButton>
               </ListItem>
@@ -421,15 +426,18 @@ export const PickupManagement: React.FC = () => {
         onClose={() => setShowVerificationDialog(false)}
         maxWidth="md"
         fullWidth
+        PaperProps={{
+          className: "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+        }}
       >
-        <DialogTitle>Verify Pickup - Order #{selectedOrder?.orderNumber}</DialogTitle>
-        <DialogContent>
+        <DialogTitle className="text-slate-900 dark:text-white">Verify Pickup - Order #{selectedOrder?.orderNumber}</DialogTitle>
+        <DialogContent className="dark:bg-slate-800">
           <Grid container spacing={3}>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom className="text-slate-900 dark:text-white">
                 Customer Information
               </Typography>
-              <Typography>
+              <Typography className="text-slate-700 dark:text-slate-300">
                 Name: {selectedOrder?.customerName}
                 <br />
                 Order #: {selectedOrder?.orderNumber}
@@ -438,7 +446,7 @@ export const PickupManagement: React.FC = () => {
               </Typography>
 
               <Box sx={{ mt: 3 }}>
-                <Typography variant="subtitle1" gutterBottom>
+                <Typography variant="subtitle1" gutterBottom className="text-slate-900 dark:text-white">
                   ID Verification
                 </Typography>
                 {!idPhotoTaken ? (
@@ -457,6 +465,7 @@ export const PickupManagement: React.FC = () => {
                       startIcon={<MdPhotoCamera />}
                       onClick={captureIDPhoto}
                       sx={{ mt: 1 }}
+                      className="bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600"
                     >
                       Capture ID
                     </Button>
@@ -468,6 +477,7 @@ export const PickupManagement: React.FC = () => {
                       variant="outlined"
                       onClick={() => setIdPhotoTaken(null)}
                       sx={{ mt: 1 }}
+                      className="dark:text-slate-300 dark:border-slate-600"
                     >
                       Retake
                     </Button>
@@ -477,29 +487,31 @@ export const PickupManagement: React.FC = () => {
             </Grid>
 
             <Grid size={{ xs: 12, md: 6 }}>
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom className="text-slate-900 dark:text-white">
                 Select Items for Pickup
               </Typography>
               <List>
                 {selectedOrder?.items.map(item => (
-                  <ListItem key={item.id}>
+                  <ListItem key={item.id} className="dark:text-slate-300">
                     <Checkbox
                       checked={item.isSelected}
                       onChange={() => handleItemToggle(item.id)}
+                      className="dark:text-emerald-400"
                     />
                     <ListItemText
                       primary={item.name}
                       secondary={`Quantity: ${item.quantity}`}
+                      className="dark:text-slate-400"
                     />
                   </ListItem>
                 ))}
               </List>
 
               <Box sx={{ mt: 3 }}>
-                <Typography variant="subtitle1" gutterBottom>
+                <Typography variant="subtitle1" gutterBottom className="text-slate-900 dark:text-white">
                   Customer Signature
                 </Typography>
-                <Paper sx={{ border: '1px solid #ccc', p: 2 }}>
+                <Paper sx={{ border: '1px solid #ccc', p: 2 }} className="dark:border-slate-600 dark:bg-slate-700">
                   <SignaturePad
                     canvasProps={{ width: 500, height: 200 }}
                     ref={(ref) => setSignature(ref)}
@@ -510,15 +522,18 @@ export const PickupManagement: React.FC = () => {
                     <Checkbox
                       checked={idVerified}
                       onChange={(e) => setIdVerified(e.target.checked)}
+                      className="dark:text-emerald-400"
                     />
                   }
                   label="ID Verified"
                   sx={{ mt: 1 }}
+                  className="dark:text-slate-300"
                 />
                 <Button
                   size="small"
                   onClick={() => signature?.clear()}
                   sx={{ mt: 1 }}
+                  className="dark:text-slate-300"
                 >
                   Clear Signature
                 </Button>
@@ -526,14 +541,15 @@ export const PickupManagement: React.FC = () => {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowVerificationDialog(false)}>
+        <DialogActions className="dark:bg-slate-800 dark:border-t dark:border-slate-700">
+          <Button onClick={() => setShowVerificationDialog(false)} className="dark:text-slate-300">
             Cancel
           </Button>
           <Button
             onClick={handleVerification}
             variant="contained"
             disabled={!idPhotoTaken || !signature || signature.isEmpty()}
+            className="bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600"
           >
             Confirm Pickup
           </Button>

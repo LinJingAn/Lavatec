@@ -6,7 +6,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={`rounded-lg border border-gray-200 bg-white shadow-sm ${className || ""}`}
+      className={`rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors duration-300 ${className || ""}`}
       {...props}
     />
   )
@@ -32,7 +32,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, CardTitleProps>(
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={`text-2xl font-semibold leading-none tracking-tight ${className || ""}`}
+      className={`text-2xl font-semibold leading-none tracking-tight text-slate-900 dark:text-white ${className || ""}`}
       {...props}
     />
   )
@@ -45,7 +45,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionPr
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={`text-sm text-gray-500 ${className || ""}`}
+      className={`text-sm text-slate-500 dark:text-slate-400 ${className || ""}`}
       {...props}
     />
   )
@@ -56,7 +56,7 @@ interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={`p-6 pt-0 ${className || ""}`} {...props} />
+    <div ref={ref} className={`p-6 pt-0 text-slate-700 dark:text-slate-300 ${className || ""}`} {...props} />
   )
 );
 CardContent.displayName = "CardContent";

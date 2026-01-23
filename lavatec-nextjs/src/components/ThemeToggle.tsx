@@ -14,25 +14,25 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ showLabel = false, variant = 
     return (
       <div className="relative group">
         <button
-          className="theme-toggle flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="theme-toggle flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200"
           aria-label="Theme settings"
         >
           {isDark ? (
-            <MdDarkMode className="w-5 h-5 text-yellow-500" />
+            <MdDarkMode className="w-5 h-5 text-yellow-400" />
           ) : (
             <MdLightMode className="w-5 h-5 text-amber-500" />
           )}
           {showLabel && (
-            <span className="text-sm text-gray-600 dark:text-gray-300">
+            <span className="text-sm text-slate-600 dark:text-slate-300">
               {theme === 'system' ? 'Sistema' : isDark ? 'Escuro' : 'Claro'}
             </span>
           )}
         </button>
-        <div className="absolute right-0 mt-2 w-40 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+        <div className="absolute right-0 mt-2 w-40 py-2 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
           <button
             onClick={() => setTheme('light')}
-            className={`w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-              theme === 'light' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+            className={`w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+              theme === 'light' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'
             }`}
           >
             <MdLightMode className="w-4 h-4" />
@@ -40,8 +40,8 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ showLabel = false, variant = 
           </button>
           <button
             onClick={() => setTheme('dark')}
-            className={`w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-              theme === 'dark' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+            className={`w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+              theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'
             }`}
           >
             <MdDarkMode className="w-4 h-4" />
@@ -49,8 +49,8 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ showLabel = false, variant = 
           </button>
           <button
             onClick={() => setTheme('system')}
-            className={`w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-              theme === 'system' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+            className={`w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+              theme === 'system' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'
             }`}
           >
             <MdComputer className="w-4 h-4" />
@@ -65,18 +65,18 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ showLabel = false, variant = 
     return (
       <button
         onClick={toggleTheme}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200"
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       >
         {isDark ? (
           <>
-            <MdLightMode className="w-5 h-5 text-amber-500" />
-            {showLabel && <span className="text-sm text-gray-700 dark:text-gray-200">Modo Claro</span>}
+            <MdLightMode className="w-5 h-5 text-amber-400" />
+            {showLabel && <span className="text-sm text-slate-700 dark:text-slate-200">Modo Claro</span>}
           </>
         ) : (
           <>
-            <MdDarkMode className="w-5 h-5 text-gray-600" />
-            {showLabel && <span className="text-sm text-gray-700 dark:text-gray-200">Modo Escuro</span>}
+            <MdDarkMode className="w-5 h-5 text-slate-600" />
+            {showLabel && <span className="text-sm text-slate-700 dark:text-slate-200">Modo Escuro</span>}
           </>
         )}
       </button>
@@ -87,14 +87,14 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ showLabel = false, variant = 
   return (
     <button
       onClick={toggleTheme}
-      className="theme-toggle p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      className="theme-toggle p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200"
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
     >
       {isDark ? (
         <MdLightMode className="w-5 h-5 text-yellow-400" />
       ) : (
-        <MdDarkMode className="w-5 h-5 text-gray-600" />
+        <MdDarkMode className="w-5 h-5 text-slate-600" />
       )}
     </button>
   );

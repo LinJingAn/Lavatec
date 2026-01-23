@@ -57,9 +57,9 @@ const TopBar = () => {
   }, [location.pathname]);
 
   const getButtonClasses = (section: 'admin' | 'stores') => {
-    const baseClasses = "flex items-center space-x-1.5 px-3 py-1.5 rounded-full transition-colors duration-200 focus:outline-none";
-    const activeClasses = "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400";
-    const inactiveClasses = "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800";
+    const baseClasses = "flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-colors duration-200 focus:outline-none";
+    const activeClasses = "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400";
+    const inactiveClasses = "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
     
     return `${baseClasses} ${activeSection === section ? activeClasses : inactiveClasses}`;
   };
@@ -142,7 +142,7 @@ const TopBar = () => {
 
   return (
     <div className="relative">
-      <div className="h-14 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center px-5 z-20 transition-colors duration-200">
+      <div className="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center px-5 z-20 transition-colors duration-300">
         {/* Left side - Admin and Stores */}
         <div className="flex items-center space-x-2">
           <button
@@ -173,10 +173,10 @@ const TopBar = () => {
           <ThemeToggle />
 
           <button
-            className={`p-2 rounded-full transition-colors duration-200 focus:outline-none ${
+            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none ${
               showHelpSidebar 
-                ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' 
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
             onClick={handleHelpClick}
           >
@@ -185,15 +185,15 @@ const TopBar = () => {
 
           <div className="relative">
             <button 
-              className={`p-2 rounded-full transition-colors duration-200 focus:outline-none ${
+              className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none ${
                 showNotifications 
-                  ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                  ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' 
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
               onClick={handleNotificationsClick}
             >
               <MdOutlineNotifications className="w-5 h-5" />
-              <span className="absolute -top-0.5 -right-0.5 bg-blue-600 dark:bg-blue-500 text-white text-[11px] w-4 h-4 flex items-center justify-center rounded-full">
+              <span className="absolute -top-0.5 -right-0.5 bg-emerald-500 text-white text-[11px] w-4 h-4 flex items-center justify-center rounded-full">
                 3
               </span>
             </button>
@@ -201,11 +201,11 @@ const TopBar = () => {
 
           <div className="flex items-center pl-2">
             <button 
-              className="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg px-2 py-1 transition-colors duration-200 focus:outline-none"
+              className="flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 transition-colors duration-200 focus:outline-none"
               onClick={handleUserMenuClick}
             >
-              <span className="text-sm text-gray-700 dark:text-gray-300">{user?.name || 'User'}</span>
-              <div className="w-8 h-8 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
+              <span className="text-sm text-slate-700 dark:text-slate-300">{user?.name || 'User'}</span>
+              <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
                 {user?.name?.[0] || 'U'}
               </div>
             </button>
@@ -215,7 +215,7 @@ const TopBar = () => {
 
       {/* Help sidebar */}
       {showHelpSidebar && (
-        <div className="absolute right-5 top-14 z-30 shadow-lg rounded-b-lg overflow-hidden max-h-96 overflow-y-auto scrollbar-hide">
+        <div className="absolute right-5 top-14 z-30 shadow-lg rounded-b-lg overflow-hidden max-h-96 overflow-x-hidden">
           <SecondaryNavbar
             title="Central de Ajuda"
             items={helpSubItems}
@@ -227,7 +227,7 @@ const TopBar = () => {
 
       {/* Notifications sidebar */}
       {showNotifications && (
-        <div className="absolute right-20 top-14 z-30 shadow-lg rounded-b-lg overflow-hidden max-h-96 overflow-y-auto scrollbar-hide">
+        <div className="absolute right-20 top-14 z-30 shadow-lg rounded-b-lg overflow-hidden max-h-96 overflow-x-hidden">
           <SecondaryNavbar
             title="Notificações"
             items={notificationItems}
@@ -239,10 +239,10 @@ const TopBar = () => {
 
       {/* User menu sidebar */}
       {showUserMenu && (
-        <div className="absolute right-5 top-14 z-30 shadow-lg rounded-b-lg overflow-hidden">
-          <div className="w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-b-lg max-h-96 overflow-y-auto scrollbar-hide">
-            <div className="py-4 px-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-              <span className="font-medium text-gray-800 dark:text-gray-200">Menu do Usuário</span>
+        <div className="absolute right-5 top-14 z-30 shadow-xl rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+          <div className="w-64 bg-white dark:bg-slate-800 max-h-96 overflow-y-auto overflow-x-hidden scrollbar-hide">
+            <div className="py-4 px-6 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+              <span className="font-semibold text-slate-800 dark:text-slate-200 whitespace-nowrap">Menu do Usuário</span>
             </div>
             <div className="py-2">
               {userMenuItems.map((item, index) => (
@@ -252,15 +252,15 @@ const TopBar = () => {
                     console.log('Button clicked for item:', item.label, 'route:', item.to);
                     handleUserMenuNavigation(item);
                   }}
-                  className={`w-full flex items-center px-6 py-2.5 text-sm cursor-pointer transition-colors duration-150 text-left ${
+                  className={`w-full flex items-center justify-between px-6 py-2.5 text-sm cursor-pointer transition-colors duration-150 text-left whitespace-nowrap ${
                     item.to === '/logout' 
                       ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300' 
-                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
                   }`}
                 >
-                  {item.label}
+                  <span className="flex-1 min-w-0 truncate">{item.label}</span>
                   {item.to === '/logout' && (
-                    <span className="ml-auto text-red-500 dark:text-red-400">←</span>
+                    <span className="ml-2 flex-shrink-0 text-red-500 dark:text-red-400">←</span>
                   )}
                 </button>
               ))}

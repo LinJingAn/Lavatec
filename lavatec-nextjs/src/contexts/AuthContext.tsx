@@ -103,6 +103,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   
   // Fetch user profile data from our backend API
   const fetchUserProfile = async (token: string) => {
+    // Skip API call if it's a dev token
+    if (token === 'dev-token') {
+      console.log('🔧 Dev token detected - skipping API call');
+      return;
+    }
+    
     try {
       // Token is automatically included by api interceptor
       const response = await api.get('/auth/profile');
@@ -139,13 +145,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error: any) {
       console.error('Error fetching user profile:', error);
-      // If token is invalid, clear session
-      if (error.response?.status === 401) {
+      // If token is invalid, clear session (but not for dev token)
+      if (error.response?.status === 401 && token !== 'dev-token') {
         localStorage.removeItem('token');
         setSession(null);
         setUser(null);
         setDbUser(null);
-      } else {
+      } else if (token !== 'dev-token') {
         setAuthError(error as Error);
       }
     }
@@ -155,6 +161,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshUserData = async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
+    
+    // Skip API call for dev token
+    if (token === 'dev-token') {
+      console.log('🔧 Dev token - skipping refresh');
+      return;
+    }
     
     await fetchUserProfile(token);
   };
@@ -169,6 +181,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const token = localStorage.getItem('token');
         
         if (token) {
+          // Skip API call for dev token - user is already set by setDevUser
+          if (token === 'dev-token') {
+            console.log('🔧 Dev token found - skipping profile fetch');
+            // Ensure user state is set (in case component remounted)
+            const existingUser = user || {
+              id: 'dev-user-123',
+              email: 'dev@lavatec.com',
+              name: 'Dev User',
+              role: 'admin',
+            };
+            const existingDbUser = dbUser || {
+              id: 'dev-user-123',
+              email: 'dev@lavatec.com',
+              name: 'Dev User',
+              role: 'admin',
+              is_active: true,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            };
+            if (!user) setUser(existingUser);
+            if (!dbUser) setDbUser(existingDbUser);
+            setSession({
+              token,
+              user: existingUser,
+            });
+            setIsLoading(false);
+            return;
+          }
+          
           // Verify token and fetch user profile
           await fetchUserProfile(token);
           

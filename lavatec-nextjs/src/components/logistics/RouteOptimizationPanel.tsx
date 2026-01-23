@@ -155,11 +155,11 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
   };
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }} className="bg-white dark:bg-slate-800 transition-colors duration-300">
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }} className="dark:border-slate-700">
         <Grid container spacing={2} alignItems="center">
           <Grid size="grow">
-            <Typography variant="h6">Route Planning & Optimization</Typography>
+            <Typography variant="h6" className="text-slate-900 dark:text-white">Route Planning & Optimization</Typography>
           </Grid>
           <Grid>
             <Button
@@ -167,6 +167,7 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
               startIcon={<MdTimeline />}
               onClick={handleOptimizeRoutes}
               disabled={isOptimizing}
+              className="bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600"
             >
               {isOptimizing ? 'Optimizing...' : 'Optimize Routes'}
             </Button>
@@ -176,7 +177,7 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
 
       <Grid container spacing={2} sx={{ flexGrow: 1, p: 2 }}>
         <Grid size={{ xs: 12, md: 4 }}>
-          <Paper sx={{ height: '100%', overflow: 'auto' }}>
+          <Paper sx={{ height: '100%', overflow: 'auto' }} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors duration-300">
             <List>
               {routes.map((route) => (
                 <ListItem
@@ -186,16 +187,20 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
                       label={route.status}
                       size="small"
                       color={route.status === 'completed' ? 'success' : 'primary'}
+                      className="dark:bg-emerald-500"
                     />
                   }
+                  className="dark:border-slate-700"
                 >
                   <ListItemButton
                     selected={selectedRoute?.id === route.id}
                     onClick={() => handleRouteSelect(route)}
+                    className="dark:text-slate-300 dark:hover:bg-slate-700"
                   >
                     <ListItemText
                       primary={`Route #${route.id}`}
                       secondary={`${route.stops.length} stops • ${route.totalDistance.toFixed(1)} km`}
+                      className="dark:text-slate-400"
                     />
                   </ListItemButton>
                 </ListItem>
@@ -205,12 +210,26 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
         </Grid>
 
         <Grid size={{ xs: 12, md: 8 }}>
-          <Paper sx={{ height: '100%' }}>
+          <Paper sx={{ height: '100%' }} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors duration-300">
             <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''}>
               <GoogleMap
                 mapContainerStyle={{ width: '100%', height: '100%' }}
                 center={mapCenter}
                 zoom={12}
+                options={{
+                  styles: [
+                    {
+                      featureType: 'all',
+                      elementType: 'geometry',
+                      stylers: [{ color: '#1e293b' }]
+                    },
+                    {
+                      featureType: 'all',
+                      elementType: 'labels.text.fill',
+                      stylers: [{ color: '#cbd5e1' }]
+                    }
+                  ]
+                }}
               >
                 {directions && <DirectionsRenderer directions={directions} />}
                 {selectedRoute?.stops.map((stop, index) => (
@@ -227,20 +246,21 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
       </Grid>
 
       {selectedRoute && (
-        <Paper sx={{ p: 2, mt: 2 }}>
-          <Typography variant="h6" gutterBottom>
+        <Paper sx={{ p: 2, mt: 2 }} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+          <Typography variant="h6" gutterBottom className="text-slate-900 dark:text-white">
             Route Details
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
-                <InputLabel>Assign Driver</InputLabel>
+                <InputLabel className="dark:text-slate-300">Assign Driver</InputLabel>
                 <Select
                   value={selectedRoute.driverId || ''}
                   onChange={(e) => handleDriverAssignment(selectedRoute.id, e.target.value as string)}
+                  className="dark:text-slate-300 dark:bg-slate-700"
                 >
                   {drivers.map((driver) => (
-                    <MenuItem key={driver.id} value={driver.id}>
+                    <MenuItem key={driver.id} value={driver.id} className="dark:text-slate-300">
                       {driver.name} - {driver.vehicleType}
                     </MenuItem>
                   ))}
@@ -249,14 +269,15 @@ export const RouteOptimizationPanel: React.FC<RouteOptimizationPanelProps> = ({ 
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
-                <InputLabel>Time Window</InputLabel>
+                <InputLabel className="dark:text-slate-300">Time Window</InputLabel>
                 <Select
                   value={selectedTimeWindow}
                   onChange={(e) => setSelectedTimeWindow(e.target.value)}
+                  className="dark:text-slate-300 dark:bg-slate-700"
                 >
-                  <MenuItem value="morning">Morning (9:00 - 12:00)</MenuItem>
-                  <MenuItem value="afternoon">Afternoon (12:00 - 17:00)</MenuItem>
-                  <MenuItem value="evening">Evening (17:00 - 20:00)</MenuItem>
+                  <MenuItem value="morning" className="dark:text-slate-300">Morning (9:00 - 12:00)</MenuItem>
+                  <MenuItem value="afternoon" className="dark:text-slate-300">Afternoon (12:00 - 17:00)</MenuItem>
+                  <MenuItem value="evening" className="dark:text-slate-300">Evening (17:00 - 20:00)</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

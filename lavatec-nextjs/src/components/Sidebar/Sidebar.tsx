@@ -42,12 +42,12 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, secondary = false, activ
     type="button"
     data-sidebar-button={label}
     className={`
-      flex flex-col items-center justify-center h-[72px] text-sm cursor-pointer transition-colors duration-150 w-full
+      flex flex-col items-center justify-center h-[72px] text-sm cursor-pointer transition-colors duration-200 w-full
       ${secondary 
-        ? 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800' 
+        ? 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800' 
         : active 
-          ? 'text-blue-600 dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-blue-900/30' 
-          : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'}
+          ? 'text-emerald-600 dark:text-emerald-400 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-900/30' 
+          : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'}
       ${className}
     `}
     onClick={(e) => {
@@ -60,7 +60,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, secondary = false, activ
     }}
   >
     <div className="flex items-center justify-center">
-      <span className={`text-2xl ${active ? 'text-blue-600 dark:text-blue-400' : ''}`}>{icon}</span>
+      <span className={`text-2xl ${active ? 'text-emerald-600 dark:text-emerald-400' : ''}`}>{icon}</span>
     </div>
     <span className="text-xs mt-1.5">{label}</span>
   </button>
@@ -366,7 +366,7 @@ const Sidebar = () => {
   if (activeSection === 'stores') {
     return (
       <div className="flex">
-        <div className="w-24 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col transition-colors duration-200" style={{ height: 'calc(100vh - 60px)' }}>
+        <div className="w-24 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-colors duration-300" style={{ height: 'calc(100vh - 60px)' }}>
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <ul className="flex flex-col w-full items-center space-y-2 py-4">
               <li className="w-full">
@@ -436,11 +436,11 @@ const Sidebar = () => {
             </ul>
           </div>
           
-          <div className="flex-shrink-0 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex-shrink-0 border-t border-slate-200 dark:border-slate-800">
             <ul className="w-full flex flex-col items-center space-y-2 py-4">
               <li className="w-full pb-4">
                 <button 
-                  className="w-full flex flex-col items-center justify-center h-[72px] text-sm text-red-500 dark:text-red-400 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"
+                  className="w-full flex flex-col items-center justify-center h-[72px] text-sm text-red-500 dark:text-red-400 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
                   onClick={handleLogout}
                 >
                   <div className="flex items-center justify-center">
@@ -474,7 +474,7 @@ const Sidebar = () => {
   // Admin section
   return (
     <div className="flex">
-      <div className="w-24 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col transition-colors duration-200" style={{ height: 'calc(100vh - 60px)' }}>
+      <div className="w-24 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-colors duration-300" style={{ height: 'calc(100vh - 60px)' }}>
         <div className="flex-1 overflow-y-auto scrollbar-hide">
           <ul className="flex flex-col w-full items-center space-y-2 py-4">
             <li className="w-full">
@@ -542,11 +542,11 @@ const Sidebar = () => {
           </ul>
         </div>
 
-        <div className="flex-shrink-0 border-t border-gray-100 dark:border-gray-800">
+        <div className="flex-shrink-0 border-t border-slate-200 dark:border-slate-800">
           <ul className="w-full flex flex-col items-center space-y-2 py-4">
             <li className="w-full pb-4">
               <button 
-                className="w-full flex flex-col items-center justify-center h-[72px] text-sm text-red-500 dark:text-red-400 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"
+                className="w-full flex flex-col items-center justify-center h-[72px] text-sm text-red-500 dark:text-red-400 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
                 onClick={handleLogout}
               >
                 <div className="flex items-center justify-center">

@@ -5,13 +5,13 @@ import TopBar from './TopBar';
 
 const MainLayout = () => {
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       <TopBar />
       <div className="flex-1 flex overflow-hidden">
         <div className="flex">
           <Sidebar />
         </div>
-        <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900 p-6 transition-colors duration-200">
+        <main className="flex-1 overflow-auto bg-slate-50 dark:bg-slate-950 p-6 transition-colors duration-300">
           <Outlet />
         </main>
       </div>

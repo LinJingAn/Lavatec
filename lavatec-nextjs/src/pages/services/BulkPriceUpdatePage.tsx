@@ -263,46 +263,46 @@ const BulkPriceUpdatePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-full p-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto"></div>
+      <div className="flex justify-center items-center h-full p-8 bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-300">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 dark:border-emerald-400 mx-auto"></div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="flex items-center mb-6">
-        <Link to="/services/pricing" className="mr-4 text-gray-600 hover:text-gray-800">
+    <div className="p-6 max-w-6xl mx-auto bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-300 overflow-x-hidden">
+      <div className="flex flex-wrap items-center mb-6 gap-4">
+        <Link to="/services/pricing" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200">
           <MdArrowBack className="text-2xl" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-            <MdOutlineDryCleaning className="mr-2 text-blue-600" />
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
+            <MdOutlineDryCleaning className="mr-2 text-emerald-500 dark:text-emerald-400" />
             Atualização em Massa de Preços
           </h1>
-          <p className="text-gray-600">
+          <p className="text-slate-600 dark:text-slate-400">
             Atualize múltiplos preços simultaneamente
           </p>
         </div>
       </div>
 
       {previewMode ? (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden mb-6 transition-colors duration-300">
           <div className="p-6">
-            <h2 className="text-lg font-medium mb-4">Prévia das Alterações</h2>
+            <h2 className="text-lg font-medium mb-4 text-slate-900 dark:text-white">Prévia das Alterações</h2>
             
-            <div className="mb-6 bg-blue-50 text-blue-700 p-4 rounded-md">
+            <div className="mb-6 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800">
               <div className="flex items-start">
-                <MdDescription className="mt-0.5 mr-2 text-blue-600" />
-                <div>
-                  <p className="font-medium">{updateName}</p>
-                  {updateDescription && <p className="text-sm mt-1">{updateDescription}</p>}
+                <MdDescription className="mt-0.5 mr-2 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium break-words">{updateName}</p>
+                  {updateDescription && <p className="text-sm mt-1 break-words">{updateDescription}</p>}
                 </div>
               </div>
               <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div>
                   <p className="text-sm font-medium">Tipo de Ajuste:</p>
-                  <p>
+                  <p className="break-words">
                     {adjustmentType === 'percentage' 
                       ? `${adjustmentValue > 0 ? '+' : ''}${adjustmentValue}%` 
                       : `${adjustmentValue > 0 ? '+' : ''}${formatCurrency(adjustmentValue)}`
@@ -317,50 +317,50 @@ const BulkPriceUpdatePage: React.FC = () => {
             </div>
             
             {previewResults.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <MdWarning className="text-5xl mx-auto mb-2 text-orange-500" />
-                <p className="text-lg font-medium">Nenhum preço será afetado</p>
+              <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                <MdWarning className="text-5xl mx-auto mb-2 text-orange-500 dark:text-orange-400" />
+                <p className="text-lg font-medium text-slate-900 dark:text-white">Nenhum preço será afetado</p>
                 <p className="mt-1">Verifique seus filtros de seleção e tente novamente.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                  <thead className="bg-slate-50 dark:bg-slate-900">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         Serviço
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         Tipo de Peça
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         Preço Atual
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         Novo Preço
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         Diferença
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
                     {previewResults.map((result, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                      <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors duration-200">
                         <td className="px-4 py-2 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{result.serviceName}</div>
+                          <div className="text-sm font-medium text-slate-900 dark:text-white">{result.serviceName}</div>
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap">
-                          <div className="text-sm text-gray-700">{result.garmentName}</div>
+                          <div className="text-sm text-slate-700 dark:text-slate-300">{result.garmentName}</div>
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-right text-sm">
+                        <td className="px-4 py-2 whitespace-nowrap text-right text-sm text-slate-900 dark:text-white">
                           {formatCurrency(result.oldPrice)}
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
+                        <td className="px-4 py-2 whitespace-nowrap text-right text-sm font-medium text-slate-900 dark:text-white">
                           {formatCurrency(result.newPrice)}
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap text-right text-sm">
-                          <span className={result.difference > 0 ? 'text-green-600' : result.difference < 0 ? 'text-red-600' : 'text-gray-500'}>
+                          <span className={result.difference > 0 ? 'text-emerald-600 dark:text-emerald-400' : result.difference < 0 ? 'text-red-600 dark:text-red-400' : 'text-slate-500 dark:text-slate-400'}>
                             {result.difference > 0 ? '+' : ''}{formatCurrency(result.difference)} ({result.percentChange.toFixed(1)}%)
                           </span>
                         </td>
@@ -371,10 +371,10 @@ const BulkPriceUpdatePage: React.FC = () => {
               </div>
             )}
             
-            <div className="mt-6 flex justify-end space-x-3">
+            <div className="mt-6 flex justify-end space-x-3 flex-wrap gap-2">
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors duration-200 whitespace-nowrap"
               >
                 <MdClose className="inline mr-1" /> Voltar
               </button>
@@ -382,8 +382,8 @@ const BulkPriceUpdatePage: React.FC = () => {
               <button
                 onClick={handleSubmit}
                 disabled={previewResults.length === 0}
-                className={`px-4 py-2 bg-green-600 text-white rounded-md flex items-center ${
-                  previewResults.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'
+                className={`px-4 py-2 bg-emerald-500 text-white rounded-lg flex items-center transition-colors duration-200 whitespace-nowrap ${
+                  previewResults.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-emerald-600'
                 }`}
               >
                 <MdCheckCircle className="mr-1" /> Aplicar Alterações
@@ -392,44 +392,44 @@ const BulkPriceUpdatePage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden mb-6 transition-colors duration-300">
           <div className="p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left side - Update Settings */}
-              <div>
-                <h2 className="text-lg font-medium mb-4">Configurações da Atualização</h2>
+              <div className="min-w-0 space-y-4">
+                <h2 className="text-lg font-medium text-slate-900 dark:text-white">Configurações da Atualização</h2>
                 
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 break-words">
                     Nome da atualização *
                   </label>
                   <input
                     type="text"
                     value={updateName}
                     onChange={(e) => setUpdateName(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full h-10 border border-slate-300 dark:border-slate-600 rounded-lg py-2 px-3 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200"
                     placeholder="Ex: Aumento de preços - Janeiro 2023"
                   />
                 </div>
                 
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 break-words">
                     Descrição (opcional)
                   </label>
                   <textarea
                     value={updateDescription}
                     onChange={(e) => setUpdateDescription(e.target.value)}
                     rows={2}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg py-2 px-3 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200 resize-none"
                     placeholder="Descreva o motivo da atualização..."
                   />
                 </div>
                 
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 break-words">
                     Tipo de ajuste
                   </label>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 flex-wrap">
                     <div className="flex items-center">
                       <input
                         type="radio"
@@ -437,9 +437,9 @@ const BulkPriceUpdatePage: React.FC = () => {
                         name="adjustmentType"
                         checked={adjustmentType === 'percentage'}
                         onChange={() => setAdjustmentType('percentage')}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                        className="h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-slate-300 dark:border-slate-600"
                       />
-                      <label htmlFor="percentage" className="ml-2 block text-sm text-gray-700">
+                      <label htmlFor="percentage" className="ml-2 block text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
                         Percentual
                       </label>
                     </div>
@@ -450,17 +450,17 @@ const BulkPriceUpdatePage: React.FC = () => {
                         name="adjustmentType"
                         checked={adjustmentType === 'fixed'}
                         onChange={() => setAdjustmentType('fixed')}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                        className="h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-slate-300 dark:border-slate-600"
                       />
-                      <label htmlFor="fixed" className="ml-2 block text-sm text-gray-700">
+                      <label htmlFor="fixed" className="ml-2 block text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
                         Valor Fixo
                       </label>
                     </div>
                   </div>
                 </div>
                 
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 break-words">
                     {adjustmentType === 'percentage' ? 'Percentual (%)' : 'Valor (R$)'}
                   </label>
                   <input
@@ -468,30 +468,30 @@ const BulkPriceUpdatePage: React.FC = () => {
                     value={adjustmentValue}
                     onChange={(e) => setAdjustmentValue(parseFloat(e.target.value) || 0)}
                     step={adjustmentType === 'percentage' ? '0.1' : '0.01'}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full h-10 border border-slate-300 dark:border-slate-600 rounded-lg py-2 px-3 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200"
                   />
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 break-words">
                     {adjustmentType === 'percentage'
                       ? 'Insira valores positivos para aumento e negativos para desconto. Ex: 5 para aumentar 5%.'
                       : 'Insira valores positivos para aumento e negativos para desconto. Ex: 2.50 para aumentar R$ 2,50.'}
                   </p>
                 </div>
                 
-                <div className="mb-3">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Categorias de Serviço</h3>
-                  <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 break-words">Categorias de Serviço</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {getServiceCategories().map((category) => (
-                      <div key={category} className="flex items-center">
+                      <div key={category} className="flex items-start min-w-0">
                         <input
                           type="checkbox"
                           id={`service-category-${category}`}
                           checked={selectedServiceCategories.includes(category)}
                           onChange={() => handleServiceCategoryChange(category)}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          className="mt-0.5 mr-2 flex-shrink-0 h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 rounded cursor-pointer"
                         />
                         <label 
                           htmlFor={`service-category-${category}`} 
-                          className="ml-2 block text-sm text-gray-700"
+                          className="text-sm text-slate-700 dark:text-slate-300 flex-1 min-w-0 break-words cursor-pointer leading-relaxed"
                         >
                           {getCategoryName(category)}
                         </label>
@@ -500,21 +500,21 @@ const BulkPriceUpdatePage: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="mb-4">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Categorias de Peça</h3>
-                  <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 break-words">Categorias de Peça</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {getGarmentCategories().map((category) => (
-                      <div key={category} className="flex items-center">
+                      <div key={category} className="flex items-start min-w-0">
                         <input
                           type="checkbox"
                           id={`garment-category-${category}`}
                           checked={selectedGarmentCategories.includes(category)}
                           onChange={() => handleGarmentCategoryChange(category)}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          className="mt-0.5 mr-2 flex-shrink-0 h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 rounded cursor-pointer"
                         />
                         <label 
                           htmlFor={`garment-category-${category}`} 
-                          className="ml-2 block text-sm text-gray-700"
+                          className="text-sm text-slate-700 dark:text-slate-300 flex-1 min-w-0 break-words cursor-pointer leading-relaxed"
                         >
                           {category}
                         </label>
@@ -525,68 +525,80 @@ const BulkPriceUpdatePage: React.FC = () => {
               </div>
               
               {/* Right side - Selection */}
-              <div>
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-medium">Seleção Específica</h2>
-                  <div className="text-sm text-gray-500">
+              <div className="min-w-0 space-y-4">
+                <div className="flex justify-between items-center flex-wrap gap-2">
+                  <h2 className="text-lg font-medium text-slate-900 dark:text-white">Seleção Específica</h2>
+                  <div className="text-sm text-slate-500 dark:text-slate-400 whitespace-nowrap">
                     {selectedServiceIds.length} serviços, {selectedGarmentIds.length} peças
                   </div>
                 </div>
                 
-                <div className="mb-4">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Serviços</h3>
-                  <div className="border border-gray-300 rounded-md h-60 overflow-y-auto p-2">
-                    {filteredServices.map(service => (
-                      <div key={service.id} className="flex items-center py-1 border-b border-gray-100">
-                        <input
-                          type="checkbox"
-                          id={`service-${service.id}`}
-                          checked={selectedServiceIds.includes(service.id)}
-                          onChange={() => handleServiceChange(service.id)}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        <label 
-                          htmlFor={`service-${service.id}`} 
-                          className="ml-2 block text-sm text-gray-700"
-                        >
-                          <span className="font-medium">{service.name}</span>
-                          <span className="text-xs text-gray-500 ml-1">({getCategoryName(service.categoryId)})</span>
-                        </label>
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 break-words">Serviços</h3>
+                  <div className="border border-slate-300 dark:border-slate-600 rounded-lg h-80 overflow-y-auto p-3 bg-white dark:bg-slate-700 transition-colors duration-200">
+                    {filteredServices.length === 0 ? (
+                      <div className="text-center py-8 text-slate-500 dark:text-slate-400 text-sm">
+                        Nenhum serviço disponível
                       </div>
-                    ))}
+                    ) : (
+                      filteredServices.map(service => (
+                        <div key={service.id} className="flex items-start py-2 border-b border-slate-200 dark:border-slate-600 last:border-b-0 min-w-0">
+                          <input
+                            type="checkbox"
+                            id={`service-${service.id}`}
+                            checked={selectedServiceIds.includes(service.id)}
+                            onChange={() => handleServiceChange(service.id)}
+                            className="mt-0.5 mr-2 flex-shrink-0 h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 rounded cursor-pointer"
+                          />
+                          <label 
+                            htmlFor={`service-${service.id}`} 
+                            className="flex-1 min-w-0 text-sm text-slate-700 dark:text-slate-300 cursor-pointer leading-relaxed"
+                          >
+                            <span className="font-medium break-words">{service.name}</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 ml-1 break-words">({getCategoryName(service.categoryId)})</span>
+                          </label>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
                 
-                <div className="mb-4">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Tipos de Peça</h3>
-                  <div className="border border-gray-300 rounded-md h-60 overflow-y-auto p-2">
-                    {filteredGarments.map(garment => (
-                      <div key={garment.id} className="flex items-center py-1 border-b border-gray-100">
-                        <input
-                          type="checkbox"
-                          id={`garment-${garment.id}`}
-                          checked={selectedGarmentIds.includes(garment.id)}
-                          onChange={() => handleGarmentChange(garment.id)}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        <label 
-                          htmlFor={`garment-${garment.id}`} 
-                          className="ml-2 block text-sm text-gray-700"
-                        >
-                          <span className="font-medium">{garment.name}</span>
-                          <span className="text-xs text-gray-500 ml-1">({garment.category})</span>
-                        </label>
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 break-words">Tipos de Peça</h3>
+                  <div className="border border-slate-300 dark:border-slate-600 rounded-lg h-80 overflow-y-auto p-3 bg-white dark:bg-slate-700 transition-colors duration-200">
+                    {filteredGarments.length === 0 ? (
+                      <div className="text-center py-8 text-slate-500 dark:text-slate-400 text-sm">
+                        Nenhum tipo de peça disponível
                       </div>
-                    ))}
+                    ) : (
+                      filteredGarments.map(garment => (
+                        <div key={garment.id} className="flex items-start py-2 border-b border-slate-200 dark:border-slate-600 last:border-b-0 min-w-0">
+                          <input
+                            type="checkbox"
+                            id={`garment-${garment.id}`}
+                            checked={selectedGarmentIds.includes(garment.id)}
+                            onChange={() => handleGarmentChange(garment.id)}
+                            className="mt-0.5 mr-2 flex-shrink-0 h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 rounded cursor-pointer"
+                          />
+                          <label 
+                            htmlFor={`garment-${garment.id}`} 
+                            className="flex-1 min-w-0 text-sm text-slate-700 dark:text-slate-300 cursor-pointer leading-relaxed"
+                          >
+                            <span className="font-medium break-words">{garment.name}</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 ml-1 break-words">({garment.category})</span>
+                          </label>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="mt-6 flex justify-end space-x-3">
+            <div className="mt-6 flex justify-end space-x-3 flex-wrap gap-2">
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors duration-200 whitespace-nowrap"
               >
                 <MdClose className="inline mr-1" /> Cancelar
               </button>
@@ -594,8 +606,8 @@ const BulkPriceUpdatePage: React.FC = () => {
               <button
                 onClick={handleGeneratePreview}
                 disabled={!updateName || adjustmentValue === 0}
-                className={`px-4 py-2 bg-blue-600 text-white rounded-md flex items-center ${
-                  !updateName || adjustmentValue === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                className={`px-4 py-2 bg-emerald-500 text-white rounded-lg flex items-center transition-colors duration-200 whitespace-nowrap ${
+                  !updateName || adjustmentValue === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-emerald-600'
                 }`}
               >
                 <MdPreview className="mr-1" /> Gerar Prévia

@@ -44,14 +44,14 @@ const SecondaryNavItem: React.FC<SecondaryNavItemProps> = ({ to, label, active, 
     <NavLink
       to={to}
       className={`
-        flex items-center px-6 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-150
+        flex items-center px-6 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors duration-200 whitespace-nowrap
         ${isActiveRoute 
-          ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 font-medium' 
-          : 'text-gray-600 dark:text-gray-300'}
+          ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 font-medium' 
+          : 'text-slate-600 dark:text-slate-300'}
       `}
       onClick={handleClick}
     >
-      {label}
+      <span className="truncate">{label}</span>
     </NavLink>
   );
 };
@@ -102,12 +102,12 @@ const SecondaryNavbar: React.FC<SecondaryNavbarProps> = ({
   };
   
   return (
-    <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen overflow-y-auto scrollbar-hide transition-colors duration-200">
-      <div className="py-4 px-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-between items-center">
-        <span className="font-medium text-gray-800 dark:text-gray-200">{title}</span>
+    <div className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 h-screen overflow-y-auto overflow-x-hidden scrollbar-hide transition-colors duration-300">
+      <div className="py-4 px-6 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex justify-between items-center">
+        <span className="font-semibold text-slate-800 dark:text-slate-200 whitespace-nowrap truncate">{title}</span>
         {showAddButton && (
           <button 
-            className="p-1 rounded-full text-blue-500 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
+            className="p-1 rounded-lg text-emerald-500 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors duration-200 flex-shrink-0"
             onClick={handleAddClick}
             title={`Add ${title.toLowerCase()}`}
           >

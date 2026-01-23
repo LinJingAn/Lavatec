@@ -23,10 +23,10 @@ const DashboardPage = () => {
   }, [navigate]);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-semibold mb-6">Redirecionando...</h1>
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <p className="text-gray-600">Redirecionando para o Dashboard da Empresa...</p>
+    <div className="p-6 bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-300">
+      <h1 className="text-2xl font-semibold mb-6 text-slate-900 dark:text-white">Redirecionando...</h1>
+      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+        <p className="text-slate-600 dark:text-slate-300">Redirecionando para o Dashboard da Empresa...</p>
       </div>
     </div>
   );

@@ -73,7 +73,7 @@ const LoginPage = () => {
         // Success - show success message and redirect
         setSuccess(true);
         setTimeout(() => {
-          navigate('/');
+          navigate('/stores/dashboard/overview');
         }, 1000);
       }
     } catch (err) {
@@ -98,19 +98,29 @@ const LoginPage = () => {
     // Show success and navigate
     setSuccess(true);
     
+    // Wait a bit longer to ensure state is propagated
     setTimeout(() => {
       console.log('🚀 Dev mode bypass complete - navigating to dashboard');
-      navigate('/');
-    }, 500);
+      navigate('/stores/dashboard/overview', { replace: true });
+    }, 800);
     
     setIsSubmitting(false);
   };
 
   // Check if we're in development mode
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isDevelopment = process.env.NODE_ENV === 'development' || 
+                       import.meta.env?.DEV || 
+                       !process.env.NODE_ENV || 
+                       window.location.hostname === 'localhost';
+
+  // Debug log
+  console.log('Dev mode enabled:', isDevelopment, {
+    NODE_ENV: process.env.NODE_ENV,
+    hostname: window.location.hostname
+  });
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-white dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen w-full flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       {/* Add custom styles for this page */}
       <style>{`
         .login-input {
@@ -167,13 +177,13 @@ const LoginPage = () => {
       <div className="max-w-[550px] w-full px-6 mx-auto pt-10">
         {/* Header Section */}
         <div className="mb-16">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Lavatec</h1>
+          <h1 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">Lavatec</h1>
         </div>
 
         {/* Main Login Form */}
         <div className="w-full text-center">
-          <h2 className="text-3xl font-bold mb-3 text-center text-gray-900 dark:text-white">Entrar</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-10 text-center">
+          <h2 className="text-3xl font-bold mb-3 text-center text-slate-900 dark:text-white">Entrar</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-10 text-center">
             Insira seu email abaixo para entrar na sua conta
           </p>
           
@@ -213,13 +223,13 @@ const LoginPage = () => {
           
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-6">
-              <p className="font-normal mb-2 text-left text-gray-900 dark:text-gray-200">Email</p>
+              <p className="font-normal mb-2 text-left text-slate-700 dark:text-slate-200">Email</p>
               <input
                 id="email"
                 type="email"
                 placeholder="meuemail@exemplo.com"
                 {...register('email')}
-                className="login-input h-[50px] w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white dark:placeholder-gray-400"
+                className="login-input h-[50px] w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-3 mb-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-slate-400 transition-colors duration-200"
               />
               {errors.email && (
                 <p className="text-red-500 dark:text-red-400 text-sm text-left">
@@ -230,10 +240,10 @@ const LoginPage = () => {
             
             <div className="mb-8">
               <div className="flex justify-between items-center mb-2">
-                <p className="font-normal text-left text-gray-900 dark:text-gray-200">Senha</p>
+                <p className="font-normal text-left text-slate-700 dark:text-slate-200">Senha</p>
                 <RouterLink
                   to="/forgot-password"
-                  className="text-blue-600 dark:text-blue-400 text-sm hover:text-blue-700 dark:hover:text-blue-300"
+                  className="text-emerald-600 dark:text-emerald-400 text-sm hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200"
                 >
                   Esqueceu sua senha?
                 </RouterLink>
@@ -243,11 +253,11 @@ const LoginPage = () => {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   {...register('password')}
-                  className="login-input h-[50px] w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 pr-12 mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white"
+                  className="login-input h-[50px] w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-3 pr-12 mb-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white transition-colors duration-200"
                 />
                 <button
                   type="button"
-                  className="absolute right-[2px] top-[5px] h-10 w-10 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 text-gray-600 dark:text-gray-300"
+                  className="absolute right-[2px] top-[5px] h-10 w-10 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors duration-200 text-slate-600 dark:text-slate-300"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
@@ -275,7 +285,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-[50px] bg-blue-600 dark:bg-blue-500 text-white rounded-md uppercase font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-[50px] bg-emerald-500 text-white rounded-lg uppercase font-medium hover:bg-emerald-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
             >
               {isSubmitting ? "ENTRANDO..." : "ENTRAR"}
             </button>
@@ -286,7 +296,7 @@ const LoginPage = () => {
                 type="button"
                 onClick={handleDevLogin}
                 disabled={isSubmitting}
-                className="w-full h-[50px] mt-3 bg-orange-500 dark:bg-orange-600 text-white rounded-md uppercase font-medium hover:bg-orange-600 dark:hover:bg-orange-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-orange-600 dark:border-orange-500"
+                className="w-full h-[50px] mt-3 bg-slate-700 dark:bg-slate-600 text-white rounded-lg uppercase font-medium hover:bg-slate-800 dark:hover:bg-slate-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600 dark:border-slate-500"
                 title="Development Mode - Quick Login"
               >
                 {isSubmitting ? "DEV LOGIN..." : "🔧 DEV LOGIN"}
@@ -295,15 +305,15 @@ const LoginPage = () => {
 
             {/* Dev Mode Info */}
             {isDevelopment && (
-              <div className="mt-2 p-2 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-700 rounded text-xs text-orange-700 dark:text-orange-300">
-                <strong>🔧 Modo Desenvolvimento:</strong> Clique no botão laranja para login rápido
+              <div className="mt-2 p-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-700 dark:text-slate-300">
+                <strong>🔧 Modo Desenvolvimento:</strong> Clique no botão para login rápido
               </div>
             )}
           </form>
           
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-8">
+          <p className="text-center text-sm text-slate-600 dark:text-slate-400 mt-8">
             Não tem uma conta?{' '}
-            <RouterLink to="/register" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+            <RouterLink to="/register" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200">
               Criar conta
             </RouterLink>
           </p>

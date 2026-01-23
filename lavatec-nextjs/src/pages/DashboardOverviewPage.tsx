@@ -35,15 +35,15 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, trend, icon }) => (
-  <div className="bg-white rounded-lg p-6 shadow-sm">
+  <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:shadow-md">
     <div className="flex flex-col">
-      <span className="text-gray-600 text-sm mb-2">{title}</span>
+      <span className="text-slate-600 dark:text-slate-400 text-sm mb-2">{title}</span>
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-2xl font-semibold">{value}</span>
-          <div className="text-green-500 text-sm mt-2">{trend}</div>
+          <span className="text-2xl font-semibold text-slate-900 dark:text-white">{value}</span>
+          <div className="text-emerald-500 text-sm mt-2">{trend}</div>
         </div>
-        <div className="text-blue-500">
+        <div className="text-emerald-500 dark:text-emerald-400">
           {icon}
         </div>
       </div>
@@ -165,29 +165,29 @@ const DashboardOverviewPage = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-semibold mb-6">Visão Geral</h1>
+    <div className="p-6 bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-300">
+      <h1 className="text-2xl font-semibold mb-6 text-slate-900 dark:text-white">Visão Geral</h1>
       
       {/* Stats Grid */}
-      <div className="grid grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => (
           <StatCard key={index} {...stat} />
         ))}
       </div>
 
       {/* Services Chart */}
-      <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
-        <h2 className="text-xl font-semibold mb-6">Serviços Mais Vendidos</h2>
+      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 mb-8 transition-colors duration-300">
+        <h2 className="text-xl font-semibold mb-6 text-slate-900 dark:text-white">Serviços Mais Vendidos</h2>
         <div className="space-y-6">
           {services.map((service, index) => (
             <div key={index}>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-700">{service.name}</span>
-                <span className="text-gray-700">R$ {service.value.toLocaleString()}</span>
+                <span className="text-slate-700 dark:text-slate-300">{service.name}</span>
+                <span className="text-slate-700 dark:text-slate-300">R$ {service.value.toLocaleString()}</span>
               </div>
-              <div className="w-full bg-gray-100 rounded-full h-2">
+              <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
                 <div
-                  className="bg-blue-500 h-2 rounded-full"
+                  className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
                   style={{ width: `${(service.value / 8240) * 100}%` }}
                 />
               </div>
@@ -197,11 +197,11 @@ const DashboardOverviewPage = () => {
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-6">Pedidos Recentes</h2>
+      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+        <h2 className="text-xl font-semibold mb-6 text-slate-900 dark:text-white">Pedidos Recentes</h2>
         <table className="w-full">
           <thead>
-            <tr className="text-left text-gray-500">
+            <tr className="text-left text-slate-500 dark:text-slate-400">
               <th className="pb-4 font-medium">Pedido</th>
               <th className="pb-4 font-medium">Cliente</th>
               <th className="pb-4 font-medium">Data</th>
@@ -211,21 +211,21 @@ const DashboardOverviewPage = () => {
           </thead>
           <tbody>
             {recentOrders.map((order, index) => (
-              <tr key={index} className="border-t border-gray-100">
-                <td className="py-4 text-gray-600">{order.id}</td>
-                <td className="text-gray-600">{order.client}</td>
-                <td className="text-gray-600">{order.date}</td>
+              <tr key={index} className="border-t border-slate-100 dark:border-slate-700">
+                <td className="py-4 text-slate-600 dark:text-slate-300">{order.id}</td>
+                <td className="text-slate-600 dark:text-slate-300">{order.client}</td>
+                <td className="text-slate-600 dark:text-slate-300">{order.date}</td>
                 <td>
                   <span className={`px-3 py-1 rounded-full text-sm inline-block
                     ${order.status === 'Concluído' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-blue-100 text-blue-800'
+                      ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300' 
+                      : 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
                     }`}
                   >
                     {order.status}
                   </span>
                 </td>
-                <td className="text-right text-gray-600">R$ {order.value.toFixed(2)}</td>
+                <td className="text-right text-slate-600 dark:text-slate-300">R$ {order.value.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

@@ -67,19 +67,22 @@ const testimonials = [
     name: 'Maria Santos',
     role: 'Lavanderia Express',
     quote: 'Reduzimos erros em 80% e a equipe ficou mais produtiva. A diferença foi imediata.',
-    image: 'MS',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&q=80',
+    initials: 'MS',
   },
   {
     name: 'Carlos Oliveira',
     role: 'Rede CleanWash',
     quote: 'Gerenciar 5 unidades ficou simples. Os relatórios me dão visão completa do negócio.',
-    image: 'CO',
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&q=80',
+    initials: 'CO',
   },
   {
     name: 'Ana Paula',
     role: 'LaundryPro',
     quote: 'Nossos clientes adoram as notificações. O atendimento melhorou muito.',
-    image: 'AP',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&q=80',
+    initials: 'AP',
   },
 ];
 
@@ -195,14 +198,21 @@ const LandingPage: React.FC = () => {
 
       {/* Hero Section - Editorial, asymmetric */}
       <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
-        {/* Subtle gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/50 via-transparent to-transparent dark:from-emerald-950/20 dark:via-transparent" />
+        {/* Background image with overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=1600&h=900&fit=crop&q=80" 
+            alt="Lavanderia moderna e organizada"
+            className="w-full h-full object-cover opacity-10 dark:opacity-5"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/98 via-white/95 to-white dark:from-slate-950/98 dark:via-slate-950/95 dark:to-slate-950" />
+        </div>
         
         {/* Decorative elements */}
-        <div className="absolute top-40 right-0 w-96 h-96 bg-emerald-100 dark:bg-emerald-900/20 rounded-full blur-3xl opacity-50" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-30" />
+        <div className="absolute top-40 right-0 w-96 h-96 bg-emerald-100 dark:bg-emerald-900/20 rounded-full blur-3xl opacity-50 z-10" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-30 z-10" />
 
-        <div className="relative max-w-6xl mx-auto px-6">
+        <div className="relative max-w-6xl mx-auto px-6 z-20">
           <div className="max-w-3xl">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full text-xs font-medium mb-8">
@@ -345,6 +355,91 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Platform Showcase Section */}
+      <section className="py-24 bg-white dark:bg-slate-900">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+            {/* Text */}
+            <div>
+              <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400 mb-4 block">
+                Interface Intuitiva
+              </span>
+              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-4">
+                Gestão visual e prática
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 mb-6">
+                Interface limpa e moderna que sua equipe aprende em minutos. Acompanhe pedidos, estoque e finanças de forma visual.
+              </p>
+              <ul className="space-y-3">
+                {['Dashboard em tempo real', 'Controle de pedidos visual', 'Relatórios automáticos'].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                      <CheckIcon />
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Image */}
+            <div className="relative">
+              <div className="rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+                <img 
+                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80" 
+                  alt="Dashboard Lavatec - Gestão de pedidos"
+                  className="w-full h-auto"
+                />
+              </div>
+              {/* Floating stats */}
+              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 rounded-xl shadow-xl p-4 border border-slate-200 dark:border-slate-700">
+                <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">+80%</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">Produtividade</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Image - Order */}
+            <div className="order-2 lg:order-1 relative">
+              <div className="rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+                <img 
+                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80" 
+                  alt="Gestão de clientes Lavatec"
+                  className="w-full h-auto"
+                />
+              </div>
+              {/* Floating notification */}
+              <div className="absolute -top-4 -right-4 bg-white dark:bg-slate-800 rounded-xl shadow-xl px-4 py-3 border border-slate-200 dark:border-slate-700 flex items-center gap-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <p className="text-sm font-medium text-slate-900 dark:text-white">Cliente notificado</p>
+              </div>
+            </div>
+            {/* Text */}
+            <div className="order-1 lg:order-2">
+              <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400 mb-4 block">
+                Comunicação Automática
+              </span>
+              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-4">
+                Mantenha clientes sempre informados
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 mb-6">
+                Notificações automáticas por WhatsApp, SMS e email em cada etapa do pedido. Seus clientes sempre sabem o status.
+              </p>
+              <ul className="space-y-3">
+                {['WhatsApp integrado', 'SMS automático', 'Email personalizado'].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                      <CheckIcon />
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section - Bento grid style */}
       <section id="recursos" className="py-24 lg:py-32">
         <div className="max-w-6xl mx-auto px-6">
@@ -413,24 +508,81 @@ const LandingPage: React.FC = () => {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-12 mb-16">
             {[
-              { step: '01', title: 'Crie sua conta', desc: 'Cadastro gratuito em menos de 2 minutos. Sem cartão de crédito.' },
-              { step: '02', title: 'Configure', desc: 'Adicione seus serviços, preços e personalize o sistema.' },
-              { step: '03', title: 'Comece a usar', desc: 'Registre pedidos e acompanhe tudo em tempo real.' },
+              { 
+                step: '01', 
+                title: 'Crie sua conta', 
+                desc: 'Cadastro gratuito em menos de 2 minutos. Sem cartão de crédito.',
+                icon: (
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                )
+              },
+              { 
+                step: '02', 
+                title: 'Configure', 
+                desc: 'Adicione seus serviços, preços e personalize o sistema.',
+                icon: (
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                )
+              },
+              { 
+                step: '03', 
+                title: 'Comece a usar', 
+                desc: 'Registre pedidos e acompanhe tudo em tempo real.',
+                icon: (
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                )
+              },
             ].map((item, i) => (
-              <div key={i} className="text-center lg:text-left">
-                <span className="inline-block text-4xl lg:text-5xl font-bold text-slate-200 dark:text-slate-800 mb-4">
-                  {item.step}
-                </span>
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400">
-                  {item.desc}
-                </p>
+              <div key={i} className="relative">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300">
+                  <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-6">
+                    {item.icon}
+                  </div>
+                  <span className="inline-block text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-4">
+                    {item.step}
+                  </span>
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+                {i < 2 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-6 transform -translate-y-1/2 text-slate-300 dark:text-slate-700">
+                    <ArrowRightIcon />
+                  </div>
+                )}
               </div>
             ))}
+          </div>
+
+          {/* Video or additional visual */}
+          <div className="max-w-4xl mx-auto">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+              <img 
+                src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&h=675&fit=crop&q=80" 
+                alt="Lavatec em ação - Interface do sistema"
+                className="w-full h-auto"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-slate-900/20 hover:bg-slate-900/30 transition-colors">
+                <button className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+                  <PlayIcon />
+                </button>
+              </div>
+            </div>
+            <p className="text-center text-sm text-slate-500 dark:text-slate-500 mt-4">
+              Veja como é fácil gerenciar sua lavanderia com o Lavatec
+            </p>
           </div>
         </div>
       </section>
@@ -458,9 +610,11 @@ const LandingPage: React.FC = () => {
                   "{item.quote}"
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-sm font-semibold text-slate-600 dark:text-slate-300">
-                    {item.image}
-                  </div>
+                  <img 
+                    src={item.image} 
+                    alt={item.name}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
+                  />
                   <div>
                     <p className="font-semibold text-slate-900 dark:text-white text-sm">{item.name}</p>
                     <p className="text-slate-500 dark:text-slate-500 text-xs">{item.role}</p>
@@ -591,6 +745,16 @@ const LandingPage: React.FC = () => {
       <section className="py-24 lg:py-32">
         <div className="max-w-6xl mx-auto px-6">
           <div className="relative bg-emerald-600 rounded-3xl p-12 lg:p-16 overflow-hidden">
+            {/* Background image with overlay */}
+            <div className="absolute inset-0">
+              <img 
+                src="https://images.unsplash.com/photo-1521791055366-0d553872125f?w=1600&h=600&fit=crop&q=80" 
+                alt="Equipe de lavanderia profissional"
+                className="w-full h-full object-cover opacity-20"
+              />
+              <div className="absolute inset-0 bg-emerald-600/90" />
+            </div>
+            
             {/* Pattern overlay */}
             <div className="absolute inset-0 opacity-10">
               <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -603,7 +767,7 @@ const LandingPage: React.FC = () => {
               </svg>
             </div>
             
-            <div className="relative text-center max-w-2xl mx-auto">
+            <div className="relative text-center max-w-2xl mx-auto z-10">
               <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
                 Pronto para simplificar sua operação?
               </h2>

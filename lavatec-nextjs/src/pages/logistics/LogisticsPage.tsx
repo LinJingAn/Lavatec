@@ -28,9 +28,10 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`logistics-tabpanel-${index}`}
       aria-labelledby={`logistics-tab-${index}`}
+      className="bg-white dark:bg-slate-800 transition-colors duration-300"
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 3 }} className="dark:bg-slate-800">{children}</Box>}
     </div>
   );
 }
@@ -55,25 +56,26 @@ const LogisticsPage: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }} className="bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-300">
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography variant="h4" component="h1" gutterBottom className="text-slate-900 dark:text-white">
           Logistics & Delivery Management
         </Typography>
       </Box>
 
       {error && <ErrorAlert message={error} />}
 
-      <Paper sx={{ width: '100%', mb: 4 }}>
+      <Paper sx={{ width: '100%', mb: 4 }} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors duration-300">
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"
           sx={{ borderBottom: 1, borderColor: 'divider' }}
+          className="dark:border-slate-700"
         >
-          <Tab label="Route Planning" />
-          <Tab label="Pickup Management" />
+          <Tab label="Route Planning" className="dark:text-slate-300" />
+          <Tab label="Pickup Management" className="dark:text-slate-300" />
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
