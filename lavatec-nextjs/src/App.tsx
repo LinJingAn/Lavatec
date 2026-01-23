@@ -133,6 +133,7 @@ import ProfilePreferencesPage from './pages/profile/ProfilePreferencesPage'
 import RegularCustomersPage from './pages/stores/customers/RegularCustomersPage'
 import HeavyCustomersPage from './pages/stores/customers/HeavyCustomersPage'
 import PDVHistoryPage from './pages/stores/pdv/PDVHistoryPage'
+import LandingPage from './pages/LandingPage'
 
 function App() {
   return (
@@ -150,6 +151,7 @@ function App() {
                 <SidebarProvider>
                   <Routes>
                   {/* Public routes */}
+                  <Route path="/" element={<LandingPage />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/unauthorized" element={<UnauthorizedPage />} />
@@ -162,8 +164,8 @@ function App() {
                   {/* Protected routes with MainLayout */}
                   <Route element={<ProtectedRoute />}>
                     <Route element={<MainLayout />}>
-                      {/* Root redirect */}
-                      <Route path="/" element={<Navigate to="/stores/dashboard/overview" replace />} />
+                      {/* Dashboard home redirect */}
+                      <Route path="/dashboard-home" element={<Navigate to="/stores/dashboard/overview" replace />} />
                       
                       {/* Admin Dashboard redirects */}
                       <Route path="/admin" element={<Navigate to="/admin/financeiro/dashboard" replace />} />

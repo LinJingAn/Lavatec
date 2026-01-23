@@ -50,5 +50,13 @@ export const config = {
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
     },
   },
+  whatsapp: {
+    provider: process.env.WHATSAPP_PROVIDER || 'mock', // 'mock', 'twilio'
+    twilio: {
+      accountSid: process.env.TWILIO_ACCOUNT_SID || '',
+      authToken: process.env.TWILIO_AUTH_TOKEN || '',
+      phoneNumber: process.env.TWILIO_WHATSAPP_NUMBER || process.env.TWILIO_PHONE_NUMBER || '',
+    },
+  },
 };
 

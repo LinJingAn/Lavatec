@@ -269,6 +269,26 @@ CREATE TABLE IF NOT EXISTS invoice_payments (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Payment sessions represent the "Step 1" payment integration: generate a payment link and
+-- track its status. In "Step 2" this table can store provider references (e.g., pagar.me)
+-- and be updated via webhooks.
+CREATE TABLE IF NOT EXISTS payment_sessions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  invoice_id UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
+  order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
+  customer_id UUID REFERENCES customers(id) ON DELETE SET NULL,
+  provider VARCHAR(50) NOT NULL DEFAULT 'manual',
+  provider_reference VARCHAR(255),
+  status VARCHAR(50) NOT NULL DEFAULT 'pending', -- pending | paid | cancelled | expired
+  amount DECIMAL(10, 2) NOT NULL,
+  currency VARCHAR(10) DEFAULT 'BRL',
+  payment_url TEXT NOT NULL,
+  expires_at TIMESTAMP,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS invoice_templates (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(255) NOT NULL,
