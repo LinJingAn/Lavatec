@@ -4,8 +4,10 @@ const nextConfig = {
   // This project mounts the existing React Router SPA inside Next.js.
   // All routes are handled client-side by react-router.
   output: 'standalone',
-  // Disable static optimization for pages that use React Router
-  // Pages should export `export const dynamic = 'force-dynamic'` if they use client-side hooks
+  // Skip static generation - all pages use React Router and should be dynamic
+  generateBuildId: async () => {
+    return 'build-' + Date.now();
+  },
 };
 
 export default nextConfig;

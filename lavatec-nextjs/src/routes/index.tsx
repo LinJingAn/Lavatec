@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import FinanceiroPage from '../pages/admin/FinanceiroPage';
-import FinancialDashboardPage from '../pages/admin/financeiro/FinancialDashboardPage';
-import ContasReceberPage from '../pages/admin/financeiro/ContasReceberPage';
-import ContasPagarPage from '../pages/admin/financeiro/ContasPagarPage';
-import RelatoriosPage from '../pages/admin/financeiro/RelatoriosPage';
-import ConciliacaoPage from '../pages/admin/financeiro/ConciliacaoPage';
+import FinanceiroPage from '../views/admin/FinanceiroPage';
+import FinancialDashboardPage from '../views/admin/financeiro/FinancialDashboardPage';
+import ContasReceberPage from '../views/admin/financeiro/ContasReceberPage';
+import ContasPagarPage from '../views/admin/financeiro/ContasPagarPage';
+import RelatoriosPage from '../views/admin/financeiro/RelatoriosPage';
+import ConciliacaoPage from '../views/admin/financeiro/ConciliacaoPage';
 
 // ... existing imports ...
 

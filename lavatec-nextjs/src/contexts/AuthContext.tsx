@@ -539,6 +539,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const companyId = null; // Not used in current backend schema
   const branchId = dbUser?.branch_id || null;
   
+  // Email verification status
+  const emailVerified = dbUser?.email_verified || false;
+  
   // Provide the auth context value
   const value = {
     session,
@@ -553,6 +556,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     updatePassword,
     updateUserData,
     refreshUserData,
+    emailVerified,
+    resendVerificationEmail,
     isAdmin,
     isManager,
     isStaff,

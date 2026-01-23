@@ -1,6 +1,9 @@
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 
-const Spa = dynamic(() => import('@/spa/Spa'), { ssr: false });
+// Disable static generation for root page since it uses React Router
+export const dynamic = 'force-dynamic';
+
+const Spa = nextDynamic(() => import('@/spa/Spa'), { ssr: false });
 
 export default function RootPage() {
   return <Spa />;

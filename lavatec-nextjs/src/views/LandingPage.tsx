@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import { useAuth } from '../contexts/AuthContext';
 
 // Minimal, elegant icons
 const ArrowRightIcon = () => (
@@ -94,8 +95,14 @@ const stats = [
 ];
 
 const LandingPage: React.FC = () => {
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // If user is already logged in, redirect to dashboard
+  if (user) {
+    return <Navigate to="/stores/dashboard/overview" replace />;
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);

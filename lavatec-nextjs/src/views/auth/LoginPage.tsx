@@ -46,7 +46,7 @@ const LoginPage = () => {
 
   // If user is already logged in, redirect to dashboard
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/stores/dashboard/overview" replace />;
   }
 
   const onSubmit = async (data: LoginFormValues) => {
@@ -109,14 +109,13 @@ const LoginPage = () => {
 
   // Check if we're in development mode
   const isDevelopment = process.env.NODE_ENV === 'development' || 
-                       import.meta.env?.DEV || 
-                       !process.env.NODE_ENV || 
-                       window.location.hostname === 'localhost';
+                       !process.env.NODE_ENV ||
+                       (typeof window !== 'undefined' && window.location.hostname === 'localhost');
 
   // Debug log
   console.log('Dev mode enabled:', isDevelopment, {
     NODE_ENV: process.env.NODE_ENV,
-    hostname: window.location.hostname
+    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server'
   });
 
   return (
@@ -210,7 +209,7 @@ const LoginPage = () => {
                     setNeedsVerification(false);
                     setSuccess(true);
                     setTimeout(() => {
-                      navigate('/');
+                      navigate('/stores/dashboard/overview');
                     }, 2000);
                   }
                 }}
