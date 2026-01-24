@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { 
   MdSearch, 
@@ -31,6 +31,7 @@ import {
   MdOutlineLocalPrintshop,
   MdOutlineDownload
 } from 'react-icons/md';
+import { CustomerService, Customer as ApiCustomer } from '../../services';
 
 // Disable static generation - this page uses React Router
 export const dynamic = 'force-dynamic';
@@ -391,8 +392,55 @@ const CustomersPage = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [customers, setCustomers] = useState(mockCustomers);
-  const [filteredCustomers, setFilteredCustomers] = useState(mockCustomers);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch customers from API
+  const fetchCustomers = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await CustomerService.getCustomers({ limit: 100 });
+      // Transform API data to match expected format
+      const transformedCustomers: Customer[] = (response.customers || []).map((c: ApiCustomer) => ({
+        id: c.id,
+        name: c.name,
+        code: c.id.substring(0, 8).toUpperCase(),
+        category: c.category || 'regular',
+        categoryId: c.category === 'vip' ? '1' : c.category === 'business' ? '2' : '3',
+        contact: c.name,
+        phone: c.phone || '',
+        email: c.email || '',
+        address: [c.address, c.city, c.state].filter(Boolean).join(', '),
+        lastOrder: c.last_order_date || '',
+        totalOrders: c.total_orders || 0,
+        totalSpent: c.total_spent || 0,
+        status: c.is_active !== false ? 'active' : 'inactive',
+        orderFrequency: 'monthly',
+        city: c.city || '',
+        state: c.state || '',
+        tags: [],
+        notes: '',
+        createdAt: c.created_at
+      }));
+      setCustomers(transformedCustomers.length > 0 ? transformedCustomers : mockCustomers);
+      setFilteredCustomers(transformedCustomers.length > 0 ? transformedCustomers : mockCustomers);
+    } catch (err: any) {
+      console.error('Error fetching customers:', err);
+      setError(err.message || 'Erro ao carregar clientes');
+      // Fallback to mock data on error
+      setCustomers(mockCustomers);
+      setFilteredCustomers(mockCustomers);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [fetchCustomers]);
   
   // Basic search and filter state
   const [searchTerm, setSearchTerm] = useState('');

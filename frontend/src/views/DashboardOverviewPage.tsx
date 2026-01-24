@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { MdTrendingUp, MdShoppingCart, MdLocalLaundryService, MdPeople } from 'react-icons/md';
+import React, { useState, useEffect, useCallback } from 'react';
+import { MdTrendingUp, MdShoppingCart, MdLocalLaundryService, MdPeople, MdRefresh } from 'react-icons/md';
+import { DashboardService, AdminService, OverviewDashboard } from '../services';
 
-// Mock data for company and branches
-const companyData = {
+// Default mock data for company and branches (fallback)
+const defaultCompanyData = {
   name: 'Lavatec',
   founded: '2018',
   headquarters: 'São Paulo, Brazil',
@@ -11,20 +12,21 @@ const companyData = {
   website: 'www.lavatec.com.br'
 };
 
-const branchesData = [
+const defaultBranchesData = [
   { id: 1, name: 'Lavatec São Paulo - Centro', address: 'Rua Augusta, 1500', city: 'São Paulo', phone: '(11) 3456-7890', manager: 'Ana Oliveira', active: true },
   { id: 2, name: 'Lavatec Rio de Janeiro', address: 'Av. Atlântica, 500', city: 'Rio de Janeiro', phone: '(21) 3456-7890', manager: 'Pedro Santos', active: true },
   { id: 3, name: 'Lavatec Belo Horizonte', address: 'Av. Afonso Pena, 2000', city: 'Belo Horizonte', phone: '(31) 3456-7890', manager: 'Camila Rocha', active: true },
   { id: 4, name: 'Lavatec Brasília', address: 'SQN 104, Bloco A', city: 'Brasília', phone: '(61) 3456-7890', manager: 'Rodrigo Mendes', active: false },
 ];
 
-const statisticsData = {
-  totalRevenue: 'R$ 1.245.780',
-  monthlyRevenue: 'R$ 156.450',
-  totalOrders: '12.456',
-  activeCustomers: '4.567',
-  processedItems: '156.432',
-  avgOrderValue: 'R$ 98,50'
+// Format currency helper
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
 };
 
 interface StatCardProps {
@@ -52,7 +54,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, trend, icon }) => (
 );
 
 const DashboardOverviewPage = () => {
-  const [branches, setBranches] = useState(branchesData);
+  const [branches, setBranches] = useState(defaultBranchesData);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editBranchId, setEditBranchId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
@@ -64,40 +66,92 @@ const DashboardOverviewPage = () => {
     active: true
   });
   const [activeTab, setActiveTab] = useState('company');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [dashboardData, setDashboardData] = useState<OverviewDashboard | null>(null);
 
+  // Fetch dashboard data from API
+  const fetchDashboardData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [overviewData, branchesData] = await Promise.all([
+        DashboardService.getOverviewDashboard(),
+        AdminService.getBranches()
+      ]);
+      
+      setDashboardData(overviewData);
+      
+      // Transform branches data
+      if (branchesData.branches && branchesData.branches.length > 0) {
+        const transformedBranches = branchesData.branches.map((b, index) => ({
+          id: index + 1,
+          name: b.name,
+          address: b.address || '',
+          city: b.city || '',
+          phone: b.phone || '',
+          manager: b.manager_name || '',
+          active: b.is_active !== false
+        }));
+        setBranches(transformedBranches);
+      }
+    } catch (err: any) {
+      console.error('Error fetching dashboard data:', err);
+      setError(err.message || 'Erro ao carregar dados');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  // Stats based on API data or defaults
   const stats = [
     {
       title: 'Receita Total',
-      value: 'R$ 28.450',
-      trend: '↑ 12.6% vs. mês anterior',
+      value: dashboardData ? formatCurrency(dashboardData.revenue?.month || 0) : 'R$ 28.450',
+      trend: dashboardData && dashboardData.revenue?.growth 
+        ? `${dashboardData.revenue.growth > 0 ? '↑' : '↓'} ${Math.abs(dashboardData.revenue.growth).toFixed(1)}% vs. mês anterior`
+        : '↑ 12.6% vs. mês anterior',
       icon: <MdTrendingUp className="w-8 h-8" />
     },
     {
       title: 'Total de Pedidos',
-      value: '243',
+      value: dashboardData?.totalOrders?.toString() || '243',
       trend: '↑ 8.2% vs. mês anterior',
       icon: <MdShoppingCart className="w-8 h-8" />
     },
     {
-      title: 'KG Processados',
-      value: '1.245',
+      title: 'Pedidos Ativos',
+      value: dashboardData?.activeOrders?.toString() || '45',
       trend: '↑ 5.3% vs. mês anterior',
       icon: <MdLocalLaundryService className="w-8 h-8" />
     },
     {
-      title: 'Clientes Ativos',
-      value: '189',
-      trend: '↑ 3.8% vs. mês anterior',
+      title: 'Concluídos Hoje',
+      value: dashboardData?.completedToday?.toString() || '12',
+      trend: '↑ 3.8% vs. ontem',
       icon: <MdPeople className="w-8 h-8" />
     }
   ];
 
-  const services = [
+  const services = dashboardData?.topServices?.slice(0, 2).map(s => ({
+    name: s.service,
+    value: s.revenue
+  })) || [
     { name: 'Lavagem Rápida', value: 8240 },
     { name: 'Lavagem + Secagem', value: 6120 }
   ];
 
-  const recentOrders = [
+  const recentOrders = dashboardData?.recentOrders?.slice(0, 5).map((o: any) => ({
+    id: `#${o.order_number || o.id}`,
+    client: o.customer_name || 'Cliente',
+    date: new Date(o.created_at).toLocaleDateString('pt-BR'),
+    status: o.status === 'completed' ? 'Concluído' : o.status === 'processing' ? 'Em processamento' : o.status,
+    value: o.total || 0
+  })) || [
     { id: '#6745', client: 'Maria Silva', date: '18/05/2023', status: 'Concluído', value: 67.50 },
     { id: '#6744', client: 'João Santos', date: '18/05/2023', status: 'Em processamento', value: 42.00 }
   ];

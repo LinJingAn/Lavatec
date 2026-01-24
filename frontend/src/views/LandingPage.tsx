@@ -99,16 +99,17 @@ const LandingPage: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // If user is already logged in, redirect to dashboard
-  if (user) {
-    return <Navigate to="/stores/dashboard/overview" replace />;
-  }
-
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // If user is already logged in, redirect to dashboard
+  // NOTE: This must be placed AFTER all hooks to follow React's rules of hooks
+  if (user) {
+    return <Navigate to="/stores/dashboard/overview" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans antialiased transition-colors duration-300">

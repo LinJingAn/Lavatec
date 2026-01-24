@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdEdit, MdDelete, MdSearch, MdFilterList, MdAdd } from 'react-icons/md';
+import { MdEdit, MdDelete, MdSearch, MdFilterList, MdAdd, MdRefresh } from 'react-icons/md';
+import { AdminService, Branch } from '@/services';
 
 // Disable static generation - this page uses React Router
 export const dynamic = 'force-dynamic';
 
-// Mock data for units
-const mockUnidades = [
+// Default mock data for units
+const defaultUnidades = [
   { id: 1, name: 'São José Centro', address: 'Avenida Central, Rua 1', status: 'active', employees: 15, machines: 12 },
   { id: 2, name: 'Escazú', address: 'Plaza Tempo, Local #5', status: 'maintenance', employees: 10, machines: 8 },
   { id: 3, name: 'Heredia', address: 'Centro Comercial Paseo de las Flores', status: 'active', employees: 12, machines: 10 },
@@ -16,13 +17,48 @@ const mockUnidades = [
   { id: 7, name: 'Santa Ana', address: 'Centro Empresarial Forum 1', status: 'active', employees: 11, machines: 9 },
 ];
 
+type Unidade = typeof defaultUnidades[0];
+
 const ListUnidadesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [unidades, setUnidades] = useState<Unidade[]>(defaultUnidades);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch branches from API
+  const fetchBranches = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await AdminService.getBranches();
+      if (response.branches && response.branches.length > 0) {
+        const transformedUnidades = response.branches.map((branch: Branch, index: number) => ({
+          id: index + 1,
+          name: branch.name,
+          address: [branch.address, branch.city, branch.state].filter(Boolean).join(', '),
+          status: branch.is_active !== false ? 'active' : 'inactive',
+          employees: 0, // Not available from API
+          machines: 0  // Not available from API
+        }));
+        setUnidades(transformedUnidades);
+      }
+    } catch (err: any) {
+      console.error('Error fetching branches:', err);
+      setError(err.message || 'Erro ao carregar unidades');
+      // Keep default mock data on error
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBranches();
+  }, [fetchBranches]);
   
   // Filter units based on search term and status filter
-  const filteredUnidades = mockUnidades.filter(unidad => {
+  const filteredUnidades = unidades.filter(unidad => {
     const matchesSearch = unidad.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          unidad.address.toLowerCase().includes(searchTerm.toLowerCase());
     

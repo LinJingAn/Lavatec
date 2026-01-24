@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   MdArrowBack, 
@@ -19,16 +19,95 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useSidebar } from '@/contexts/SidebarContext';
+import { FinancialService, AccountReceivable } from '@/services';
 
 // Disable static generation - this page uses React Router
 export const dynamic = 'force-dynamic';
 
+// Default mock data for fallback
+const defaultInvoices = [
+  {
+    id: 1,
+    customerName: 'John Doe',
+    invoiceNumber: 'INV-2024-001',
+    amount: 1500.00,
+    dueDate: '2024-04-15',
+    status: 'pending',
+    aging: 0,
+    partialPayments: []
+  },
+  {
+    id: 2,
+    customerName: 'Jane Smith',
+    invoiceNumber: 'INV-2024-002',
+    amount: 2500.00,
+    dueDate: '2024-03-20',
+    status: 'overdue',
+    aging: 15,
+    partialPayments: [
+      { date: '2024-03-25', amount: 1000.00 }
+    ]
+  },
+  {
+    id: 3,
+    customerName: 'Acme Corp',
+    invoiceNumber: 'INV-2024-003',
+    amount: 3500.00,
+    dueDate: '2024-04-01',
+    status: 'paid',
+    aging: 0,
+    partialPayments: [
+      { date: '2024-03-28', amount: 2000.00 },
+      { date: '2024-04-01', amount: 1500.00 }
+    ]
+  }
+];
+
 const ContasReceberPage = () => {
   const navigate = useNavigate();
   const { closeSecondarySidebar } = useSidebar();
-  
-  // Mock data for demonstration
-  const [invoices, setInvoices] = useState([
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch accounts receivable from API
+  const fetchAccountsReceivable = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await FinancialService.getAccountsReceivable();
+      if (response.accounts && response.accounts.length > 0) {
+        // Transform API data to match component format
+        const transformedInvoices = response.accounts.map((account: AccountReceivable, index: number) => ({
+          id: index + 1,
+          customerName: account.customer_name || 'Cliente',
+          invoiceNumber: account.invoice_id || `INV-${account.id.substring(0, 8)}`,
+          amount: account.amount,
+          dueDate: account.due_date,
+          status: account.status,
+          aging: account.status === 'overdue' 
+            ? Math.floor((Date.now() - new Date(account.due_date).getTime()) / (1000 * 60 * 60 * 24))
+            : 0,
+          partialPayments: []
+        }));
+        setInvoices(transformedInvoices);
+      }
+    } catch (err: any) {
+      console.error('Error fetching accounts receivable:', err);
+      setError(err.message || 'Erro ao carregar contas a receber');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAccountsReceivable();
+  }, [fetchAccountsReceivable]);
+
+  // Invoice data (from API or default)
+  const [invoices, setInvoices] = useState(defaultInvoices.map(inv => ({...inv})) as typeof defaultInvoices);
+
+  // Legacy mock data kept for backwards compatibility (unused, kept for reference)
+  const _legacyMockData = [
     {
       id: 1,
       customerName: 'John Doe',
@@ -37,7 +116,7 @@ const ContasReceberPage = () => {
       dueDate: '2024-04-15',
       status: 'pending',
       aging: 0,
-      partialPayments: []
+      partialPayments: [] as { date: string; amount: number }[]
     },
     {
       id: 2,
@@ -64,7 +143,7 @@ const ContasReceberPage = () => {
         { date: '2024-04-01', amount: 1500.00 }
       ]
     }
-  ]);
+  ];
 
   const [agingReport, setAgingReport] = useState([
     { range: '0-30 days', amount: 50000.00, count: 25 },
