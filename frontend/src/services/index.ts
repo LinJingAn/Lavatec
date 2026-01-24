@@ -60,3 +60,62 @@ export { PromotionService } from './PromotionService';
 export { InvoiceService } from './InvoiceService';
 export { SupplyService } from './SupplyService';
 export { pricingService } from './PricingService';
+
+// User/Employee Management
+export { UserService } from './UserService';
+export type {
+  Employee,
+  CreateEmployeeRequest,
+  UpdateEmployeeRequest,
+  EmployeeFilters,
+  Schedule,
+  Training,
+  Benefit,
+  PayrollEntry
+} from './UserService';
+
+// Marketing
+export { MarketingService } from './MarketingService';
+export type {
+  Campaign,
+  EmailTemplate,
+  SMSTemplate,
+  CustomerSegment,
+  LoyaltyProgram,
+  LoyaltyTier,
+  CommunicationLog
+} from './MarketingService';
+
+// Reports
+export { ReportsService } from './ReportsService';
+export type {
+  ReportFilter,
+  SalesReport,
+  ServiceReport,
+  CustomerReport,
+  EmployeePerformanceReport,
+  OperationalReport,
+  InventoryReport,
+  FinancialSummary
+} from './ReportsService';
+
+// Inventory
+export { InventoryService } from './InventoryService';
+export type {
+  InventoryItem,
+  InventoryCategory,
+  Supplier,
+  StockMovement,
+  PurchaseOrder,
+  PurchaseOrderItem
+} from './InventoryService';
+
+// Services
+export { ServiceService } from './ServiceService';
+export type {
+  ServiceType,
+  ServiceCategory as ServiceCategoryType,
+  GarmentType,
+  PriceRule,
+  ServiceFilters
+} from './ServiceService';

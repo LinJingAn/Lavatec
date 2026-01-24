@@ -39,12 +39,30 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
   };
 
   const renderWidget = (widget: Widget) => {
+    // Safety check: ensure widget.data exists
+    if (!widget.data) {
+      return (
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+          Sem dados disponíveis
+        </div>
+      );
+    }
+
     switch (widget.type) {
       case 'chart':
+        // Ensure data is an array
+        const chartData = Array.isArray(widget.data) ? widget.data : [];
+        if (chartData.length === 0) {
+          return (
+            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+              Sem dados para exibir
+            </div>
+          );
+        }
         return (
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={widget.data}>
+              <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
@@ -56,23 +74,55 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
           </div>
         );
       case 'metric':
+        // Ensure data is an object
+        const metricData = typeof widget.data === 'object' && widget.data !== null && !Array.isArray(widget.data) 
+          ? widget.data 
+          : {};
+        const entries = Object.entries(metricData);
+        if (entries.length === 0) {
+          return (
+            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+              Sem métricas disponíveis
+            </div>
+          );
+        }
         return (
           <div className="space-y-2">
-            {Object.entries(widget.data).map(([key, value]) => (
+            {entries.map(([key, value]) => (
               <div key={key} className="flex justify-between">
-                <span className="capitalize">{key}</span>
-                <span>{formatCurrency(value as number)}</span>
+                <span className="capitalize text-gray-700 dark:text-gray-300">{key}</span>
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {typeof value === 'number' ? formatCurrency(value) : value}
+                </span>
               </div>
             ))}
           </div>
         );
       case 'table':
+        // Ensure data is an array with at least one element
+        const tableData = Array.isArray(widget.data) ? widget.data : [];
+        if (tableData.length === 0 || !tableData[0] || typeof tableData[0] !== 'object') {
+          return (
+            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+              Sem dados na tabela
+            </div>
+          );
+        }
+        const firstRow = tableData[0];
+        const columns = Object.keys(firstRow);
+        if (columns.length === 0) {
+          return (
+            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+              Sem colunas para exibir
+            </div>
+          );
+        }
         return (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr>
-                  {Object.keys(widget.data[0]).map((key) => {
+                  {columns.map((key) => {
                     const translatedKey = 
                       key === 'service' ? 'serviço' :
                       key === 'revenue' ? 'receita' :
@@ -82,19 +132,27 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
                       key === 'tasks' ? 'tarefas' :
                       key === 'efficiency' ? 'eficiência' :
                       key === 'rating' ? 'nota' :
+                      key === 'customer' ? 'cliente' :
+                      key === 'amount' ? 'valor' :
+                      key === 'status' ? 'status' :
+                      key === 'id' ? 'ID' :
                       key;
                     
                     return (
-                      <th key={key} className="text-left p-2">{translatedKey}</th>
+                      <th key={key} className="text-left p-2 text-gray-700 dark:text-gray-300 font-medium">
+                        {translatedKey}
+                      </th>
                     );
                   })}
                 </tr>
               </thead>
               <tbody>
-                {widget.data.map((row: any, index: number) => (
-                  <tr key={index}>
-                    {Object.values(row).map((value: any, i: number) => (
-                      <td key={i} className="p-2">{value}</td>
+                {tableData.map((row: any, index: number) => (
+                  <tr key={index} className="border-t border-gray-200 dark:border-slate-700">
+                    {columns.map((colKey, i: number) => (
+                      <td key={i} className="p-2 text-gray-600 dark:text-gray-400">
+                        {row[colKey] ?? '-'}
+                      </td>
                     ))}
                   </tr>
                 ))}
@@ -103,7 +161,11 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
           </div>
         );
       default:
-        return null;
+        return (
+          <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+            Tipo de widget desconhecido
+          </div>
+        );
     }
   };
 
@@ -118,44 +180,50 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
         </Button>
       </div>
 
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="widgets">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-            >
-              {widgets.map((widget, index) => (
-                <Draggable
-                  key={widget.id}
-                  draggableId={widget.id}
-                  index={index}
-                  isDragDisabled={!isEditing}
-                >
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>{widget.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          {renderWidget(widget)}
-                        </CardContent>
-                      </Card>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      {widgets.length === 0 ? (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          Nenhum widget disponível
+        </div>
+      ) : (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="widgets">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              >
+                {widgets.map((widget, index) => (
+                  <Draggable
+                    key={widget.id}
+                    draggableId={widget.id}
+                    index={index}
+                    isDragDisabled={!isEditing}
+                  >
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                          <CardHeader>
+                            <CardTitle className="text-gray-900 dark:text-white">{widget.title}</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            {renderWidget(widget)}
+                          </CardContent>
+                        </Card>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      )}
     </div>
   );
 }; 

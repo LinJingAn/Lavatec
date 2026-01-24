@@ -184,14 +184,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Skip API call for dev token - user is already set by setDevUser
           if (token === 'dev-token') {
             console.log('🔧 Dev token found - skipping profile fetch');
-            // Ensure user state is set (in case component remounted)
-            const existingUser = user || {
+            // Always set dev user state (in case component remounted or state was cleared)
+            const devUser: User = {
               id: 'dev-user-123',
               email: 'dev@lavatec.com',
               name: 'Dev User',
               role: 'admin',
             };
-            const existingDbUser = dbUser || {
+            const devDbUser: DbUser = {
               id: 'dev-user-123',
               email: 'dev@lavatec.com',
               name: 'Dev User',
@@ -200,11 +200,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
             };
-            if (!user) setUser(existingUser);
-            if (!dbUser) setDbUser(existingDbUser);
+            setUser(devUser);
+            setDbUser(devDbUser);
             setSession({
               token,
-              user: existingUser,
+              user: devUser,
             });
             setIsLoading(false);
             return;
@@ -226,12 +226,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
-        setAuthError(error as Error);
-        // Clear invalid token
-        localStorage.removeItem('token');
-        setSession(null);
-        setUser(null);
-        setDbUser(null);
+        const token = localStorage.getItem('token');
+        // Only clear token and state if it's not a dev token
+        if (token !== 'dev-token') {
+          setAuthError(error as Error);
+          localStorage.removeItem('token');
+          setSession(null);
+          setUser(null);
+          setDbUser(null);
+        } else {
+          // For dev token, just log the error but don't clear state
+          console.warn('🔧 Dev mode: Error during auth init, but keeping dev user');
+        }
       } finally {
         setIsLoading(false);
       }

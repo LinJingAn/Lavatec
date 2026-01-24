@@ -1,72 +1,156 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { DashboardMetrics } from '@/components/dashboard/DashboardMetrics';
 import { DashboardWidgets, Widget } from '@/components/dashboard/DashboardWidgets';
+import { DashboardService, OrderService } from '@/services';
+import { MdError } from 'react-icons/md';
 
 const OverviewPage: React.FC = () => {
-  // Example data - in a real app, this would come from an API
-  const metricsData = {
-    orders: 150,
-    revenue: 25000,
-    customers: 45,
-    dailyData: [
-      { date: '2024-01-01', orders: 10, revenue: 2000, customers: 5 },
-      { date: '2024-01-02', orders: 15, revenue: 3000, customers: 8 },
-      { date: '2024-01-03', orders: 12, revenue: 2400, customers: 6 },
-      { date: '2024-01-04', orders: 18, revenue: 3600, customers: 9 },
-      { date: '2024-01-05', orders: 20, revenue: 4000, customers: 10 },
-    ]
-  };
+  const [metricsData, setMetricsData] = useState({
+    orders: 0,
+    revenue: 0,
+    customers: 0,
+    dailyData: [] as { date: string; orders: number; revenue: number; customers: number }[]
+  });
+  const [widgets, setWidgets] = useState<Widget[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const widgets = [
-    {
-      id: '1',
-      type: 'chart',
-      title: 'Principais Serviços',
-      data: [
-        { name: 'Lavar e Dobrar', value: 45 },
-        { name: 'Lavagem a Seco', value: 30 },
-        { name: 'Passar', value: 25 }
-      ]
-    },
-    {
-      id: '2',
-      type: 'metric',
-      title: 'Resumo de Hoje',
-      data: {
-        'Pedidos': 15,
-        'Receita': 3000,
-        'Clientes': 8
+  const fetchDashboardData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Fetch dashboard overview data
+      const [overviewResult, ordersResult] = await Promise.all([
+        DashboardService.getOverviewDashboard().catch(() => null),
+        OrderService.getOrders({ limit: 5 }).catch(() => ({ orders: [] }))
+      ]);
+
+      if (overviewResult) {
+        setMetricsData({
+          orders: overviewResult.todayOrders || 0,
+          revenue: overviewResult.todayRevenue || 0,
+          customers: overviewResult.newCustomers || 0,
+          dailyData: overviewResult.dailyData || []
+        });
+
+        // Build widgets from API data
+        const recentOrders = (ordersResult.orders || []).slice(0, 5).map((order: any) => ({
+          id: order.id || 'N/A',
+          customer: order.customer_name || 'N/A',
+          service: order.items?.[0]?.service_name || 'N/A',
+          amount: order.total || 0,
+          status: order.status === 'completed' ? 'Concluído' : 
+                  order.status === 'in_progress' ? 'Em Andamento' : 'Pendente'
+        }));
+
+        const newWidgets: Widget[] = [
+          {
+            id: '1',
+            type: 'chart',
+            title: 'Principais Serviços',
+            data: Array.isArray(overviewResult.topServices) && overviewResult.topServices.length > 0
+              ? overviewResult.topServices
+              : [
+                  { name: 'Lavar e Dobrar', value: 0 },
+                  { name: 'Lavagem a Seco', value: 0 },
+                  { name: 'Passar', value: 0 }
+                ]
+          },
+          {
+            id: '2',
+            type: 'metric',
+            title: 'Resumo de Hoje',
+            data: {
+              'Pedidos': overviewResult.todayOrders || 0,
+              'Receita': overviewResult.todayRevenue || 0,
+              'Clientes': overviewResult.newCustomers || 0
+            }
+          },
+          {
+            id: '3',
+            type: 'table',
+            title: 'Pedidos Recentes',
+            data: recentOrders.length > 0 ? recentOrders : []
+          }
+        ];
+
+        setWidgets(newWidgets);
+      } else {
+        // Fallback to sample data if API fails
+        setMetricsData({
+          orders: 0,
+          revenue: 0,
+          customers: 0,
+          dailyData: []
+        });
+        setWidgets([
+          {
+            id: '1',
+            type: 'chart',
+            title: 'Principais Serviços',
+            data: []
+          },
+          {
+            id: '2',
+            type: 'metric',
+            title: 'Resumo de Hoje',
+            data: { 'Pedidos': 0, 'Receita': 0, 'Clientes': 0 }
+          },
+          {
+            id: '3',
+            type: 'table',
+            title: 'Pedidos Recentes',
+            data: []
+          }
+        ]);
+        setError('Não foi possível carregar os dados do dashboard. Verifique a conexão com o servidor.');
       }
-    },
-    {
-      id: '3',
-      type: 'table',
-      title: 'Pedidos Recentes',
-      data: [
-        { id: 'PED001', customer: 'João Silva', service: 'Lavar e Dobrar', amount: 45.00, status: 'Concluído' },
-        { id: 'PED002', customer: 'Maria Santos', service: 'Lavagem a Seco', amount: 30.00, status: 'Em Andamento' },
-        { id: 'PED003', customer: 'Roberto Pereira', service: 'Passar', amount: 25.00, status: 'Pendente' }
-      ]
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      setError('Erro ao carregar dados do dashboard.');
+    } finally {
+      setLoading(false);
     }
-  ];
+  }, []);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   const handleWidgetsChange = (newWidgets: Widget[]) => {
+    setWidgets(newWidgets);
     // In a real app, this would save the widget layout to the backend
     console.log('Widgets alterados:', newWidgets);
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-8 min-h-[400px]">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 p-6">
-      <h1 className="text-2xl font-bold">Visão Geral do Painel</h1>
+    <div className="space-y-6 p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Visão Geral do Painel</h1>
+      
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center">
+          <MdError className="text-red-500 mr-2" size={20} />
+          <span className="text-red-700 dark:text-red-400">{error}</span>
+        </div>
+      )}
       
       <DashboardMetrics data={metricsData} />
       
       <DashboardWidgets 
-        widgets={widgets as Widget[]} 
+        widgets={widgets} 
         onWidgetsChange={handleWidgetsChange} 
       />
     </div>
   );
 };
 
-export default OverviewPage; 
+export default OverviewPage;

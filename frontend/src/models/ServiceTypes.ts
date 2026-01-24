@@ -42,7 +42,10 @@ export const getCategoryName = (categoryId: ServiceCategory): string => {
   return categories[categoryId] || 'Categoria Desconhecida';
 };
 
-// Mock data generation functions
+/**
+ * @deprecated Use ServiceService.getServices() instead.
+ * This mock data is kept only for fallback purposes when API is unavailable.
+ */
 export const generateMockServiceTypes = (): ServiceType[] => {
   return [
     {
