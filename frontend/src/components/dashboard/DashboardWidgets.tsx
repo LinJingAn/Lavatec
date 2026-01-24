@@ -42,7 +42,7 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
     // Safety check: ensure widget.data exists
     if (!widget.data) {
       return (
-        <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8 animate-pulse">
           Sem dados disponíveis
         </div>
       );
@@ -54,7 +54,7 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
         const chartData = Array.isArray(widget.data) ? widget.data : [];
         if (chartData.length === 0) {
           return (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+            <div className="text-center text-gray-500 dark:text-gray-400 py-8 animate-pulse">
               Sem dados para exibir
             </div>
           );
@@ -63,12 +63,27 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="name" stroke="#9ca3af" />
+                <YAxis stroke="#9ca3af" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1f2937', 
+                    border: 'none', 
+                    borderRadius: '8px',
+                    transition: 'all 0.3s ease'
+                  }}
+                  labelStyle={{ color: '#fff' }}
+                  itemStyle={{ color: '#fff' }}
+                />
                 <Legend />
-                <Bar dataKey="value" fill="#8884d8" />
+                <Bar 
+                  dataKey="value" 
+                  fill="#22c55e" 
+                  radius={[8, 8, 0, 0]}
+                  animationDuration={1000}
+                  animationBegin={0}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -81,17 +96,23 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
         const entries = Object.entries(metricData);
         if (entries.length === 0) {
           return (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+            <div className="text-center text-gray-500 dark:text-gray-400 py-8 animate-pulse">
               Sem métricas disponíveis
             </div>
           );
         }
         return (
           <div className="space-y-2">
-            {entries.map(([key, value]) => (
-              <div key={key} className="flex justify-between">
+            {entries.map(([key, value], index) => (
+              <div 
+                key={key} 
+                className="flex justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-300"
+                style={{ 
+                  animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`
+                }}
+              >
                 <span className="capitalize text-gray-700 dark:text-gray-300">{key}</span>
-                <span className="font-semibold text-gray-900 dark:text-white">
+                <span className="font-semibold text-gray-900 dark:text-white transition-all duration-300 hover:scale-105">
                   {typeof value === 'number' ? formatCurrency(value as number) : value as string}
                 </span>
               </div>
@@ -103,7 +124,7 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
         const tableData = Array.isArray(widget.data) ? widget.data : [];
         if (tableData.length === 0 || !tableData[0] || typeof tableData[0] !== 'object') {
           return (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+            <div className="text-center text-gray-500 dark:text-gray-400 py-8 animate-pulse">
               Sem dados na tabela
             </div>
           );
@@ -112,7 +133,7 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
         const columns = Object.keys(firstRow);
         if (columns.length === 0) {
           return (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+            <div className="text-center text-gray-500 dark:text-gray-400 py-8 animate-pulse">
               Sem colunas para exibir
             </div>
           );
@@ -148,7 +169,13 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
               </thead>
               <tbody>
                 {tableData.map((row: any, index: number) => (
-                  <tr key={index} className="border-t border-gray-200 dark:border-slate-700">
+                  <tr 
+                    key={index} 
+                    className="border-t border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors duration-200"
+                    style={{ 
+                      animation: `fadeInLeft 0.5s ease-out ${index * 0.05}s both`
+                    }}
+                  >
                     {columns.map((colKey, i: number) => (
                       <td key={i} className="p-2 text-gray-600 dark:text-gray-400">
                         {row[colKey] ?? '-'}
@@ -162,7 +189,7 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
         );
       default:
         return (
-          <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+          <div className="text-center text-gray-500 dark:text-gray-400 py-8 animate-pulse">
             Tipo de widget desconhecido
           </div>
         );
@@ -175,13 +202,14 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
         <Button 
           variant="outline" 
           onClick={() => setIsEditing(!isEditing)}
+          className="bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 border-slate-200 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600 transition-all duration-300 hover:scale-105 active:scale-95"
         >
           {isEditing ? 'Concluído' : 'Editar Layout'}
         </Button>
       </div>
 
       {widgets.length === 0 ? (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400 animate-pulse">
           Nenhum widget disponível
         </div>
       ) : (
@@ -200,13 +228,22 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
                     index={index}
                     isDragDisabled={!isEditing}
                   >
-                    {(provided) => (
+                    {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+                        className={`transition-all duration-300 ${
+                          snapshot.isDragging 
+                            ? 'opacity-50 rotate-2 scale-105 shadow-2xl' 
+                            : 'opacity-100'
+                        }`}
+                        style={{ 
+                          ...provided.draggableProps.style,
+                          animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`
+                        }}
                       >
-                        <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                        <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                           <CardHeader>
                             <CardTitle className="text-gray-900 dark:text-white">{widget.title}</CardTitle>
                           </CardHeader>

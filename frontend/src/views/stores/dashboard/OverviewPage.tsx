@@ -14,6 +14,7 @@ const OverviewPage: React.FC = () => {
   const [widgets, setWidgets] = useState<Widget[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const fetchDashboardData = useCallback(async () => {
     try {
@@ -111,6 +112,8 @@ const OverviewPage: React.FC = () => {
       setError('Erro ao carregar dados do dashboard.');
     } finally {
       setLoading(false);
+      // Trigger fade-in animation after data loads
+      setTimeout(() => setIsVisible(true), 100);
     }
   }, []);
 
@@ -127,28 +130,53 @@ const OverviewPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8 min-h-[400px]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600"></div>
+        <div className="relative">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 dark:border-slate-700 border-t-emerald-600"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-emerald-400 animate-ping opacity-20"></div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Visão Geral do Painel</h1>
+      <h1 
+        className={`text-2xl font-bold text-gray-900 dark:text-white transition-all duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+        }`}
+      >
+        Visão Geral do Painel
+      </h1>
       
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center">
-          <MdError className="text-red-500 mr-2" size={20} />
+        <div 
+          className={`bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center transition-all duration-500 ${
+            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+          }`}
+        >
+          <MdError className="text-red-500 mr-2 animate-pulse" size={20} />
           <span className="text-red-700 dark:text-red-400">{error}</span>
         </div>
       )}
       
-      <DashboardMetrics data={metricsData} />
+      <div 
+        className={`transition-all duration-700 delay-100 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+      >
+        <DashboardMetrics data={metricsData} />
+      </div>
       
-      <DashboardWidgets 
-        widgets={widgets} 
-        onWidgetsChange={handleWidgetsChange} 
-      />
+      <div 
+        className={`transition-all duration-700 delay-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+      >
+        <DashboardWidgets 
+          widgets={widgets} 
+          onWidgetsChange={handleWidgetsChange} 
+        />
+      </div>
     </div>
   );
 };
