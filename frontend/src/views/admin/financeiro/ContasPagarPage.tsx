@@ -46,8 +46,8 @@ const ContasPagarPage = () => {
   // Generate expense report by category
   const expenseReport = categories.map(cat => ({
     category: cat.name,
-    amount: bills.filter(b => b.category_id === cat.id).reduce((sum, b) => sum + b.amount, 0),
-    count: bills.filter(b => b.category_id === cat.id).length
+    amount: bills.filter(b => b.category === cat.name).reduce((sum, b) => sum + b.amount, 0),
+    count: bills.filter(b => b.category === cat.name).length
   })).filter(item => item.amount > 0);
 
   // Get notifications (overdue and upcoming)
@@ -82,7 +82,7 @@ const ContasPagarPage = () => {
       const [billsResult, categoriesResult] = await Promise.all([
         FinancialService.getAccountsPayable({
           status: filters.status !== 'all' ? filters.status as any : undefined,
-          category_id: filters.category !== 'all' ? filters.category : undefined
+          category: filters.category !== 'all' ? filters.category : undefined
         }),
         FinancialService.getCategories('expense')
       ]);
@@ -129,7 +129,7 @@ const ContasPagarPage = () => {
 
   const handleMarkAsPaid = async (billId: string) => {
     try {
-      await FinancialService.updateAccountPayable(billId, { status: 'paid', paid_date: new Date().toISOString() });
+      await FinancialService.updateAccountPayable(billId, { status: 'paid', payment_date: new Date().toISOString() });
       fetchData();
     } catch (err) {
       console.error('Error marking as paid:', err);

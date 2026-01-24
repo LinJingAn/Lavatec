@@ -28,10 +28,10 @@ const OverviewPage: React.FC = () => {
 
       if (overviewResult) {
         setMetricsData({
-          orders: overviewResult.todayOrders || 0,
-          revenue: overviewResult.todayRevenue || 0,
-          customers: overviewResult.newCustomers || 0,
-          dailyData: overviewResult.dailyData || []
+          orders: overviewResult.totalOrders || 0,
+          revenue: overviewResult.revenue?.today || 0,
+          customers: overviewResult.completedToday || 0,
+          dailyData: []
         });
 
         // Build widgets from API data
@@ -50,7 +50,7 @@ const OverviewPage: React.FC = () => {
             type: 'chart',
             title: 'Principais Serviços',
             data: Array.isArray(overviewResult.topServices) && overviewResult.topServices.length > 0
-              ? overviewResult.topServices
+              ? overviewResult.topServices.map((s: any) => ({ name: s.service, value: s.revenue || s.count || 0 }))
               : [
                   { name: 'Lavar e Dobrar', value: 0 },
                   { name: 'Lavagem a Seco', value: 0 },
@@ -62,9 +62,9 @@ const OverviewPage: React.FC = () => {
             type: 'metric',
             title: 'Resumo de Hoje',
             data: {
-              'Pedidos': overviewResult.todayOrders || 0,
-              'Receita': overviewResult.todayRevenue || 0,
-              'Clientes': overviewResult.newCustomers || 0
+              'Pedidos': overviewResult.totalOrders || 0,
+              'Receita': overviewResult.revenue?.today || 0,
+              'Concluídos': overviewResult.completedToday || 0
             }
           },
           {

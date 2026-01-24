@@ -49,9 +49,9 @@ const AnalyticsPage: React.FC = () => {
             type: 'metric',
             title: 'Análise de Clientes',
             data: {
-              'Valor Médio do Pedido': analyticsResult.averageOrderValue || 0,
-              'Taxa de Retenção': `${analyticsResult.retentionRate || 0}%`,
-              'Novos Clientes': analyticsResult.newCustomers || 0
+              'Valor Médio do Pedido': analyticsResult.averageOrderValue || analyticsResult.avgOrderValue || 0,
+              'Taxa de Retenção': `${analyticsResult.retentionRate || analyticsResult.customerRetentionRate || 0}%`,
+              'Novos Clientes': analyticsResult.newCustomers || analyticsResult.newCustomersThisMonth || 0
             }
           },
           {

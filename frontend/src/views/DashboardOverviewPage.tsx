@@ -178,7 +178,7 @@ const DashboardOverviewPage = () => {
     setEditBranchId(null);
   };
 
-  const handleEditBranch = (branch: typeof branchesData[0]) => {
+  const handleEditBranch = (branch: typeof branches[0]) => {
     setFormData({
       name: branch.name,
       address: branch.address,

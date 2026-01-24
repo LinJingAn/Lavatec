@@ -177,7 +177,7 @@ const ListUnidadesPage: React.FC = () => {
         
         <div className="px-4 py-3 border-t">
           <p className="text-sm text-gray-500">
-            Mostrando {filteredUnidades.length} de {mockUnidades.length} unidades.
+            Mostrando {filteredUnidades.length} de {unidades.length} unidades.
           </p>
         </div>
       </div>

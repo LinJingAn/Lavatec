@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { MdAdd, MdEdit, MdDelete, MdPause, MdPlayArrow, MdError } from 'react-icons/md';
 import { PromotionService } from '@/services';
+import type { Promotion as ServicePromotion } from '@/services/promotionApiService';
 
-interface Promotion {
-  id: string;
-  name: string;
-  description?: string;
-  discount_type: 'percentage' | 'fixed';
-  discount_value: number;
-  start_date: string;
-  end_date: string;
+interface Promotion extends ServicePromotion {
   is_active: boolean;
-  usage_count?: number;
-  max_uses?: number;
 }
 
 const ActivePromotionsPage: React.FC = () => {
@@ -25,8 +17,13 @@ const ActivePromotionsPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const result = await PromotionService.getPromotions({ is_active: true });
-      setPromotions(result.promotions || []);
+      const result = await PromotionService.getInstance().getActivePromotions();
+      // Map service Promotion to local Promotion with is_active derived from status
+      const mappedPromotions: Promotion[] = result.map(promo => ({
+        ...promo,
+        is_active: promo.status === 'active'
+      }));
+      setPromotions(mappedPromotions);
     } catch (err) {
       console.error('Error fetching promotions:', err);
       setError('Erro ao carregar promoções. Verifique a conexão com o servidor.');
@@ -42,7 +39,7 @@ const ActivePromotionsPage: React.FC = () => {
 
   const handleTogglePromotion = async (id: string, isActive: boolean) => {
     try {
-      await PromotionService.updatePromotion(id, { is_active: !isActive });
+      await PromotionService.getInstance().updatePromotion(id, { is_active: !isActive } as any);
       fetchPromotions();
     } catch (err) {
       console.error('Error toggling promotion:', err);
@@ -54,7 +51,7 @@ const ActivePromotionsPage: React.FC = () => {
     if (!window.confirm('Tem certeza que deseja excluir esta promoção?')) return;
     
     try {
-      await PromotionService.deletePromotion(id);
+      await PromotionService.getInstance().deletePromotion(id);
       fetchPromotions();
     } catch (err) {
       console.error('Error deleting promotion:', err);
@@ -133,10 +130,11 @@ const ActivePromotionsPage: React.FC = () => {
                         : formatCurrency(promo.discount_value)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(promo.start_date).toLocaleDateString('pt-BR')} - {new Date(promo.end_date).toLocaleDateString('pt-BR')}
+                      {new Date(promo.start_date).toLocaleDateString('pt-BR')}
+                      {promo.end_date ? ` - ${new Date(promo.end_date).toLocaleDateString('pt-BR')}` : ' (Sem data de término)'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {promo.usage_count || 0} {promo.max_uses ? `/ ${promo.max_uses}` : ''}
+                      {promo.usage_count || 0} {promo.max_usage_count ? `/ ${promo.max_usage_count}` : ''}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${

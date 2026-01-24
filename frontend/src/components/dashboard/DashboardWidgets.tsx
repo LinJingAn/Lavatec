@@ -92,7 +92,7 @@ export const DashboardWidgets: React.FC<DashboardWidgetsProps> = ({
               <div key={key} className="flex justify-between">
                 <span className="capitalize text-gray-700 dark:text-gray-300">{key}</span>
                 <span className="font-semibold text-gray-900 dark:text-white">
-                  {typeof value === 'number' ? formatCurrency(value) : value}
+                  {typeof value === 'number' ? formatCurrency(value as number) : value as string}
                 </span>
               </div>
             ))}

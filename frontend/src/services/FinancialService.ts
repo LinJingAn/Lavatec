@@ -152,6 +152,25 @@ class FinancialServiceClass {
     }
   }
 
+  async updateAccountPayable(id: string, updates: Partial<Omit<AccountPayable, 'id' | 'created_at'>>): Promise<{ account: AccountPayable }> {
+    try {
+      const response = await api.put(`/financial/payable/${id}`, updates);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating account payable:', error);
+      throw error;
+    }
+  }
+
+  async deleteAccountPayable(id: string): Promise<void> {
+    try {
+      await api.delete(`/financial/payable/${id}`);
+    } catch (error) {
+      console.error('Error deleting account payable:', error);
+      throw error;
+    }
+  }
+
   async payAccountPayable(id: string, payment: { payment_date: string; payment_method: string; amount?: number }): Promise<{ account: AccountPayable }> {
     try {
       const response = await api.post(`/financial/payable/${id}/pay`, payment);

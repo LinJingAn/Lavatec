@@ -44,6 +44,12 @@ export interface CustomerAnalytics {
   avgOrderValue: number;
   topCustomers: { id: string; name: string; totalSpent: number; orderCount: number }[];
   customersByCategory: { category: string; count: number }[];
+  customerSegments?: { name: string; value: number }[];
+  serviceDistribution?: { name: string; value: number }[];
+  averageOrderValue?: number;
+  retentionRate?: number;
+  newCustomers?: number;
+  topServices?: any[];
   churnRate: number;
 }
 
@@ -56,6 +62,8 @@ export interface KPIs {
   returnRate: number;
   newCustomers: number;
   repeatCustomerRate: number;
+  monthlyData?: { month: string; actual: number; target: number; growth: number }[];
+  goals?: { revenue: number; orders: number; customers: number };
   comparisonPeriod: {
     revenue: number;
     orders: number;
